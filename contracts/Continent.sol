@@ -104,11 +104,11 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         address treasuryAddress = World(world).treasury();
         Treasury tt = Treasury(treasuryAddress);
         KingsGold gold = KingsGold(tt.gold());
-        require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in the reserve");
+        require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
 
         gold.transferFrom(msg.sender, treasuryAddress, provinceCost);
 
-        (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, msg.sender);
+        (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, tx.origin);
         user.addProvince(proxy);
 
         return tokenId;
