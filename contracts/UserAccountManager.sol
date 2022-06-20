@@ -39,11 +39,12 @@ contract UserAccountManager is Initializable, Roles, AccessControlUpgradeable, U
     //     return super.hasRole(role, account);
     // }
     
-    function ensureUserAccount() public onlyRole(MINTER_ROLE) {
-        if(users[tx.origin] != address(0)) return; // If user exist, then just return.
+    function ensureUserAccount() public onlyRole(MINTER_ROLE) returns(address) {
+        if(users[tx.origin] != address(0)) return users[tx.origin]; // If user exist, then just return.
 
         BeaconProxy proxy = new BeaconProxy(userAccountBeacon,abi.encodeWithSelector(UserAccount(address(0)).initialize.selector));
         users[tx.origin] = address(proxy);
+        return address(proxy);
     }
 
     function getUserAccount(address _user) external view returns(address) {

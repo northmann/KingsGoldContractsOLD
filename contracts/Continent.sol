@@ -96,9 +96,10 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     // Everyone should be able to mint new Provinces from a payment in KingsGold
     function createProvince(string memory _name) external returns(uint256) {
         // Check name, no illegal chars
-        UserAccountManager(userAccountManager).ensureUserAccount(); // Just make sure that the user account exist!
+        address userAccountAddress = UserAccountManager(userAccountManager).ensureUserAccount(); // Just make sure that the user account exist!
 
-        UserAccount user = UserAccount(UserAccountManager(userAccountManager).getUserAccount(tx.origin));
+        //UserAccount user = UserAccount(UserAccountManager(userAccountManager).getUserAccount(tx.origin));
+        UserAccount user = UserAccount(userAccountAddress);
         require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
         address treasuryAddress = World(world).treasury();
@@ -106,7 +107,8 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         KingsGold gold = KingsGold(tt.gold());
         require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
 
-        gold.transferFrom(msg.sender, treasuryAddress, provinceCost);
+        if(!gold.transferFrom(msg.sender, treasuryAddress, provinceCost))
+            revert();
 
         (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, tx.origin);
         user.addProvince(proxy);
