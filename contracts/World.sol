@@ -1,22 +1,20 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
 pragma solidity >0.8.2;
+import "hardhat/console.sol";
 
-//import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
-//import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
+import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-//import "@openzeppelin/contracts/access/Ownable.sol";
-//import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-//import "./ProvinceBeacon.sol";
 import "./GenericAccessControl.sol";
 import "./Roles.sol";
 import "./Continent.sol";
 import "./KingsGold.sol";
 import "./Treasury.sol";
+
+
 
 contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
 
@@ -30,10 +28,11 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
     }
 
     function initialize(address _userManager) initializer public {
-        userManager =_userManager; // Has to be set here!
+        userManager =_userManager; // Has to be set here, before anything else!
     }
 
     function createWorld(address _continentBeacon) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        console.log("function: createWorld variable: _continentBeacon = ", _continentBeacon);
         BeaconProxy proxy = new BeaconProxy(_continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManager));
 
         continents.push(address(proxy));
