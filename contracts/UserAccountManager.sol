@@ -16,7 +16,7 @@ import "./Roles.sol";
 
 contract UserAccountManager is Initializable, Roles, AccessControlUpgradeable, UUPSUpgradeable {
 
-    UpgradeableBeacon private userAccountBeacon;
+    address private userAccountBeacon;
     mapping(address => address) private users;
 
 
@@ -33,7 +33,7 @@ contract UserAccountManager is Initializable, Roles, AccessControlUpgradeable, U
         _grantRole(UPGRADER_ROLE, tx.origin);
 
         
-        userAccountBeacon = new UpgradeableBeacon(address(new UserAccount()));
+        //userAccountBeacon = new UpgradeableBeacon(address(new UserAccount()));
     }
 
     // /**
@@ -45,15 +45,15 @@ contract UserAccountManager is Initializable, Roles, AccessControlUpgradeable, U
     
     function ensureUserAccount() public onlyRole(MINTER_ROLE) returns(address) {
         if(users[tx.origin] != address(0)) return users[tx.origin]; // If exist return
-        BeaconProxy proxy = new BeaconProxy(address(userAccountBeacon),abi.encodeWithSelector(UserAccount(address(0)).initialize.selector));
+        BeaconProxy proxy = new BeaconProxy(userAccountBeacon,abi.encodeWithSelector(UserAccount(address(0)).initialize.selector));
         users[tx.origin] = address(proxy);
         return address(proxy);
     }
 
-    /// Upgrade the UserAccount template
-    function upgradeUserAccountTemplate(address _template) external onlyRole(UPGRADER_ROLE) {
-        userAccountBeacon.upgradeTo(_template);
-    }
+    // /// Upgrade the UserAccount template
+    // function upgradeUserAccountTemplate(address _template) external onlyRole(UPGRADER_ROLE) {
+    //     userAccountBeacon.upgradeTo(_template);
+    // }
 
     /// Upgrade the UserAccountManager template
     function _authorizeUpgrade(address newImplementation)

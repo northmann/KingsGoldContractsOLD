@@ -33,7 +33,7 @@ contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgra
         //__AccessControl_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
-        setUserAccountManager(_userManager);
+        userManager = _userManager;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
