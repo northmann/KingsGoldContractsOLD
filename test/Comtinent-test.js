@@ -12,13 +12,18 @@ describe("Continent", function () {
   let continentBeacon;
   let continentAddress;
   let world;
+  let userAccountBeacon;
 
   beforeEach(async function () {
     //const [owner] = await ethers.getSigners();
-    console.log("Start with UserAccountManager");
+    const UserAccount = await ethers.getContractFactory("UserAccount");
+    userAccountBeacon = await upgrades.deployBeacon(UserAccount);
+    await userAccountBeacon.deployed();
+    console.log("UserAccount Beacon deployed to:", userAccountBeacon.address);
 
+    console.log("Start with UserAccountManager");
     const UserAccountManager = await ethers.getContractFactory("UserAccountManager");
-    userManager = await upgrades.deployProxy(UserAccountManager);
+    userManager = await upgrades.deployProxy(UserAccountManager, [userAccountBeacon.address]);
     await userManager.deployed();
     console.log("UserAccountManager deployed to:", userManager.address);
 
@@ -41,11 +46,11 @@ describe("Continent", function () {
     console.log("Continent Beacon deployed to:", continentBeacon.address);
 
     const World = await ethers.getContractFactory("World");
-    world = await upgrades.deployProxy(World, [userManager.address]);
+    world = await upgrades.deployProxy(World, [userManager.address, continentBeacon.address]);
     await world.deployed();
     console.log("World deployed to:", world.address);
 
-    let tx = await world.createWorld(continentBeacon.address);
+    let tx = await world.createWorld();
     // wait until the transaction is mined
     await tx.wait();
     continentAddress = await world.continents(0);

@@ -24,7 +24,7 @@ contract UserAccount is Initializable {
     address public alliance;
 
         /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() payable {
+    constructor() {
         _disableInitializers();
     }
 
@@ -45,4 +45,12 @@ contract UserAccount is Initializable {
     function removeProvince(address _province) public {
         provinces.remove(_province);
     }
+
+    function setKingdom(address _kingdomAddress) external {
+        kingdom = _kingdomAddress;
+    }
+    function setAlliance(address _kingdomAddress) external {
+        kingdom = _kingdomAddress;
+    }
+
 }

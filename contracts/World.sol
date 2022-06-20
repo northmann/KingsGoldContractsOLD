@@ -18,6 +18,7 @@ import "./Treasury.sol";
 
 contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
 
+    address private continentBeacon;
     address[] public continents;
 
     address public treasury;
@@ -27,13 +28,15 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
         _disableInitializers();
     }
 
-    function initialize(address _userManager) initializer public {
+    function initialize(address _userManager, address _continentBeacon) initializer public {
+        __UUPSUpgradeable_init();
         userManager =_userManager; // Has to be set here, before anything else!
+        continentBeacon = _continentBeacon;
     }
 
-    function createWorld(address _continentBeacon) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        console.log("function: createWorld variable: _continentBeacon = ", _continentBeacon);
-        BeaconProxy proxy = new BeaconProxy(_continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManager));
+    function createWorld() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        console.log("function: createWorld variable: _continentBeacon = ", continentBeacon);
+        BeaconProxy proxy = new BeaconProxy(continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManager));
 
         continents.push(address(proxy));
     }
@@ -42,6 +45,11 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
         return continents.length;
     }
     
+        /// Upgrade the UserAccount template
+    function upgradeContinentBeacon(address _beaconAddress) external onlyRole(UPGRADER_ROLE) {
+        continentBeacon = _beaconAddress;
+    }
+
 
     function setTreasury(address _treasuryAddress) external onlyRole(DEFAULT_ADMIN_ROLE)
     {

@@ -95,8 +95,11 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
     function createProvince(string memory _name) external returns(uint256) {
-        UserAccount user = UserAccount(UserAccountManager(userAccountManager).ensureUserAccount());
-        require(user.provinceCount() > 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
+        // Check name, no illegal chars
+        UserAccountManager(userAccountManager).ensureUserAccount(); // Just make sure that the user account exist!
+
+        UserAccount user = UserAccount(UserAccountManager(userAccountManager).getUserAccount(tx.origin));
+        require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
         address treasuryAddress = World(world).treasury();
         Treasury tt = Treasury(treasuryAddress);
