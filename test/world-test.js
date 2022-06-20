@@ -67,6 +67,8 @@ describe("World", function () {
     console.log(index);
 
     console.log("Continent index ", index);
+
+    console.log("Continent address: ", await _world.continents(0));
   
     expect(index).to.equal(1);
   });

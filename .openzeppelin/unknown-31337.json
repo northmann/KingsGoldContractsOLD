@@ -7,148 +7,47 @@
       "kind": "uups"
     },
     {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0xf021cfe7ce16035a5998054faeaa380bd2f3ff23b0de8318c1926bb57a7a66e0",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0x2ea2d4e575ed37ad2cf23c746cf7a4454c46b3e9aa2eb071eb7a863a14009136",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "txHash": "0xd56daf0ac11aa43c9d337f3247c48b5ed9db4c2be9841a3416a611aad01ec262",
+      "kind": "uups"
+    },
+    {
       "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       "txHash": "0xf045ea586cff296a6a59f44d56f3804414b7eaacca86c725bffba8ba059616af",
       "kind": "uups"
     },
     {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0x4d83029a66d513b492c43025b4ce6b1bc9a5a04abdd7403ea49df322031f998f",
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x0f6fd5650f79c02808a5eecfee37e362d30868b418c07339cee75b27346b3a53",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      "txHash": "0x1e15e56a77e5906169604a94217c277bdfac2386344050e5665546501a418d2e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0xf5c9db79c0b198b87f0d91659cdcd8299af9dfd34a56487774eb810b1fa9587b",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0xd2f7c4ff96a5a525b653452abc19437bf8fd1de0d291b129840230a64131a595",
       "kind": "uups"
     }
   ],
   "impls": {
-    "fc0d17b21f75c5a0affefb7e1f70671c28b34338e333025e2cab69185dbfed6e": {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xe967d1b61930e07a5e82c084e640b04cd3e26d94887d5976933e5080bba955f8",
-      "layout": {
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "52",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:87"
-          },
-          {
-            "label": "userAccountManagerTemplate",
-            "offset": 0,
-            "slot": "101",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:30"
-          },
-          {
-            "label": "provinceTemplate",
-            "offset": 0,
-            "slot": "102",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:31"
-          },
-          {
-            "label": "armyTemplate",
-            "offset": 0,
-            "slot": "103",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:32"
-          },
-          {
-            "label": "userAccountManager",
-            "offset": 0,
-            "slot": "104",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:36"
-          },
-          {
-            "label": "provinceManager",
-            "offset": 0,
-            "slot": "105",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:38"
-          },
-          {
-            "label": "armyManager",
-            "offset": 0,
-            "slot": "106",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:40"
-          },
-          {
-            "label": "treasury",
-            "offset": 0,
-            "slot": "107",
-            "type": "t_address",
-            "contract": "Continent",
-            "src": "contracts\\Continent.sol:45"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
     "3b7a4a6ebde02c585f4ce1f8ffb3a3b937bb80d44ce881b0ef10909bc2bafbd4": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       "txHash": "0xd4ea4703f3313ec2aca2f077178e4a7fdc91631b3a044f66df948d06369880af",
@@ -298,9 +197,9 @@
         }
       }
     },
-    "82456b5aaa5bd2e0d7ef7e375454381f0462347ac242d7eb7f2b78029c721761": {
+    "f8e5a43f8fa4131d19dc2123001a460f1599bac673eb18c33c8d05e80c631660": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x28dbfe0c1baa9ae87306ea4dcc04140372a049e303228715ce21926a96b6f0aa",
+      "txHash": "0x783cb500331ab94d52d656e756d17d74a605042966a4e3340769b06d0fb51e2e",
       "layout": {
         "storage": [
           {
@@ -350,7 +249,7 @@
             "slot": "101",
             "type": "t_array(t_address)dyn_storage",
             "contract": "World",
-            "src": "contracts\\World.sol:23"
+            "src": "contracts\\World.sol:22"
           },
           {
             "label": "treasury",
@@ -358,7 +257,7 @@
             "slot": "102",
             "type": "t_address",
             "contract": "World",
-            "src": "contracts\\World.sol:25"
+            "src": "contracts\\World.sol:24"
           }
         ],
         "types": {
@@ -389,9 +288,9 @@
         }
       }
     },
-    "8f02b24b98bf3fdd683827a6271f8c5ed87872ecc8ed58639e79ca8f6445d65c": {
+    "069ab0a6181b5e02ab01cdbf38ea367d7520dd8c7b9226ebc4df38798577f3bc": {
       "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0xfc3b99971eed961376f7f43455d9b7335f9fb0dab2471185f3d57f06fbce19e1",
+      "txHash": "0x9b9817afeed47053ffcbd0c7b670dab8e77bb6661312bb2c29caf3770de49780",
       "layout": {
         "storage": [
           {
@@ -503,6 +402,299 @@
           },
           "t_string_storage": {
             "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "6a563a5321671c46e8995ba64ea42445fc43108fbd4dde49b575518a9c03dcf1": {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0x8f2607c95f931e0b9cc2e7f85eff6948790a534228a4394e67744bbef916f566",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "userManager",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "GenericAccessControl",
+            "src": "contracts\\GenericAccessControl.sol:12"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\ERC1967\\ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "gold",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_address",
+            "contract": "Treasury",
+            "src": "contracts\\Treasury.sol:20"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "bb215faa572b1e6537b6e5b5f17b20e45e20db5d4f26701ffed06c65b3506a8b": {
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x955d82ae8676dea2741804470014443130283fc2cec5e8b519f77097f3bab791",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "userManager",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "GenericAccessControl",
+            "src": "contracts\\GenericAccessControl.sol:12"
+          },
+          {
+            "label": "name",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:32"
+          },
+          {
+            "label": "userAccountManagerTemplate",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:35"
+          },
+          {
+            "label": "provinceTemplate",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:36"
+          },
+          {
+            "label": "armyTemplate",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:37"
+          },
+          {
+            "label": "farmEventTemplate",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:38"
+          },
+          {
+            "label": "userAccountManager",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:40"
+          },
+          {
+            "label": "provinceManager",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:41"
+          },
+          {
+            "label": "armyManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:42"
+          },
+          {
+            "label": "world",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_address",
+            "contract": "Continent",
+            "src": "contracts\\Continent.sol:47"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "22b8e12027d212851504c56d163607710c043b65aca202facdd2c39d091b1862": {
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "txHash": "0x76acea79f783e172cf5c559d0c907d3c03ac904f96231311bd19cdf7a9ef17bd",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "userManager",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "GenericAccessControl",
+            "src": "contracts\\GenericAccessControl.sol:12"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\ERC1967\\ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "continents",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "World",
+            "src": "contracts\\World.sol:22"
+          },
+          {
+            "label": "treasury",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_address",
+            "contract": "World",
+            "src": "contracts\\World.sol:24"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_uint256": {
+            "label": "uint256",
             "numberOfBytes": "32"
           },
           "t_uint8": {

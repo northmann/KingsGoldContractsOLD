@@ -2,10 +2,19 @@
 // solhint-disable-next-line
 pragma solidity >0.8.2;
 
+import "hardhat/console.sol";
+
+import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+
+import "./GenericAccessControl.sol";
 import "./KingsGold.sol";
+import "./Roles.sol";
 
 
-contract Treasury {
+contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
 
 
     address public gold;
@@ -13,22 +22,20 @@ contract Treasury {
     event Bought(uint256 amount);
     event Sold(uint256 amount);
 
-    constructor(address _gold) {
+   /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(address _userManager, address _gold) initializer public {
+        userManager =_userManager; // Has to be set here, before anything else!
         gold = _gold;
     }
 
-    // function createProvince() public {
-    //     // check that msg.sender is ProvinceManager in a world
-    //     // TX.origin is user
-    //     // Treasury is allowed to use user's coins
 
-        
-        
-    //     gold.transferFrom(tx.origin, address(this), provinceCost);
-
-
-
-    // }
+    function setGold(address _gold) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        gold = _gold;
+    }
 
     function buy() payable public {
         uint256 amountTobuy = msg.value;
@@ -49,5 +56,12 @@ contract Treasury {
 
         emit Sold(amount);
     }
+
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        onlyRole(UPGRADER_ROLE)
+        override
+    {}
+
 
 }
