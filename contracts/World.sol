@@ -34,11 +34,16 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
         continentBeacon = _continentBeacon;
     }
 
-    function createWorld() external onlyRole(DEFAULT_ADMIN_ROLE) {
-        console.log("function: createWorld variable: _continentBeacon = ", continentBeacon);
+    function createContinent() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        //console.log("function: createWorld variable: _continentBeacon = ", continentBeacon);
         BeaconProxy proxy = new BeaconProxy(continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManager));
-
+        
         continents.push(address(proxy));
+
+        //console.log("createContinent - now grant role to proxy");
+        // Make sure that the mintProvince can create new UserAccounts.
+        //UserAccountManager(userManager).grantRole(MINTER_ROLE, address(proxy));
+        //console.log("createContinent - now grant role to proxy - Done!!!");
     }
 
     function getContinentsCount() external view returns(uint256) {

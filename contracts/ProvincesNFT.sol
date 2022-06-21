@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
 pragma solidity ^0.8.4;
+import "hardhat/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
@@ -27,13 +28,12 @@ contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgra
     }
 
     function initialize(address _userManager) initializer public virtual {
+        userManager = _userManager; // First init, as this may affect role checks
         __ERC721_init("KingsGold Provinces", "KSGP");
         __ERC721Enumerable_init();
         __Pausable_init();
-        //__AccessControl_init();
         __ERC721Burnable_init();
         __UUPSUpgradeable_init();
-        userManager = _userManager;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -45,6 +45,8 @@ contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgra
     }
 
     function safeMint(address to) public onlyRole(MINTER_ROLE) returns(uint256) {
+        console.log("safeMint: msg.sender: ", msg.sender, " is requisting access to MINTER_ROLE");
+
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);

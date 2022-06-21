@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
 pragma solidity >0.8.2;
+import "hardhat/console.sol";
 
 import "./Roles.sol";
 import "./UserAccountManager.sol";
@@ -10,6 +11,7 @@ contract GenericAccessControl is Initializable, Roles {
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
     address public userManager;
+
 
     modifier onlyRole(bytes32 role) {
         require(UserAccountManager(userManager).hasRole(role, msg.sender),"Access denied");

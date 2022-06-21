@@ -46,6 +46,19 @@ contract UserAccount is Initializable {
         provinces.remove(_province);
     }
 
+    function getProvince(uint256 index) public view  returns(address) {
+        require(index < provinces.length());
+        return provinces.at(index);
+    }
+
+    function getProvinces() public view returns(address[] memory) {
+        address[] memory result = new address[](provinces.length());
+        for(uint256 i = 0; i < provinces.length(); i++)
+            result[i] = provinces.at(i);
+        return result;
+    }
+
+
     function setKingdom(address _kingdomAddress) external {
         kingdom = _kingdomAddress;
     }

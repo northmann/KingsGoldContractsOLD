@@ -25,8 +25,8 @@ contract UserAccountManager is Initializable, Roles, AccessControlUpgradeable, U
     function initialize(address _userAccountBeacon) initializer public virtual {
         __AccessControl_init();
         __UUPSUpgradeable_init();
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, tx.origin);
+        _grantRole(MINTER_ROLE, tx.origin);
         _grantRole(UPGRADER_ROLE, tx.origin);
 
         userAccountBeacon = _userAccountBeacon;
@@ -52,8 +52,8 @@ contract UserAccountManager is Initializable, Roles, AccessControlUpgradeable, U
     }
 
     /// Upgrade the UserAccount template
-    function upgradeUserAccountBeacon(address _beaconAddress) external onlyRole(UPGRADER_ROLE) {
-        userAccountBeacon = _beaconAddress;
+    function upgradeUserAccountBeacon(address _template) external onlyRole(UPGRADER_ROLE) {
+        userAccountBeacon = _template;
     }
 
     /// Upgrade the UserAccountManager template

@@ -1,0 +1,32 @@
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+const { createBeacon, createUpgradeable, deployContract } = require("./Auxiliary.js");
+
+// Not possible to run test on Beacon.sol as it do not have an initializer for userManager.
+describe("Beacon", function () {
+
+  let userAccountBeacon;
+  let userAccountManager;
+  let beaconContract;
+
+  beforeEach(async function () {
+    userAccountBeacon = await createBeacon("UserAccount");
+    userAccountManager = await createUpgradeable("UserAccountManager", [userAccountBeacon.address]);
+
+    beaconContract = await deployContract("Beacon", [userAccountManager.address]);
+  });
+
+  it('setBeacon', async () => {
+    const [owner, addr1, addr2] = await ethers.getSigners();
+
+    let beaconAddress = await beaconContract.beacon();
+    expect(beaconAddress).to.equal(ethers.constants.AddressZero);
+
+    const tx = await beaconContract.setBeacon(owner.address); // Set it to Zero
+    await tx.wait();
+
+    beaconAddress = await beaconContract.beacon();
+    expect(beaconAddress).to.equal(owner.address); // Initialized address
+  });
+});
+

@@ -37,7 +37,6 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     address private armyTemplate;
     address private farmEventTemplate;
 
-    address private userAccountManager;
     address private provinceManager;
     address private armyManager;
 
@@ -57,7 +56,7 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         //transferOwnership(tx.origin); // Now set ownership to the caller and not the world contract.
         name = _name;
         world = _world;
-        userAccountManager = _userManager;
+        userManager = _userManager;
 
         // userAccountManagerTemplate = address(new UserAccountManager());
         // userAccountManager = UserAccountManager(address(
@@ -95,26 +94,44 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
     function createProvince(string memory _name) external returns(uint256) {
+        console.log("createProvince - Start");
         // Check name, no illegal chars
-        address userAccountAddress = UserAccountManager(userAccountManager).ensureUserAccount(); // Just make sure that the user account exist!
+        address userAccountAddress = UserAccountManager(userManager).ensureUserAccount(); // Just make sure that the user account exist!
 
+        console.log("createProvince - check user");
         //UserAccount user = UserAccount(UserAccountManager(userAccountManager).getUserAccount(tx.origin));
         UserAccount user = UserAccount(userAccountAddress);
         require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
+        console.log("createProvince - get treasury address");
         address treasuryAddress = World(world).treasury();
+        console.log("createProvince - get treasury");
         Treasury tt = Treasury(treasuryAddress);
+        console.log("createProvince - get Gold instance");
         KingsGold gold = KingsGold(tt.gold());
+        console.log("createProvince - check balanceOf user");
         require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
 
+        console.log("createProvince - transfer gold");
         if(!gold.transferFrom(msg.sender, treasuryAddress, provinceCost))
             revert();
 
+        console.log("createProvince - mintProvince with ProvinceManager: ", provinceManager);
+
         (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, tx.origin);
+
+        console.log("createProvince - add province to user");
         user.addProvince(proxy);
 
         return tokenId;
     }
+
+    function setProvinceManager(address _instance) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        provinceManager = _instance;
+    }
+
+
 
     // function createHeroTransfer() external returns(address) {
     //     return address(0);

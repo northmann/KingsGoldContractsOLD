@@ -3,7 +3,6 @@
 pragma solidity >0.8.2;
 
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
@@ -16,14 +15,10 @@ import "./Continent.sol";
 import "./FarmEvent.sol";
 import "./Roles.sol";
 
-// Resources
-// https://programtheblockchain.com/posts/2018/04/20/storage-patterns-pagination/
-// https://github.com/kieranelby/KingOfTheEtherThrone/blob/v1.0/contracts/KingOfTheEtherThrone.sol
-// import '@openzeppelin/contracts/math/SafeMath.sol'; =>  using SafeMath for uint256;
 
-
+//, Roles, 
 contract Province is Initializable, Roles, AccessControlUpgradeable {
-    Continent continent;
+    address public continent;
 
     string public name;
 
@@ -49,31 +44,33 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
     EnumerableSet.AddressSet private outgoingTransfers;
 
 
-    modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"Access denied");
-        _;
-    }
+    // modifier onlyRoles(bytes32 role1, bytes32 role2) {
+    //     require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"Access denied");
+    //     _;
+    // }
 
     
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() payable {
+    constructor() {
         _disableInitializers();
     }
 
-    function initialize(string memory _name, address _owner, Continent _continent) initializer public {
+    function initialize(string memory _name, address _owner, address _continent) initializer public {
+        __AccessControl_init();
+        //_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(OWNER_ROLE, _owner);
         continent = _continent;
-        grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        grantRole(OWNER_ROLE, _owner);
         name = _name;
     }
 
-
-    function setVassal(address _user) external onlyRole(OWNER_ROLE)
+//onlyRole(OWNER_ROLE)
+    function setVassal(address _user) external 
     {
-        _setupRole(VASSAL_ROLE, _user);
+        //_setupRole(VASSAL_ROLE, _user);
     }
 
-    function createFarmEvent(uint256 populationUsed) external onlyRoles(OWNER_ROLE, VASSAL_ROLE) {
+    //onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function createFarmEvent(uint256 populationUsed) external  {
         require(populationUsed <= populationAvailable, "not enough population");
         // check that the hero exist and is controlled by user.
         populationAvailable = populationAvailable - populationUsed;
