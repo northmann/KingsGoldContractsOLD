@@ -2,11 +2,14 @@
 // solhint-disable-next-line
 pragma solidity >0.8.2;
 
-interface ITimeContract {   
+interface IEvent { 
+    function completeEvent() external;
+}
+
+interface ITimeContract is IEvent {   
 
     function priceForTime() external returns(uint256);
     function paidForTime() external;
-    function completeEvent() external;
 }
 
 interface IContractType {
@@ -14,4 +17,3 @@ interface IContractType {
 }
 
 interface IProvince { }
-interface IEvent { }

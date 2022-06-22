@@ -18,6 +18,8 @@ import "./Roles.sol";
 
 //, Roles, 
 contract Province is Initializable, Roles, AccessControlUpgradeable {
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     address public continent;
 
     string public name;
@@ -44,10 +46,10 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
     EnumerableSet.AddressSet private outgoingTransfers;
 
 
-    // modifier onlyRoles(bytes32 role1, bytes32 role2) {
-    //     require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"Access denied");
-    //     _;
-    // }
+    modifier onlyRoles(bytes32 role1, bytes32 role2) {
+        require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"Access denied");
+        _;
+    }
 
     
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -57,26 +59,37 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
 
     function initialize(string memory _name, address _owner, address _continent) initializer public {
         __AccessControl_init();
-        //_grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(OWNER_ROLE, _owner);
+        _grantRole(MINTER_ROLE, _continent);
         continent = _continent;
         name = _name;
     }
 
-//onlyRole(OWNER_ROLE)
-    function setVassal(address _user) external 
+    function setVassal(address _user) external onlyRole(OWNER_ROLE)
     {
-        //_setupRole(VASSAL_ROLE, _user);
+        _setupRole(VASSAL_ROLE, _user);
     }
 
-    //onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function createFarmEvent(uint256 populationUsed) external  {
+    function createFarmEvent(uint256 populationUsed) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         require(populationUsed <= populationAvailable, "not enough population");
         // check that the hero exist and is controlled by user.
         populationAvailable = populationAvailable - populationUsed;
-        //BeaconProxy proxy = new BeaconProxy(address(continent.farmEventTemplate()),abi.encodeWithSelector(FarmEvent(address(0)).initialize.selector, address(0), populationUsed));
-        //users[tx.origin] = address(proxy);
-        
 
+        //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
+        BeaconProxy proxy = new BeaconProxy(Continent(continent).farmEventTemplate(), abi.encodeWithSelector( FarmEvent(address(0)).initialize.selector, address(0), populationUsed ));
+        Continent(continent).addEvent(address(proxy));
     }
+
+    function completeEvent(address _eventContract) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    {
+        Continent(continent).completeEvent(_eventContract);
+
+        // update the population!
+
+        // populationAvailable += farm.populationSurvived();
+        // populationTotal -= (farm.populationUsed() - farm.populationSurvived());
+
+        // Kill the contract in the end!
+    }
+
 }

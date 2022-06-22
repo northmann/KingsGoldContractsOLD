@@ -23,6 +23,11 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
 
     address public treasury;
 
+    address public food;
+    address public wood;
+    address public iron;
+    address public rock;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -60,6 +65,27 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
     {
         treasury = _treasuryAddress;
     }
+
+    function setFood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        food = _address;
+    }
+
+    function setWood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        wood = _address;
+    }
+
+    function setIron(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        iron = _address;
+    }
+    
+    function setRock(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        rock = _address;
+    }
+
 
     function _authorizeUpgrade(address newImplementation)
         internal

@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
-//import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 
 import "./GenericAccessControl.sol";
@@ -28,14 +28,16 @@ import "./Roles.sol";
 
 
 contract Continent is Initializable, Roles, GenericAccessControl {
+    using EnumerableSet for EnumerableSet.AddressSet;
+
+    EnumerableSet.AddressSet private events;
 
     string public name;
     uint256 constant provinceCost = 1 ether;
 
-    address private userAccountManagerTemplate;
-    address private provinceTemplate;
-    address private armyTemplate;
-    address private farmEventTemplate;
+    address public provinceTemplate;
+    address public armyTemplate;
+    address public farmEventTemplate;
 
     address private provinceManager;
     address private armyManager;
@@ -57,39 +59,6 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         name = _name;
         world = _world;
         userManager = _userManager;
-
-        // userAccountManagerTemplate = address(new UserAccountManager());
-        // userAccountManager = UserAccountManager(address(
-        //     new ERC1967Proxy(
-        //         userAccountManagerTemplate,
-        //         abi.encodeWithSelector(UserAccountManager(address(0)).initialize.selector)
-        //     )
-        // )); 
-
-        // provinceTemplate = address(new ProvinceManager());
-        // provinceManager = ProvinceManager(address(
-        //     new ERC1967Proxy(
-        //         provinceTemplate,
-        //         abi.encodeWithSelector(ProvinceManager(address(0)).initialize.selector)
-        //     )
-        // )); 
-
-        // armyTemplate = address(new ArmyManager());
-        // armyManager = ArmyManager(address(
-        //     new ERC1967Proxy(
-        //         armyTemplate,
-        //         abi.encodeWithSelector(ArmyManager(address(0)).initialize.selector)
-        //     )
-        // )); 
-
-        //farmEventTemplate = address(new FarmEvent());
-        // armyManager = ArmyManager(address(
-        //     new ERC1967Proxy(
-        //         armyTemplate,
-        //         abi.encodeWithSelector(ArmyManager(address(0)).initialize.selector)
-        //     )
-        // )); 
-        
     }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
@@ -120,6 +89,9 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
         (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, tx.origin);
 
+        console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
+        UserAccountManager(userManager).grantProvinceRole(proxy); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
+
         console.log("createProvince - add province to user");
         user.addProvince(proxy);
 
@@ -131,6 +103,28 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         provinceManager = _instance;
     }
 
+
+    // Adds an event to a collaction to keep track of created events. Used for security.
+    function addEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
+        require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
+
+        events.add(_eventContract);
+    }
+
+
+    function completeEvent(address _eventContract) public onlyRole(PROVINCE_ROLE)
+    {
+        require(events.contains(_eventContract));
+        require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
+
+        // give the _event permission to mint at wood, rock, food, iron.
+        UserAccountManager(userManager).grantTemporaryMinterRole(_eventContract);
+
+        IEvent(_eventContract).completeEvent();
+
+        // remove the _event permission to mint at wood, rock, food, iron.
+        UserAccountManager(userManager).revokeTemporaryMinterRole(_eventContract);
+    }
 
 
     // function createHeroTransfer() external returns(address) {

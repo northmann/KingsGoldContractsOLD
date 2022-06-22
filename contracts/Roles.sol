@@ -10,5 +10,8 @@ contract Roles {
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
     bytes32 public constant VASSAL_ROLE = keccak256("VASSAL_ROLE");
     bytes32 public constant OWNER_ROLE = keccak256("OWNER_ROLE");
-    
+    bytes32 public constant USER_ROLE = keccak256("USER_ROLE");
+    bytes32 public constant PROVINCE_ROLE = keccak256("PROVINCE_ROLE");
+    bytes32 public constant EVENT_ROLE = keccak256("EVENT_ROLE");
+    bytes32 public constant TEMPORARY_MINTER_ROLE = keccak256("TEMPORARY_MINTER_ROLE");
 }
