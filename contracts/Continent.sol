@@ -33,7 +33,7 @@ import "./Errors.sol";
 contract Continent is Initializable, Roles, GenericAccessControl {
     using EnumerableSet for EnumerableSet.AddressSet;
 
-    EnumerableSet.AddressSet private events;
+    //EnumerableSet.AddressSet private events;
 
     string public name;
     uint256 constant provinceCost = 1 ether;
@@ -109,12 +109,12 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     }
 
 
-    // Adds an event to a collaction to keep track of created events. Used for security.
-    function addEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
-        require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
+    // // Adds an event to a collaction to keep track of created events. Used for security.
+    // function addEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
+    //     require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
-        events.add(_eventContract);
-    }
+    //     events.add(_eventContract);
+    // }
 
     function spendEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
@@ -138,15 +138,16 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
 
 
-    function completeEvent(address _eventContract) public onlyRole(PROVINCE_ROLE)
+
+    function completeMint(address _eventContract) public onlyRole(PROVINCE_ROLE) 
     {
-        require(events.contains(_eventContract),"Missing event in continent list");
+        // require(ProvinceManager(provinceManager).containes(msg.sender)); // TODO: implement this functionality
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
         // give the _event permission to mint at wood, rock, food, iron.
         UserAccountManager(userManager).grantTemporaryMinterRole(_eventContract);
 
-        IEvent(_eventContract).completeEvent();
+        IEvent(_eventContract).completeMint();
 
         // remove the _event permission to mint at wood, rock, food, iron.
         UserAccountManager(userManager).revokeTemporaryMinterRole(_eventContract);
@@ -162,7 +163,7 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     // }
 
     /// The user pays to reduce the time on a contract.
-    function payForTime(address _contract) external {
+    function payForTime(address _contract) public onlyRole(PROVINCE_ROLE) {
         //check if contract is registred! 
         //require(knownContracts[_contract] != uint8(0), "Not known contract");
         require(ERC165Checker.supportsInterface(_contract, type(ITimeContract).interfaceId), "Not a time contract");
@@ -179,8 +180,4 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
         timeContract.paidForTime();
     }
-
-    // function deposit(uint amount_) external {
-    //     gold.transferFrom(msg.sender, address(gold), amount_);
-    // }
 }

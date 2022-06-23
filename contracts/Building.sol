@@ -5,12 +5,29 @@ import "hardhat/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-
 import "./Province.sol";
+import "./Roles.sol";
+import "./BuildFactor.sol";
 
-contract Building is Initializable {
+
+contract Building is Initializable, Roles {
 
     address public province;
+
+    BuildFactor public cost;
+
+    uint256 public amount;
+
+    modifier onlyRole(bytes32 role) {
+        require(Province(province).hasRole(role, msg.sender),"Access denied");
+        _;
+    }
+    
+
+    modifier onlyRoles(bytes32 role1, bytes32 role2) {
+        require(Province(province).hasRole(role1, msg.sender) || Province(province).hasRole(role2, msg.sender),"Access denied");
+        _;
+    }
 
         /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -23,17 +40,11 @@ contract Building is Initializable {
         // _grantRole(MINTER_ROLE, _continent);
         // continent = _continent;
         // name = _name;
+        _init();
     }
 
-
-    modifier onlyRole(bytes32 role) {
-        require(Province(province).hasRole(role, msg.sender),"Access denied");
-        _;
-    }
-
-    modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(Province(province).hasRole(role1, msg.sender) || Province(province).hasRole(role2, msg.sender),"Access denied");
-        _;
+    function _init() internal virtual 
+    {
     }
 
 
@@ -42,9 +53,15 @@ contract Building is Initializable {
         return 0;
     }
 
-    function Build(uint256 manPower, uint256 _hero, uint256 food, uint256 wood, uint256 rock, uint256 iron) external virtual {
-
+    function addAmount(uint256 _count) public onlyRole(EVENT_ROLE) {
+        amount += _count;
     }
+
+    // function Build(uint256 manPower, uint256 _hero, uint256 food, uint256 wood, uint256 rock, uint256 iron) external virtual {
+
+    // }
+
+
 
     function getSvg() public view virtual returns (string memory) {
         return string(abi.encodePacked(""));

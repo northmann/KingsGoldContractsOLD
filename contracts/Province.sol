@@ -16,13 +16,15 @@ import "./Continent.sol";
 import "./Roles.sol";
 import "./BuildingManager.sol";
 import "./Building.sol";
+import "./EventSetExtensions.sol";
 
 
 
 //, Roles, 
 contract Province is Initializable, Roles, AccessControlUpgradeable {
-    using EnumerableSet for EnumerableSet.AddressSet;
     using EnumerableMap for EnumerableMap.UintToAddressMap;
+    using EnumerableSet for EnumerableSet.AddressSet;
+    using EventSetExtensions for EnumerableSet.AddressSet;
 
     address public continent;
 
@@ -43,7 +45,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
     uint256 public populationAvailable;
     address public armyContract;
 
-    EnumerableSet.AddressSet private work;
+    EnumerableSet.AddressSet private events;
 
     EnumerableMap.UintToAddressMap private buildings;
 
@@ -54,6 +56,11 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
         require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"Access denied");
+        _;
+    }
+
+    modifier onlyEvent() {
+        require(events.contains(msg.sender)); //Event must be listed on the province's events.
         _;
     }
 
@@ -90,34 +97,47 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         // Spend the resouces on the behalf of the user
         Continent(continent).spendEvent(eventAddress); 
         
-        // Add the event to the continent list, for security.
-        Continent(continent).addEvent(eventAddress);
-
         // Add the event to the list of activities on the province.
-        work.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
+        events.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
+        
+        _grantRole(EVENT_ROLE, eventAddress); // Enable the event to perform actions on this provice.
     }
 
 
-    //TODO: What onlyRole(PROVINCE_ROLE) ?
-    function setBuilding(uint256 _id, address _buildingContract) public  {
-        buildings.set(_id, _buildingContract);
-    }
 
-    //TODO: What onlyRole(PROVINCE_ROLE) ?
+
     function getBuilding(uint256 _id) public view returns(bool, address) {
         return buildings.tryGet(_id);
     }
 
-    function completeEvent(address _eventContract) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    {
-        Continent(continent).completeEvent(_eventContract);
-
-        // update the population!
-
-        // populationAvailable += farm.populationSurvived();
-        // populationTotal -= (farm.populationUsed() - farm.populationSurvived());
-
-        // Kill the contract in the end!
+    function getEvents() public view returns(address[] memory) {
+        return events.getEvents();
     }
 
+    function setBuilding(uint256 _id, address _buildingContract) public onlyRole(EVENT_ROLE) onlyEvent {
+        buildings.set(_id, _buildingContract);
+    }
+
+    function setPoppulation(uint256 _manPower, uint256 _attrition) public onlyRole(EVENT_ROLE) onlyEvent {
+        populationAvailable += _manPower; // Return the manPower to the available pool. Attrition is included in manPower.
+        populationTotal -= _attrition; // Remove some of the population because of attrition.
+    }
+
+    function payForTime() public onlyRole(EVENT_ROLE) onlyEvent
+    {
+        Continent(continent).payForTime(msg.sender);
+    }
+
+    function completeEvent() public onlyRole(EVENT_ROLE) onlyEvent
+    {
+        // Province calls continent on behalf of Event.
+        events.remove(msg.sender);
+    }
+
+
+    function completeMint() public onlyRole(EVENT_ROLE) onlyEvent
+    {
+        // Province calls continent on behalf of Event.
+        Continent(continent).completeMint(msg.sender);
+    }
 }

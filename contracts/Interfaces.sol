@@ -4,11 +4,13 @@ pragma solidity >0.8.2;
 
 interface IEvent { 
     function completeEvent() external;
+    function completeMint() external;
 }
 
 interface ITimeContract is IEvent {   
 
     function priceForTime() external returns(uint256);
+    function payForTime() external;
     function paidForTime() external;
 }
 

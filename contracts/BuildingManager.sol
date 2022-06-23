@@ -31,6 +31,11 @@ contract BuildingManager is
 
     address public continent;
 
+    function initialize(address _userManager) initializer public virtual {
+        userManager = _userManager; // First init, as this may affect role checks
+        __UUPSUpgradeable_init();
+    }
+
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
     function Build(address _province, uint256 _buildingId, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
         Province provinceInstance = Province(_province);
@@ -58,6 +63,10 @@ contract BuildingManager is
         
         //Continent(continent).addEvent(address(proxy));
         return address(eventProxy);
+    }
+
+    function setContinent(address _continent) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        continent = _continent;
     }
 
     function _authorizeUpgrade(address newImplementation)
