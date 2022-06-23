@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
-pragma solidity >0.8.2;
+pragma solidity >=0.8.4;
 import "hardhat/console.sol";
 
 // import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
@@ -22,8 +22,11 @@ import "./KingsGold.sol";
 import "./Interfaces.sol";
 import "./UserAccountManager.sol";
 import "./UserAccount.sol";
-import "./FarmEvent.sol";
 import "./Roles.sol";
+import "./Food.sol";
+import "./Event.sol";
+import "./Errors.sol";
+
 
 
 
@@ -37,10 +40,12 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
     address public provinceTemplate;
     address public armyTemplate;
-    address public farmEventTemplate;
 
+    address public buildingManager;
     address private provinceManager;
     address private armyManager;
+
+    address public food;
 
 
     //mapping(address => uint8) public knownContracts;
@@ -111,10 +116,31 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         events.add(_eventContract);
     }
 
+    function spendEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
+        require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
+
+        address treasuryAddress = World(world).treasury();
+        Event eventContract = Event(_eventContract);
+
+        // spend the resources that the event requires
+        if(!Food(food).transferFrom(tx.origin, treasuryAddress, eventContract.food()))
+            revert InsuffcientFood({
+                minRequired: eventContract.food()
+            });
+
+        // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
+        //     revert();
+        // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
+        //     revert();
+        // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
+        //     revert();
+    }
+
+
 
     function completeEvent(address _eventContract) public onlyRole(PROVINCE_ROLE)
     {
-        require(events.contains(_eventContract));
+        require(events.contains(_eventContract),"Missing event in continent list");
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
         // give the _event permission to mint at wood, rock, food, iron.

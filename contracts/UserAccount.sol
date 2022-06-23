@@ -13,7 +13,8 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 // import "./ArmyData.sol";
 // import "./Interfaces.sol";
-// import "./Statics.sol";
+import "./Roles.sol";
+
 
 contract UserAccount is Initializable {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -48,6 +49,7 @@ contract UserAccount is Initializable {
 
     function getProvince(uint256 index) public view  returns(address) {
         require(index < provinces.length());
+
         return provinces.at(index);
     }
 

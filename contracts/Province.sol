@@ -6,19 +6,23 @@ import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 //import "./Statics.sol"; Only ProvinceID
 import "./Interfaces.sol";
 import "./Continent.sol";
-import "./FarmEvent.sol";
 import "./Roles.sol";
+import "./BuildingManager.sol";
+import "./Building.sol";
+
 
 
 //, Roles, 
 contract Province is Initializable, Roles, AccessControlUpgradeable {
     using EnumerableSet for EnumerableSet.AddressSet;
+    using EnumerableMap for EnumerableMap.UintToAddressMap;
 
     address public continent;
 
@@ -40,7 +44,9 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
     address public armyContract;
 
     EnumerableSet.AddressSet private work;
-    EnumerableSet.AddressSet private building;
+
+    EnumerableMap.UintToAddressMap private buildings;
+
     EnumerableSet.AddressSet private incomingTransfers;
     EnumerableSet.AddressSet private insideTransfers;
     EnumerableSet.AddressSet private outgoingTransfers;
@@ -70,14 +76,36 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         _setupRole(VASSAL_ROLE, _user);
     }
 
-    function createFarmEvent(uint256 populationUsed) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
-        require(populationUsed <= populationAvailable, "not enough population");
+    function createBuilding(uint256 _buildingId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
-        populationAvailable = populationAvailable - populationUsed;
+        
+        // Create a new Build event        
+        address eventAddress = BuildingManager(Continent(continent).buildingManager()).Build(address(this), _buildingId, _count, _hero);
+        BuildEvent buildEvent = BuildEvent(eventAddress);
 
-        //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
-        BeaconProxy proxy = new BeaconProxy(Continent(continent).farmEventTemplate(), abi.encodeWithSelector( FarmEvent(address(0)).initialize.selector, address(0), populationUsed ));
-        Continent(continent).addEvent(address(proxy));
+        // Check that there is mamPower enough to build the requested buildings.
+        require(buildEvent.manPower() <= populationAvailable, "not enough population");
+        populationAvailable = populationAvailable - buildEvent.manPower();
+
+        // Spend the resouces on the behalf of the user
+        Continent(continent).spendEvent(eventAddress); 
+        
+        // Add the event to the continent list, for security.
+        Continent(continent).addEvent(eventAddress);
+
+        // Add the event to the list of activities on the province.
+        work.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
+    }
+
+
+    //TODO: What onlyRole(PROVINCE_ROLE) ?
+    function setBuilding(uint256 _id, address _buildingContract) public  {
+        buildings.set(_id, _buildingContract);
+    }
+
+    //TODO: What onlyRole(PROVINCE_ROLE) ?
+    function getBuilding(uint256 _id) public view returns(bool, address) {
+        return buildings.tryGet(_id);
     }
 
     function completeEvent(address _eventContract) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)

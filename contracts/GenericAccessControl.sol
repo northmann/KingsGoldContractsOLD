@@ -12,7 +12,6 @@ contract GenericAccessControl is Initializable, Roles {
 
     address public userManager;
 
-
     modifier onlyRole(bytes32 role) {
         require(UserAccountManager(userManager).hasRole(role, msg.sender),"Access denied");
         _;
@@ -26,6 +25,8 @@ contract GenericAccessControl is Initializable, Roles {
     function setUserAccountManager(address _userManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
         userManager =_userManager;
     }
+
+
 
     // modifier ownerOrVassel() {
     //     require(hasRole(OWNER_ROLE, msg.sender) || hasRole(VASSAL_ROLE, msg.sender),"Access denied");

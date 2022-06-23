@@ -2,7 +2,6 @@
 // solhint-disable-next-line
 pragma solidity >0.8.2;
 
-//import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
@@ -12,27 +11,29 @@ import "./Interfaces.sol";
 import "./Roles.sol";
 
 abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
+    bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
+
     address public province;
 
     uint256 public creationTime;
     uint256 public timeRequired;
     uint256 public goldForTimeFactor; 
 
-    bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
+    // The cost of resources for this event
+    uint256 public manPower;
+    uint256 public food;
+    uint256 public wood;
+    uint256 public rock;
+    uint256 public iron;
+
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() payable {
+    constructor() {
         _disableInitializers();
     }
 
-    function setupEvent(address _province) internal onlyInitializing {
-        province = _province;
-        creationTime = block.timestamp;
-		_registerInterface(type(IEvent).interfaceId);
-		_registerInterface(type(ITimeContract).interfaceId);
-
-    }
-
+    // function initialize() initializer public {
+    // }
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
         require(Province(province).hasRole(role1, msg.sender) 
             || Province(province).hasRole(role2, msg.sender)
@@ -40,6 +41,15 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
             || Province(province).hasRole(DEFAULT_ADMIN_ROLE, msg.sender)
             ,"Access denied");
         _;
+    }
+
+
+    function setupEvent(address _province) internal onlyInitializing {
+        province = _province;
+        creationTime = block.timestamp;
+		_registerInterface(type(IEvent).interfaceId);
+		_registerInterface(type(ITimeContract).interfaceId);
+
     }
 
     // Perform timed transitions. Be sure to mention

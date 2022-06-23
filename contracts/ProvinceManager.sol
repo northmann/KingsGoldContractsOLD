@@ -6,8 +6,8 @@ import "hardhat/console.sol";
 // import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 //import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-//import "@openzeppelin/contracts/utils/Strings.sol";
-//import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 
 import "./Beacon.sol";
 import "./ProvincesNFT.sol";
@@ -63,7 +63,7 @@ contract ProvinceManager is Beacon, ProvincesNFT {
 
 
     function getSvg(Province province) private view returns (string memory) {
-        uint32 wood = province.forest();
+        //uint32 wood = province.forest();
         //string memory image = svgResources[wood];
         string memory svg = string(abi.encodePacked(
             SVGHEADER, 

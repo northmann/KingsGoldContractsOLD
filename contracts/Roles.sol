@@ -3,7 +3,9 @@
 pragma solidity >0.8.2;
 
 
+
 contract Roles {
+
     //bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
