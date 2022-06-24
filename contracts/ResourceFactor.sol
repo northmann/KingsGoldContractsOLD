@@ -3,7 +3,7 @@
 pragma solidity >0.8.2;
 
 
-struct BuildFactor {
+struct ResourceFactor {
     uint256 manPower;
     uint256 attrition;
     uint256 time;

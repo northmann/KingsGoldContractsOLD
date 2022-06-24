@@ -34,14 +34,14 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
     }
 
     function initialize(address _userManager, address _continentBeacon) initializer public {
+        setUserAccountManager(_userManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
-        userManager =_userManager; // Has to be set here, before anything else!
         continentBeacon = _continentBeacon;
     }
 
     function createContinent() external onlyRole(DEFAULT_ADMIN_ROLE) {
         //console.log("function: createWorld variable: _continentBeacon = ", continentBeacon);
-        BeaconProxy proxy = new BeaconProxy(continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManager));
+        BeaconProxy proxy = new BeaconProxy(continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManagerAddress));
         
         continents.push(address(proxy));
 

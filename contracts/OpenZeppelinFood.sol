@@ -22,7 +22,7 @@ contract OpenZeppelinFood is Initializable, ERC20Upgradeable, ERC20BurnableUpgra
     }
 
     function initialize(address _userAccountManager) initializer public {
-        userManager = _userAccountManager; // Important to be first, as it's required for role checks.
+        setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __ERC20_init("KingsGold Food", "KSGF");
         __ERC20Burnable_init();
         __Pausable_init();

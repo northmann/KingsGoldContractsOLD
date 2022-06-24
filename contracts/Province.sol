@@ -11,6 +11,8 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 //import "./Statics.sol"; Only ProvinceID
+import "./BuildEvent.sol";
+//import "./YieldEvent.sol";
 import "./Interfaces.sol";
 import "./Continent.sol";
 import "./Roles.sol";
@@ -20,13 +22,14 @@ import "./EventSetExtensions.sol";
 
 
 
+
 //, Roles, 
-contract Province is Initializable, Roles, AccessControlUpgradeable {
+contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     using EnumerableMap for EnumerableMap.UintToAddressMap;
     using EnumerableSet for EnumerableSet.AddressSet;
     using EventSetExtensions for EnumerableSet.AddressSet;
 
-    address public continent;
+    address private continentAddress;
 
     string public name;
 
@@ -74,8 +77,13 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         __AccessControl_init();
         _grantRole(OWNER_ROLE, _owner);
         _grantRole(MINTER_ROLE, _continent);
-        continent = _continent;
+        continentAddress = _continent;
         name = _name;
+    }
+
+    function continent() public view override returns(address)
+    {
+        return continentAddress;
     }
 
     function setVassal(address _user) external onlyRole(OWNER_ROLE)
@@ -87,7 +95,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        address eventAddress = StructureManager(Continent(continent).structureManager()).Build(address(this), _structureId, _count, _hero);
+        address eventAddress = StructureManager(Continent(continentAddress).structureManager()).Build(address(this), _structureId, _count, _hero);
         BuildEvent buildEvent = BuildEvent(eventAddress);
 
         // Check that there is mamPower enough to build the requested structures.
@@ -95,7 +103,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         populationAvailable = populationAvailable - buildEvent.manPower();
 
         // Spend the resouces on the behalf of the user
-        Continent(continent).spendEvent(eventAddress); 
+        Continent(continentAddress).spendEvent(eventAddress); 
         
         // Add the event to the list of activities on the province.
         events.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
@@ -103,41 +111,66 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         _grantRole(EVENT_ROLE, eventAddress); // Enable the event to perform actions on this provice.
     }
 
+//     function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+//         // check that the hero exist and is controlled by user.
+//         //IProvince provinceInstance = IProvince(msg.sender)
+
+// //        (bool structureExist, address structureAddress) = provinceInstance.getStructure(_structureId);
+// //        require(structureExist,"Structure do not exist");
+        
+//         // Create a new Build event        
+//         address eventAddress = StructureManager(Continent(continentAddress).structureManager()).CreateYieldEvent(address(this), _structureId, msg.sender, _count, _hero);
+//         YieldEvent yieldEvent = YieldEvent(eventAddress);
+
+//         // Check that there is mamPower enough to build the requested structures.
+//         require(yieldEvent.manPower() <= populationAvailable, "not enough population");
+//         populationAvailable = populationAvailable - yieldEvent.manPower();
+
+//         Structure structure = Structure(structureAddress);
+//         require(structure.availableAmount < _count, "Insufficient structures");
+
+//         structure.setAvailableAmount(structure.availableAmount() - _count);
+
+//         // Add the event to the list of activities on the province.
+//         events.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
+        
+//         _grantRole(EVENT_ROLE, eventAddress); // Enable the event to perform actions on this provice.
+//     }
 
 
 
-    function getStructure(uint256 _id) public view returns(bool, address) {
+    function getStructure(uint256 _id) public view override returns(bool, address) {
         return structures.tryGet(_id);
     }
 
-    function getEvents() public view returns(address[] memory) {
+    function getEvents() public view override returns(address[] memory)  {
         return events.getEvents();
     }
 
-    function setStructure(uint256 _id, address _structureContract) public onlyRole(EVENT_ROLE) onlyEvent {
+    function setStructure(uint256 _id, address _structureContract) public override onlyRole(EVENT_ROLE) onlyEvent {
         structures.set(_id, _structureContract);
     }
 
-    function setPoppulation(uint256 _manPower, uint256 _attrition) public onlyRole(EVENT_ROLE) onlyEvent {
+    function setPoppulation(uint256 _manPower, uint256 _attrition) public override onlyRole(EVENT_ROLE) onlyEvent {
         populationAvailable += _manPower; // Return the manPower to the available pool. Attrition is included in manPower.
         populationTotal -= _attrition; // Remove some of the population because of attrition.
     }
 
-    function payForTime() public onlyRole(EVENT_ROLE) onlyEvent
+    function payForTime() public override  onlyRole(EVENT_ROLE) onlyEvent
     {
-        Continent(continent).payForTime(msg.sender);
+        Continent(continentAddress).payForTime(msg.sender);
     }
 
-    function completeEvent() public onlyRole(EVENT_ROLE) onlyEvent
+    function completeEvent() public override  onlyRole(EVENT_ROLE) onlyEvent
     {
         // Province calls continent on behalf of Event.
         events.remove(msg.sender);
     }
 
 
-    function completeMint() public onlyRole(EVENT_ROLE) onlyEvent
+    function completeMint() public override onlyRole(EVENT_ROLE) onlyEvent
     {
         // Province calls continent on behalf of Event.
-        Continent(continent).completeMint(msg.sender);
+        Continent(continentAddress).completeMint(msg.sender);
     }
 }

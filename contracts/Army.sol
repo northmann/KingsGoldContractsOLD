@@ -17,7 +17,7 @@ import "./Interfaces.sol";
 
 
 
-contract Army is Initializable, ERC165Storage, IProvince {
+contract Army is Initializable, ERC165Storage {
 
     address public owner;
 

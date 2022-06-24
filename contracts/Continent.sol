@@ -61,16 +61,16 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
     function initialize(string memory _name, address _world, address _userManager) public initializer {
         //transferOwnership(tx.origin); // Now set ownership to the caller and not the world contract.
+        setUserAccountManager(_userManager);// Has to be set here, before anything else!
         name = _name;
         world = _world;
-        userManager = _userManager;
     }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
     function createProvince(string memory _name) external returns(uint256) {
         console.log("createProvince - Start");
         // Check name, no illegal chars
-        address userAccountAddress = UserAccountManager(userManager).ensureUserAccount(); // Just make sure that the user account exist!
+        address userAccountAddress = UserAccountManager(userManagerAddress).ensureUserAccount(); // Just make sure that the user account exist!
 
         console.log("createProvince - check user");
         //UserAccount user = UserAccount(UserAccountManager(userAccountManager).getUserAccount(tx.origin));
@@ -95,7 +95,7 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, tx.origin);
 
         console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
-        UserAccountManager(userManager).grantProvinceRole(proxy); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
+        UserAccountManager(userManagerAddress).grantProvinceRole(proxy); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
 
         console.log("createProvince - add province to user");
         user.addProvince(proxy);
@@ -123,9 +123,9 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         Event eventContract = Event(_eventContract);
 
         // spend the resources that the event requires
-        if(!Food(food).transferFrom(tx.origin, treasuryAddress, eventContract.food()))
+        if(!Food(food).transferFrom(tx.origin, treasuryAddress, eventContract.foodAmount()))
             revert InsuffcientFood({
-                minRequired: eventContract.food()
+                minRequired: eventContract.foodAmount()
             });
 
         // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
@@ -145,12 +145,12 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
         // give the _event permission to mint at wood, rock, food, iron.
-        UserAccountManager(userManager).grantTemporaryMinterRole(_eventContract);
+        UserAccountManager(userManagerAddress).grantTemporaryMinterRole(_eventContract);
 
         IEvent(_eventContract).completeMint();
 
         // remove the _event permission to mint at wood, rock, food, iron.
-        UserAccountManager(userManager).revokeTemporaryMinterRole(_eventContract);
+        UserAccountManager(userManagerAddress).revokeTemporaryMinterRole(_eventContract);
     }
 
 

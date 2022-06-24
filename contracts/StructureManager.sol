@@ -8,15 +8,15 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
-import "./Farm.sol";
+//import "./Farm.sol";
+import "./YieldEvent.sol";
+import "./BuildEvent.sol";
 import "./Structure.sol";
 import "./Roles.sol";
-import "./Province.sol";
+import "./Interfaces.sol";
 import "./GenericAccessControl.sol";
-import "./BuildEvent.sol";
 
-
-uint256 constant FARM_STRUCTURE_ID = uint256(keccak256("FARM_STRUCTURE"));
+uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
 
 contract StructureManager is
     Initializable,
@@ -32,13 +32,13 @@ contract StructureManager is
     address public continent;
 
     function initialize(address _userManager) initializer public virtual {
-        userManager = _userManager; // First init, as this may affect role checks
+        setUserAccountManager(_userManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
     }
 
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
     function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
-        Province provinceInstance = Province(_province);
+        IProvince provinceInstance = IProvince(_province);
         // Check access to province
         require(provinceInstance.hasRole(OWNER_ROLE, tx.origin) || provinceInstance.hasRole(VASSAL_ROLE, tx.origin), "No access");
         // Get existing structure is exist, if not create a new but do not attach to province yet
@@ -61,7 +61,25 @@ contract StructureManager is
             _count
          ));
         
-        //Continent(continent).addEvent(address(proxy));
+        return address(eventProxy);
+    }
+
+    function CreateYieldEvent(address _province, address _structure, address _receiver, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
+        IProvince provinceInstance = IProvince(_province);
+        // Check access to province
+        require(provinceInstance.hasRole(OWNER_ROLE, tx.origin) || provinceInstance.hasRole(VASSAL_ROLE, tx.origin), "No access");
+        // Get existing structure is exist, if not create a new but do not attach to province yet
+
+        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(YIELD_EVENT_ID), abi.encodeWithSelector(YieldEvent(address(0)).initialize.selector, 
+            _province,
+            _receiver, // receiver
+            _structure,
+            _count,
+            _hero
+         ));
+
+         // Spend the resources for the event!
+        
         return address(eventProxy);
     }
 

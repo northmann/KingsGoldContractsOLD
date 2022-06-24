@@ -6,12 +6,15 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 
 
-import "./Province.sol";
 import "./Interfaces.sol";
 import "./Roles.sol";
 
 abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
+    enum State { Initialized, Activated, PaidFor, Completed }
+
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
+    
+    State public state;
 
     address public province;
 
@@ -24,10 +27,10 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     address public hero;
 
     uint256 public manPower;
-    uint256 public food;
-    uint256 public wood;
-    uint256 public rock;
-    uint256 public iron;
+    uint256 public foodAmount;
+    uint256 public woodAmount;
+    uint256 public rockAmount;
+    uint256 public ironAmount;
 
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -38,16 +41,20 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     // function initialize() initializer public {
     // }
 
+    modifier notState(State _state) {
+        require(_state != state, "Illegal state");
+        _;
+    }
 
     modifier onlyRole(bytes32 role) {
-        require(Province(province).hasRole(role, msg.sender),"Access denied");
+        require(IProvince(province).hasRole(role, msg.sender),"Access denied");
         _;
     }
 
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(Province(province).hasRole(role1, msg.sender) 
-            || Province(province).hasRole(role2, msg.sender)
+        require(IProvince(province).hasRole(role1, msg.sender) 
+            || IProvince(province).hasRole(role2, msg.sender)
             // || Province(province).hasRole(MINTER_ROLE, msg.sender)
             // || Province(province).hasRole(DEFAULT_ADMIN_ROLE, msg.sender)
             ,"Access denied");
@@ -55,7 +62,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     }
 
     modifier onlyMinter() {
-        require(UserAccountManager(Continent(Province(province).continent()).userManager()).hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
+        require(IUserAccountManager(IContinent(IProvince(province).continent()).userManager()).hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
         _;
     }
 
@@ -73,7 +80,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
         creationTime = block.timestamp;
 		_registerInterface(type(IEvent).interfaceId);
 		_registerInterface(type(ITimeContract).interfaceId);
-
+        state = State.Initialized;
     }
 
 
@@ -84,21 +91,21 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     }
 
     /// When a user has paid for time, this method gets called.
-    function payForTime() external override virtual onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function payForTime() external override virtual onlyRoles(OWNER_ROLE, VASSAL_ROLE) notState(State.PaidFor) notState(State.Completed)
     {
-        Province(province).payForTime();
+        //Province(province).payForTime();
     }
 
-    function paidForTime() external override virtual onlyMinter
+    // Callback funcation from above after the event has been paid for.
+    function paidForTime() external override virtual onlyMinter 
     {
+        state = State.PaidFor;
         timeRequired = 0;
     }
 
-    function completeEvent() public override virtual timeExpired onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function completeEvent() public override virtual timeExpired onlyRoles(OWNER_ROLE, VASSAL_ROLE) notState(State.Completed)
     {
-        
-        // Optional if needed call:
-        Province(province).completeMint();
+        state = State.Completed;
     }
 
     // Only a Contract with minting rights can effectly call this function.

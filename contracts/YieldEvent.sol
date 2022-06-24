@@ -6,17 +6,23 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "./Event.sol";
+import "./YieldStructure.sol";
 import "./ResourceFactor.sol";
 import "./Interfaces.sol";
 
-contract BuildEvent is Initializable, Event {
+import "./Continent.sol";
+import "./Food.sol";
+
+contract YieldEvent is Initializable, Event {
 
     address public structure;
     uint256 public count;
+    address public receiver;
 
-    function initialize(address _province, address _structure, uint256 _count, address _hero) initializer public {
+    function initialize(address _province, address _structure, address _receiver, uint256 _count, address _hero) initializer public {
         setupEvent(_province);
         structure = _structure;
+        receiver = _receiver;
         count = _count;
         hero = _hero;
 
@@ -33,10 +39,11 @@ contract BuildEvent is Initializable, Event {
         // uint256 foodFactor,
         // uint256 woodFactor,
         // uint256 rockFactor,
-        // uint256 ironFactor) = IStructure(structure).constuctionCost();
-        ResourceFactor memory factor = IStructure(structure).constuctionCost();
+        // uint256 ironFactor) = IYieldStructure(structure).rewardFactor();
+        ResourceFactor memory factor = IYieldStructure(structure).rewardFactor();
+                                                   
 
-        manPower = count * factor.manPower;
+        manPower = count * factor.manPower; // The cost in manPower
         attrition = factor.attrition;
         timeRequired = factor.time; // Change in manPower could alter this.
         goldForTime = count * factor.goldForTime;
@@ -55,17 +62,26 @@ contract BuildEvent is Initializable, Event {
 
     function completeEvent() public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired
     {
-
-        IStructure structureInstance = IStructure(structure);
-        structureInstance.setAvailableAmount(structureInstance.availableAmount() + count);
-        structureInstance.addTotalAmount(count);
-        
-        IProvince(province).setStructure(IStructure(structure).Id(), structure);
+        // Return manPower to population pool
         IProvince(province).setPoppulation(manPower, 0);
+
+        // Payout the reward
+        IProvince(province).completeMint();
+       
         IProvince(province).completeEvent();
 
         super.completeEvent();
         // Kill the contract??
+    }
+
+    function completeMint() public override virtual timeExpired onlyMinter
+    {
+        Continent continent = Continent(Province(province).continent());
+
+        // Reward the user with commodities
+        if(foodAmount > 0) {
+            Food(continent.food()).mint_with_temp_account(receiver,foodAmount);
+        }
     }
 
 }

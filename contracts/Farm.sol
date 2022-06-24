@@ -3,18 +3,22 @@
 pragma solidity >0.8.2;
 import "hardhat/console.sol";
 
-import "./Structure.sol";
-import "./StructureManager.sol";
-import "./Roles.sol";
-import "./BuildFactor.sol";
+import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 
 
+import "./YieldStructure.sol";
+//import "./StructureManager.sol";
+//import "./Roles.sol";
+import "./ResourceFactor.sol";
 
-contract Farm is Structure  {
+uint256 constant FARM_STRUCTURE_ID = uint256(keccak256("FARM_STRUCTURE"));
+
+
+contract Farm is YieldStructure  {
 
 
     function _init() internal override {
-        cost = BuildFactor({
+        costFactor = ResourceFactor({
                     manPower:10,
                     attrition:1000,
                     time:4 hours,
@@ -24,6 +28,18 @@ contract Farm is Structure  {
                     rock:0,
                     iron:0
         });
+
+        yieldRewardFactor = ResourceFactor({
+            manPower: 10,
+            attrition: 100, // 1 %
+            time: 4 hours,
+            goldForTime: 0.1 ether,
+            food:100,
+            wood:0,
+            rock:0,
+            iron:0
+        });
+
     }
 
 
