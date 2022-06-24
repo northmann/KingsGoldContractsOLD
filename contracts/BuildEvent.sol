@@ -6,24 +6,24 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "./Event.sol";
-import "./Building.sol";
+import "./Structure.sol";
 import "./BuildFactor.sol";
 
 contract BuildEvent is Initializable, Event {
 
-    address public building;
+    address public structure;
     uint256 public count;
 
-    function initialize(address _province, address _building, uint256 _count, address _hero) initializer public {
+    function initialize(address _province, address _structure, uint256 _count, address _hero) initializer public {
         setupEvent(_province);
-        building = _building;
+        structure = _structure;
         count = _count;
         hero = _hero;
 
         _calculateCost();
     }
 
-        /// The cost of the buildings in total
+        /// The cost of the structures in total
     function _calculateCost() internal virtual
     {
         (uint256 manPowerFactor,
@@ -33,7 +33,7 @@ contract BuildEvent is Initializable, Event {
         uint256 foodFactor,
         uint256 woodFactor,
         uint256 rockFactor,
-        uint256 ironFactor) = Building(building).cost();
+        uint256 ironFactor) = Structure(structure).cost();
 
         manPower = count * manPowerFactor;
         attrition = attritionFactor;
@@ -54,9 +54,9 @@ contract BuildEvent is Initializable, Event {
 
     function completeEvent() public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired
     {
-        Building(building).addAmount(count);
+        Structure(structure).addAmount(count);
         
-        Province(province).setBuilding(Building(building).Id(), building);
+        Province(province).setStructure(Structure(structure).Id(), structure);
         Province(province).setPoppulation(manPower, 0);
         Province(province).completeEvent();
 

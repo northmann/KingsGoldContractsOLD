@@ -9,16 +9,16 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 import "./Farm.sol";
-import "./Building.sol";
+import "./Structure.sol";
 import "./Roles.sol";
 import "./Province.sol";
 import "./GenericAccessControl.sol";
 import "./BuildEvent.sol";
 
 
-uint256 constant FARM_BUILDING_ID = uint256(keccak256("FARM_BUILDING"));
+uint256 constant FARM_STRUCTURE_ID = uint256(keccak256("FARM_STRUCTURE"));
 
-contract BuildingManager is
+contract StructureManager is
     Initializable,
     Roles,
     GenericAccessControl,
@@ -26,7 +26,7 @@ contract BuildingManager is
  {
     using EnumerableMap for EnumerableMap.UintToAddressMap;
 
-    EnumerableMap.UintToAddressMap private buildingBeacons;
+    EnumerableMap.UintToAddressMap private structureBeacons;
     EnumerableMap.UintToAddressMap private eventBeacons;
 
     address public continent;
@@ -37,16 +37,16 @@ contract BuildingManager is
     }
 
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function Build(address _province, uint256 _buildingId, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
+    function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
         Province provinceInstance = Province(_province);
         // Check access to province
         require(provinceInstance.hasRole(OWNER_ROLE, tx.origin) || provinceInstance.hasRole(VASSAL_ROLE, tx.origin), "No access");
-        // Get existing building is exist, if not create a new but do not attach to province yet
+        // Get existing structure is exist, if not create a new but do not attach to province yet
 
-        (bool buildingExist, address buildingAddress) = provinceInstance.getBuilding(_buildingId);
-        if(!buildingExist) {
-            BeaconProxy buildingProxy = new BeaconProxy(buildingBeacons.get(_buildingId),abi.encodeWithSelector(Building(address(0)).initialize.selector));
-            buildingAddress = address(buildingProxy);
+        (bool structureExist, address structureAddress) = provinceInstance.getStructure(_structureId);
+        if(!structureExist) {
+            BeaconProxy structureProxy = new BeaconProxy(structureBeacons.get(_structureId),abi.encodeWithSelector(Structure(address(0)).initialize.selector));
+            structureAddress = address(structureProxy);
         }
         
         // Create an event
@@ -55,9 +55,9 @@ contract BuildingManager is
         //populationAvailable = populationAvailable - populationUsed;
 
         //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
-        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(_buildingId), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
+        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(_structureId), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
             _province,
-            buildingAddress,
+            structureAddress,
             _count
          ));
         

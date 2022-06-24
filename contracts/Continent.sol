@@ -41,7 +41,7 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     address public provinceTemplate;
     address public armyTemplate;
 
-    address public buildingManager;
+    address public structureManager;
     address private provinceManager;
     address private armyManager;
 

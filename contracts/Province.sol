@@ -14,8 +14,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./Interfaces.sol";
 import "./Continent.sol";
 import "./Roles.sol";
-import "./BuildingManager.sol";
-import "./Building.sol";
+import "./StructureManager.sol";
+import "./Structure.sol";
 import "./EventSetExtensions.sol";
 
 
@@ -47,7 +47,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
 
     EnumerableSet.AddressSet private events;
 
-    EnumerableMap.UintToAddressMap private buildings;
+    EnumerableMap.UintToAddressMap private structures;
 
     EnumerableSet.AddressSet private incomingTransfers;
     EnumerableSet.AddressSet private insideTransfers;
@@ -83,14 +83,14 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
         _setupRole(VASSAL_ROLE, _user);
     }
 
-    function createBuilding(uint256 _buildingId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        address eventAddress = BuildingManager(Continent(continent).buildingManager()).Build(address(this), _buildingId, _count, _hero);
+        address eventAddress = StructureManager(Continent(continent).structureManager()).Build(address(this), _structureId, _count, _hero);
         BuildEvent buildEvent = BuildEvent(eventAddress);
 
-        // Check that there is mamPower enough to build the requested buildings.
+        // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.manPower() <= populationAvailable, "not enough population");
         populationAvailable = populationAvailable - buildEvent.manPower();
 
@@ -106,16 +106,16 @@ contract Province is Initializable, Roles, AccessControlUpgradeable {
 
 
 
-    function getBuilding(uint256 _id) public view returns(bool, address) {
-        return buildings.tryGet(_id);
+    function getStructure(uint256 _id) public view returns(bool, address) {
+        return structures.tryGet(_id);
     }
 
     function getEvents() public view returns(address[] memory) {
         return events.getEvents();
     }
 
-    function setBuilding(uint256 _id, address _buildingContract) public onlyRole(EVENT_ROLE) onlyEvent {
-        buildings.set(_id, _buildingContract);
+    function setStructure(uint256 _id, address _structureContract) public onlyRole(EVENT_ROLE) onlyEvent {
+        structures.set(_id, _structureContract);
     }
 
     function setPoppulation(uint256 _manPower, uint256 _attrition) public onlyRole(EVENT_ROLE) onlyEvent {

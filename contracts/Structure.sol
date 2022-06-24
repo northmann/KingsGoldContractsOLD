@@ -10,7 +10,7 @@ import "./Roles.sol";
 import "./BuildFactor.sol";
 
 
-contract Building is Initializable, Roles {
+contract Structure is Initializable, Roles {
 
     address public province;
 
@@ -35,11 +35,6 @@ contract Building is Initializable, Roles {
     }
 
     function initialize() initializer public {
-        // __AccessControl_init();
-        // _grantRole(OWNER_ROLE, _owner);
-        // _grantRole(MINTER_ROLE, _continent);
-        // continent = _continent;
-        // name = _name;
         _init();
     }
 

@@ -3,14 +3,14 @@
 pragma solidity >0.8.2;
 import "hardhat/console.sol";
 
-import "./Building.sol";
-import "./BuildingManager.sol";
+import "./Structure.sol";
+import "./StructureManager.sol";
 import "./Roles.sol";
 import "./BuildFactor.sol";
 
 
 
-contract Farm is Building  {
+contract Farm is Structure  {
 
 
     function _init() internal override {
@@ -28,7 +28,7 @@ contract Farm is Building  {
 
 
     function Id() public pure override returns(uint256) {
-        return FARM_BUILDING_ID;
+        return FARM_STRUCTURE_ID;
     }
 
     function getSvg() public pure override returns (string memory) {
