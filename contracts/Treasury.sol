@@ -27,7 +27,7 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
         _disableInitializers();
     }
 
-    function initialize(address _userManager, address _gold) initializer public {
+    function initialize(IUserAccountManager _userManager, address _gold) initializer public {
         __setUserAccountManager(_userManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
         gold = IKingsGold(_gold);

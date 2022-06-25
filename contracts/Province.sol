@@ -79,7 +79,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _grantRole(OWNER_ROLE, _owner);
         _grantRole(MINTER_ROLE, _continent);
         continentAddress = _continent;
-        world = IContinent(continentAddress).world();
+        world = IContinent(continentAddress).World();
         name = _name;
     }
 
@@ -87,7 +87,6 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     {
         return world;
     }
-
 
     function continent() public view override returns(address)
     {

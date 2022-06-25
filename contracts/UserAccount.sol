@@ -12,11 +12,11 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 // import "./ArmyData.sol";
-// import "./Interfaces.sol";
+import "./Interfaces.sol";
 import "./Roles.sol";
 
 
-contract UserAccount is Initializable {
+contract UserAccount is Initializable, IUserAccount {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private provinces;
@@ -34,26 +34,26 @@ contract UserAccount is Initializable {
         alliance = tx.origin;
     }
 
-    function provinceCount() public view returns(uint256)
+    function provinceCount() public view override returns(uint256)
     {
         return provinces.length();
     }
 
-    function addProvince(address _province) public {
-        provinces.add(_province);
+    function addProvince(IProvince _province) public override {
+        provinces.add(address(_province));
     }
 
-    function removeProvince(address _province) public {
+    function removeProvince(address _province) public override {
         provinces.remove(_province);
     }
 
-    function getProvince(uint256 index) public view  returns(address) {
+    function getProvince(uint256 index) public view override returns(address) {
         require(index < provinces.length());
 
         return provinces.at(index);
     }
 
-    function getProvinces() public view returns(address[] memory) {
+    function getProvinces() public view override returns(address[] memory) {
         address[] memory result = new address[](provinces.length());
         for(uint256 i = 0; i < provinces.length(); i++)
             result[i] = provinces.at(i);
@@ -61,10 +61,10 @@ contract UserAccount is Initializable {
     }
 
 
-    function setKingdom(address _kingdomAddress) external {
+    function setKingdom(address _kingdomAddress) external override {
         kingdom = _kingdomAddress;
     }
-    function setAlliance(address _kingdomAddress) external {
+    function setAlliance(address _kingdomAddress) external override {
         kingdom = _kingdomAddress;
     }
 

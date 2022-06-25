@@ -32,8 +32,8 @@ contract StructureManager is
 
     address public continent;
 
-    function initialize(address _userManager) initializer public virtual {
-        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
+    function initialize(IUserAccountManager _userAccountManager) initializer public virtual {
+        __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
     }
 

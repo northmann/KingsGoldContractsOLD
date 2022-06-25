@@ -11,28 +11,28 @@ import "./Interfaces.sol";
 contract GenericAccessControl is Roles {
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
-    address internal userManagerAddress;
+    IUserAccountManager internal userAccountManager;
 
     modifier onlyRole(bytes32 role) {
-        require(IUserAccountManager(userManagerAddress).hasRole(role, msg.sender),"Access denied");
+        require(userAccountManager.hasRole(role, msg.sender),"Access denied");
         _;
     }
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(IUserAccountManager(userManagerAddress).hasRole(role1, msg.sender) || IUserAccountManager(userManagerAddress).hasRole(role2, msg.sender),"Access denied");
+        require(userAccountManager.hasRole(role1, msg.sender) || userAccountManager.hasRole(role2, msg.sender),"Access denied");
         _;
     }
 
-    function setUserAccountManager(address _userManager) public onlyRole(DEFAULT_ADMIN_ROLE) { 
-        __setUserAccountManager(_userManager);
+    function setUserAccountManager(IUserAccountManager _userAccountManager) public onlyRole(DEFAULT_ADMIN_ROLE) { 
+        __setUserAccountManager(_userAccountManager);
     }
 
-    function __setUserAccountManager(address _userManager) internal {
-        userManagerAddress =_userManager;
+    function __setUserAccountManager(IUserAccountManager _userAccountManager) internal {
+        userAccountManager =_userAccountManager;
     }
 
     function userManager() public view returns(IUserAccountManager) {
-        return IUserAccountManager(userManagerAddress);
+        return userAccountManager;
     }
 
 

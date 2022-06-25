@@ -36,6 +36,10 @@ interface IProvince is IAccessControlUpgradeable {
     function World() external view returns(IWorld);
 }
 
+interface IProvinceManager {
+    function mintProvince(string memory _name, address _owner) external returns(uint256, IProvince);
+}
+
 interface IGenericAccessControl {
     function userManager() external view returns(IUserAccountManager);
 }
@@ -44,10 +48,27 @@ interface IContinent  {
 
     //function continent() external view returns(address);
     //function userManager() external view returns(address);
-    function world() external view returns(IWorld);
+    function World() external view returns(IWorld);
+    function setProvinceManager(IProvinceManager _instance) external;
 }
 
 interface IUserAccountManager is IAccessControlUpgradeable { 
+    function ensureUserAccount() external returns (IUserAccount);
+    function grantProvinceRole(IProvince _province) external;
+    function grantTemporaryMinterRole(address _eventContract) external;
+    function revokeTemporaryMinterRole(address _eventContract) external; 
+    function setEventRole(address _eventContract) external;
+    function getUserAccount(address _user) external returns (IUserAccount);
+}
+
+interface IUserAccount {
+    function provinceCount() external view returns(uint256);
+    function addProvince(IProvince _province) external;
+    function removeProvince(address _province) external;
+    function getProvince(uint256 index) external returns(address);
+    function getProvinces() external view returns(address[] memory);
+    function setKingdom(address _kingdomAddress) external;
+    function setAlliance(address _kingdomAddress) external;
 }
 
 interface IStructure  { 

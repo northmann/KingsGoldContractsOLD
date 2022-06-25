@@ -27,8 +27,8 @@ contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgra
         _disableInitializers();
     }
 
-    function initialize(address _userManager) initializer public virtual {
-        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
+    function initialize(IUserAccountManager _userAccountManager) initializer public virtual {
+        __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __ERC721_init("KingsGold Provinces", "KSGP");
         __ERC721Enumerable_init();
         __Pausable_init();

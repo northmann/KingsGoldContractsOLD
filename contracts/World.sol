@@ -38,8 +38,8 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
         _disableInitializers();
     }
 
-    function initialize(address _userManager, address _continentBeacon) initializer public {
-        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
+    function initialize(IUserAccountManager _userAccountManager, address _continentBeacon) initializer public {
+        __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
         continentBeacon = _continentBeacon;
         baseFactor = 1 ether; // The base cost, this value will change depending the on the blockchain. E.g. Ethereum would 0.001 ether and FTM would be 1 ether.
@@ -47,7 +47,7 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
 
     function createContinent() external onlyRole(DEFAULT_ADMIN_ROLE) {
         //console.log("function: createWorld variable: _continentBeacon = ", continentBeacon);
-        BeaconProxy proxy = new BeaconProxy(continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userManagerAddress));
+        BeaconProxy proxy = new BeaconProxy(continentBeacon,abi.encodeWithSelector(Continent(address(0)).initialize.selector, "KingsGold Provinces", address(this), userAccountManager));
         
         continents.push(address(proxy));
 

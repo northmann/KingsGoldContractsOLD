@@ -10,6 +10,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import "./GenericAccessControl.sol";
 import "./Roles.sol";
+import "./Interfaces.sol";
 
 
 // Minimal change-----
@@ -21,7 +22,7 @@ contract OpenZeppelinFood is Initializable, ERC20Upgradeable, ERC20BurnableUpgra
         _disableInitializers();
     }
 
-    function initialize(address _userAccountManager) initializer public {
+    function initialize(IUserAccountManager _userAccountManager) initializer public {
         setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __ERC20_init("KingsGold Food", "KSGF");
         __ERC20Burnable_init();

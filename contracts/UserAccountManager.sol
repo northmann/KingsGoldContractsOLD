@@ -17,7 +17,8 @@ contract UserAccountManager is
     Initializable,
     Roles,
     AccessControlUpgradeable,
-    UUPSUpgradeable
+    UUPSUpgradeable,
+    IUserAccountManager
 {
     address public userAccountBeacon;
     mapping(address => address) private users;
@@ -46,10 +47,11 @@ contract UserAccountManager is
 
     function ensureUserAccount()
         public
+        override
         onlyRole(MINTER_ROLE)
-        returns (address)
+        returns (IUserAccount)
     {
-        if (users[tx.origin] != address(0)) return users[tx.origin]; // If user exist, then just return.
+        if (users[tx.origin] != address(0)) return IUserAccount(users[tx.origin]); // If user exist, then just return.
 
         BeaconProxy proxy = new BeaconProxy(
             userAccountBeacon,
@@ -59,30 +61,30 @@ contract UserAccountManager is
 
         _grantRole(USER_ROLE, tx.origin);
 
-        return address(proxy);
+        return IUserAccount(address(proxy));
     }
 
-    function grantProvinceRole(address _province) public onlyRole(MINTER_ROLE) {
-        _grantRole(PROVINCE_ROLE, _province);
+    function grantProvinceRole(IProvince _province) public override onlyRole(MINTER_ROLE) {
+        _grantRole(PROVINCE_ROLE, address(_province));
     }
 
-    function grantTemporaryMinterRole(address _eventContract) public onlyRole(MINTER_ROLE) {
+    function grantTemporaryMinterRole(address _eventContract) public override onlyRole(MINTER_ROLE) {
         _grantRole(TEMPORARY_MINTER_ROLE, _eventContract);
     }
 
-    function revokeTemporaryMinterRole(address _eventContract) public onlyRole(MINTER_ROLE) {
+    function revokeTemporaryMinterRole(address _eventContract) public override onlyRole(MINTER_ROLE) {
         _revokeRole(TEMPORARY_MINTER_ROLE, _eventContract);
     }
 
     // Can only be called by a Province Contract
-    function setEventRole(address _eventContract) public onlyRole(PROVINCE_ROLE) {
+    function setEventRole(address _eventContract) public override onlyRole(PROVINCE_ROLE) {
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
         _grantRole(EVENT_ROLE, _eventContract);
     }
 
-    function getUserAccount(address _user) external view returns (address) {
-        return users[_user];
+    function getUserAccount(address _user) external view override returns (IUserAccount) {
+        return IUserAccount(users[_user]);
     }
 
     /// Upgrade the UserAccount template

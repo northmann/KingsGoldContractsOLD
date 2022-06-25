@@ -38,9 +38,9 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     string public name;
     uint256 constant provinceCost = 1 ether;
 
-    address private provinceManager;
+    IProvinceManager internal provinceManager;
 
-    address public worldAddress;
+    IWorld internal world;
     //address public treasury;
     
 
@@ -49,31 +49,30 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         _disableInitializers();
     }
 
-    function initialize(string memory _name, address _world, address _userManager) public initializer {
+    function initialize(string memory _name, IWorld _world, IUserAccountManager _userAccountManager) public initializer {
         //transferOwnership(tx.origin); // Now set ownership to the caller and not the world contract.
-        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
+        __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         name = _name;
-        worldAddress = _world;
+        world = _world;
     }
 
-    function world() public view override returns(IWorld)
+    function World() public view override returns(IWorld)
     {
-        return IWorld(worldAddress);
+        return world;
     }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
     function createProvince(string memory _name) external returns(uint256) {
         console.log("createProvince - Start");
         // Check name, no illegal chars
-        address userAccountAddress = UserAccountManager(userManagerAddress).ensureUserAccount(); // Just make sure that the user account exist!
+        IUserAccount user = userAccountManager.ensureUserAccount(); // Just make sure that the user account exist!
 
         console.log("createProvince - check user");
-        //UserAccount user = UserAccount(UserAccountManager(userAccountManager).getUserAccount(tx.origin));
-        UserAccount user = UserAccount(userAccountAddress);
+
         require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
         console.log("createProvince - get treasury address");
-        ITreasury treasury = World(worldAddress).treasury();
+        ITreasury treasury = world.treasury();
         console.log("createProvince - get treasury");
         //Treasury tt = Treasury(treasuryAddress);
         console.log("createProvince - get Gold instance");
@@ -85,20 +84,20 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         if(!gold.transferFrom(msg.sender, address(treasury), provinceCost))
             revert();
 
-        console.log("createProvince - mintProvince with ProvinceManager: ", provinceManager);
+        console.log("createProvince - mintProvince with ProvinceManager: ", address(provinceManager));
 
-        (uint256 tokenId, address proxy) = ProvinceManager(provinceManager).mintProvince(_name, tx.origin);
+        (uint256 tokenId, IProvince province) = provinceManager.mintProvince(_name, tx.origin);
 
         console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
-        UserAccountManager(userManagerAddress).grantProvinceRole(proxy); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
+        userAccountManager.grantProvinceRole(province); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
 
         console.log("createProvince - add province to user");
-        user.addProvince(proxy);
+        user.addProvince(province);
 
         return tokenId;
     }
 
-    function setProvinceManager(address _instance) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setProvinceManager(IProvinceManager _instance) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         provinceManager = _instance;
     }
@@ -114,10 +113,10 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     function spendEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
-        ITreasury treasury = World(worldAddress).treasury();
+        ITreasury treasury = world.treasury();
         Event eventContract = Event(_eventContract);
 
-        IFood food = world().food();
+        IFood food = world.food();
         // spend the resources that the event requires
         if(!food.transferFrom(tx.origin, address(treasury), eventContract.foodAmount()))
             revert InsuffcientFood({
@@ -137,16 +136,17 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
     function completeMint(address _eventContract) public onlyRole(PROVINCE_ROLE) 
     {
-        // require(ProvinceManager(provinceManager).containes(msg.sender)); // TODO: implement this functionality
+        // require(provinceManager.containes(msg.sender)); // TODO: implement this functionality
+
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
         // give the _event permission to mint at wood, rock, food, iron.
-        UserAccountManager(userManagerAddress).grantTemporaryMinterRole(_eventContract);
+        userAccountManager.grantTemporaryMinterRole(_eventContract);
 
         IEvent(_eventContract).completeMint();
 
         // remove the _event permission to mint at wood, rock, food, iron.
-        UserAccountManager(userManagerAddress).revokeTemporaryMinterRole(_eventContract);
+        userAccountManager.revokeTemporaryMinterRole(_eventContract);
     }
 
 
@@ -166,7 +166,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
         ITimeContract timeContract = ITimeContract(_contract);
         uint256 timeCost = timeContract.priceForTime();
-        ITreasury treasury = World(worldAddress).treasury();
+        ITreasury treasury = world.treasury();
 
         IKingsGold gold = treasury.Gold();
         require(timeCost <= gold.balanceOf(msg.sender), "Not enough gold");

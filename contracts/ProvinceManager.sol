@@ -35,7 +35,7 @@ contract ProvinceManager is Beacon, ProvincesNFT {
     //     provinceBeacon = _provinceBeacon;
     // }
     //
-    function mintProvince(string memory _name, address _owner) public onlyRole(MINTER_ROLE) returns(uint256, address) {
+    function mintProvince(string memory _name, address _owner) public onlyRole(MINTER_ROLE) returns(uint256, IProvince) {
         
         console.log("mintProvince: msg.sender: ", msg.sender);
         console.log("mintProvince: msg.origin: ", tx.origin);
@@ -49,7 +49,7 @@ contract ProvinceManager is Beacon, ProvincesNFT {
 
         provinces[tokenId] = address(proxy);
         
-        return (tokenId, address(proxy));
+        return (tokenId, IProvince(address(proxy)));
     }
     
     function setContinent(address _continent) external onlyRole(DEFAULT_ADMIN_ROLE) {
