@@ -43,12 +43,12 @@ describe("World", function () {
     });
 
     it("getTreasury", async function () {
-        let treasuryAddress = await world.treasury();
+        let treasuryAddress = await world.Treasury();
         expect(treasuryAddress).to.equal(treasury.address);
     });
 
     it("getGold", async function () {
-        let treasuryAddress = await world.treasury();
+        let treasuryAddress = await world.Treasury();
         let treasuryInstance = await getContractInstance("Treasury", treasuryAddress);
         let goldAddress = await treasuryInstance.Gold();
         expect(goldAddress).to.equal(token.address);
