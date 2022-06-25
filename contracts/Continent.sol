@@ -30,7 +30,7 @@ import "./Errors.sol";
 
 
 
-contract Continent is Initializable, Roles, GenericAccessControl {
+contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     //EnumerableSet.AddressSet private events;
@@ -38,19 +38,9 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     string public name;
     uint256 constant provinceCost = 1 ether;
 
-    address public provinceTemplate;
-    address public armyTemplate;
-
-    address public structureManager;
     address private provinceManager;
-    address private armyManager;
 
-    address public food;
-
-
-    //mapping(address => uint8) public knownContracts;
-
-    address public world;
+    address public worldAddress;
     //address public treasury;
     
 
@@ -61,9 +51,14 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
     function initialize(string memory _name, address _world, address _userManager) public initializer {
         //transferOwnership(tx.origin); // Now set ownership to the caller and not the world contract.
-        setUserAccountManager(_userManager);// Has to be set here, before anything else!
+        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
         name = _name;
-        world = _world;
+        worldAddress = _world;
+    }
+
+    function world() public view override returns(IWorld)
+    {
+        return IWorld(worldAddress);
     }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
@@ -78,16 +73,16 @@ contract Continent is Initializable, Roles, GenericAccessControl {
         require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
         console.log("createProvince - get treasury address");
-        address treasuryAddress = World(world).treasury();
+        ITreasury treasury = World(worldAddress).treasury();
         console.log("createProvince - get treasury");
-        Treasury tt = Treasury(treasuryAddress);
+        //Treasury tt = Treasury(treasuryAddress);
         console.log("createProvince - get Gold instance");
-        KingsGold gold = KingsGold(tt.gold());
+        IKingsGold gold = treasury.Gold();
         console.log("createProvince - check balanceOf user");
         require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
 
         console.log("createProvince - transfer gold");
-        if(!gold.transferFrom(msg.sender, treasuryAddress, provinceCost))
+        if(!gold.transferFrom(msg.sender, address(treasury), provinceCost))
             revert();
 
         console.log("createProvince - mintProvince with ProvinceManager: ", provinceManager);
@@ -119,11 +114,12 @@ contract Continent is Initializable, Roles, GenericAccessControl {
     function spendEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
         require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
 
-        address treasuryAddress = World(world).treasury();
+        ITreasury treasury = World(worldAddress).treasury();
         Event eventContract = Event(_eventContract);
 
+        IFood food = world().food();
         // spend the resources that the event requires
-        if(!Food(food).transferFrom(tx.origin, treasuryAddress, eventContract.foodAmount()))
+        if(!food.transferFrom(tx.origin, address(treasury), eventContract.foodAmount()))
             revert InsuffcientFood({
                 minRequired: eventContract.foodAmount()
             });
@@ -170,12 +166,12 @@ contract Continent is Initializable, Roles, GenericAccessControl {
 
         ITimeContract timeContract = ITimeContract(_contract);
         uint256 timeCost = timeContract.priceForTime();
-        address treasuryAddress = World(world).treasury();
+        ITreasury treasury = World(worldAddress).treasury();
 
-        KingsGold gold = KingsGold(Treasury(treasuryAddress).gold());
+        IKingsGold gold = treasury.Gold();
         require(timeCost <= gold.balanceOf(msg.sender), "Not enough gold");
 
-        if(!gold.transferFrom(msg.sender, treasuryAddress, timeCost))
+        if(!gold.transferFrom(msg.sender, address(treasury), timeCost))
             revert();
 
         timeContract.paidForTime();

@@ -6,10 +6,9 @@ import "hardhat/console.sol";
 import "./OpenZeppelinFood.sol";
 
 
-contract Food is OpenZeppelinFood {
+contract Food is OpenZeppelinFood, IFood {
 
-
-    function mint_with_temp_account(address to, uint256 amount) public onlyRole(TEMPORARY_MINTER_ROLE) {
+    function mint_with_temp_account(address to, uint256 amount) public override onlyRole(TEMPORARY_MINTER_ROLE) {
         _mint(to, amount);
     }
 }

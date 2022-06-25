@@ -3,6 +3,8 @@
 pragma solidity >0.8.2;
 
 import "@openzeppelin/contracts-upgradeable/access/IAccessControlUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 import "./ResourceFactor.sol";
 
@@ -31,16 +33,18 @@ interface IProvince is IAccessControlUpgradeable {
     function payForTime() external;
     function completeEvent() external;
     function completeMint() external;
+    function World() external view returns(IWorld);
+}
+
+interface IGenericAccessControl {
+    function userManager() external view returns(IUserAccountManager);
 }
 
 interface IContinent  { 
 
     //function continent() external view returns(address);
-    function userManager() external view returns(address);
-}
-
-interface IGenericAccessControl {
-    function userManager() external view returns(address);
+    //function userManager() external view returns(address);
+    function world() external view returns(IWorld);
 }
 
 interface IUserAccountManager is IAccessControlUpgradeable { 
@@ -61,3 +65,24 @@ interface IYieldStructure is IStructure {
     function rewardFactor() external view returns(ResourceFactor memory);
 }
 
+interface IStructureManager {
+    function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(address);
+}
+
+interface IWorld is IGenericAccessControl {
+    function food() external view returns(IFood);
+    function structureManager () external view returns(IStructureManager);
+    function treasury() external view returns(ITreasury);
+}
+
+interface IFood is IERC20Upgradeable {
+    function mint_with_temp_account(address to, uint256 amount) external;
+}
+
+interface ITreasury {
+    function Gold() external view returns(IKingsGold);
+}
+
+interface IKingsGold is IERC20 {
+
+}

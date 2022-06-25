@@ -22,7 +22,8 @@ contract StructureManager is
     Initializable,
     Roles,
     GenericAccessControl,
-    UUPSUpgradeable
+    UUPSUpgradeable,
+    IStructureManager
  {
     using EnumerableMap for EnumerableMap.UintToAddressMap;
 
@@ -32,12 +33,12 @@ contract StructureManager is
     address public continent;
 
     function initialize(address _userManager) initializer public virtual {
-        setUserAccountManager(_userManager);// Has to be set here, before anything else!
+        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
     }
 
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
+    function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(address) {
         IProvince provinceInstance = IProvince(_province);
         // Check access to province
         require(provinceInstance.hasRole(OWNER_ROLE, tx.origin) || provinceInstance.hasRole(VASSAL_ROLE, tx.origin), "No access");

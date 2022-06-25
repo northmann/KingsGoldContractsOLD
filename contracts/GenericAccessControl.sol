@@ -23,12 +23,16 @@ contract GenericAccessControl is Roles {
         _;
     }
 
-    function setUserAccountManager(address _userManager) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setUserAccountManager(address _userManager) public onlyRole(DEFAULT_ADMIN_ROLE) { 
+        __setUserAccountManager(_userManager);
+    }
+
+    function __setUserAccountManager(address _userManager) internal {
         userManagerAddress =_userManager;
     }
 
-    function userManager() public view returns(address) {
-        return userManagerAddress;
+    function userManager() public view returns(IUserAccountManager) {
+        return IUserAccountManager(userManagerAddress);
     }
 
 

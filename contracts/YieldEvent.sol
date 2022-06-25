@@ -76,11 +76,9 @@ contract YieldEvent is Initializable, Event {
 
     function completeMint() public override virtual timeExpired onlyMinter
     {
-        Continent continent = Continent(Province(province).continent());
-
         // Reward the user with commodities
         if(foodAmount > 0) {
-            Food(continent.food()).mint_with_temp_account(receiver,foodAmount);
+            world.food().mint_with_temp_account(receiver,foodAmount);
         }
     }
 

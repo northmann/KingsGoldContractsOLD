@@ -24,26 +24,26 @@ describe("Treasury", function () {
     token = await deployContract("KingsGold");
     treasury = await createUpgradeable("Treasury", [userAccountManager.address, token.address]);
 
-    // continentBeacon = await createBeacon("Continent");
-    // world = await createUpgradeable("World", [userAccountManager.address, continentBeacon.address]);
+    continentBeacon = await createBeacon("Continent");
+    world = await createUpgradeable("World", [userAccountManager.address, continentBeacon.address]);
 
-    // let tx = await world.createContinent(); // Make a continent
-    // await tx.wait(); // wait until the transaction is mined
+    let tx = await world.createContinent(); // Make a continent
+    await tx.wait(); // wait until the transaction is mined
 
-    // continentAddress = await world.continents(0);
-    // console.log("Continent address: ", continentAddress);
+    continentAddress = await world.continents(0);
+    console.log("Continent address: ", continentAddress);
 
-    // const Continent = await ethers.getContractFactory("Continent");
-    // continent = Continent.attach(continentAddress);
+    const Continent = await ethers.getContractFactory("Continent");
+    continent = Continent.attach(continentAddress);
 
   });
 
   it('setGold', async () => {
-    let goldAddress = await treasury.gold();
+    let goldAddress = await treasury.Gold();
     expect(goldAddress).to.equal(token.address);
 
     await treasury.setGold(owner.address);
-    goldAddress = await treasury.gold();
+    goldAddress = await treasury.Gold();
     expect(goldAddress).to.equal(owner.address);
 
   });

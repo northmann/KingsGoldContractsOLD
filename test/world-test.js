@@ -23,10 +23,12 @@ describe("World", function () {
         userAccountBeacon = await createBeacon("UserAccount");
         userAccountManager = await createUpgradeable("UserAccountManager", [userAccountBeacon.address]);
         token = await deployContract("KingsGold");
-        treasury = await createUpgradeable("Treasury", [userAccountManager.address, token.address]);
 
         continentBeacon = await createBeacon("Continent");
+        console.log("Creating world!");
         world = await createUpgradeable("World", [userAccountManager.address, continentBeacon.address]);
+
+        treasury = await createUpgradeable("Treasury", [userAccountManager.address, token.address]);
         world.setTreasury(treasury.address);
 
         let tx = await world.createContinent(); // Make a continent
@@ -48,7 +50,7 @@ describe("World", function () {
     it("getGold", async function () {
         let treasuryAddress = await world.treasury();
         let treasuryInstance = await getContractInstance("Treasury", treasuryAddress);
-        let goldAddress = await treasuryInstance.gold();
+        let goldAddress = await treasuryInstance.Gold();
         expect(goldAddress).to.equal(token.address);
 
     });

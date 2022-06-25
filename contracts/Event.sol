@@ -17,6 +17,8 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     State public state;
 
     address public province;
+    //address public continent;
+    IWorld public world;
 
     uint256 public creationTime;
     uint256 public timeRequired;
@@ -62,7 +64,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     }
 
     modifier onlyMinter() {
-        require(IUserAccountManager(IContinent(IProvince(province).continent()).userManager()).hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
+        require(world.userManager().hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
         _;
     }
 
@@ -77,6 +79,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
 
     function setupEvent(address _province) internal onlyInitializing {
         province = _province;
+        world = IProvince(_province).World();
         creationTime = block.timestamp;
 		_registerInterface(type(IEvent).interfaceId);
 		_registerInterface(type(ITimeContract).interfaceId);

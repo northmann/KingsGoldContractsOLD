@@ -30,6 +30,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     using EventSetExtensions for EnumerableSet.AddressSet;
 
     address private continentAddress;
+    IWorld public world;
 
     string public name;
 
@@ -78,8 +79,15 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _grantRole(OWNER_ROLE, _owner);
         _grantRole(MINTER_ROLE, _continent);
         continentAddress = _continent;
+        world = IContinent(continentAddress).world();
         name = _name;
     }
+
+    function World() public view override returns(IWorld)
+    {
+        return world;
+    }
+
 
     function continent() public view override returns(address)
     {
@@ -95,7 +103,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        address eventAddress = StructureManager(Continent(continentAddress).structureManager()).Build(address(this), _structureId, _count, _hero);
+        address eventAddress = world.structureManager().Build(address(this), _structureId, _count, _hero);
         BuildEvent buildEvent = BuildEvent(eventAddress);
 
         // Check that there is mamPower enough to build the requested structures.

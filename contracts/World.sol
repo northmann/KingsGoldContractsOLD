@@ -13,7 +13,7 @@ import "./Roles.sol";
 import "./Continent.sol";
 import "./KingsGold.sol";
 import "./Treasury.sol";
-
+import "./Interfaces.sol";
 
 
 contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
@@ -21,12 +21,17 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
     address private continentBeacon;
     address[] public continents;
 
-    address public treasury;
+    IStructureManager public structureManager;
+    address public armyManager;
 
-    address public food;
+    ITreasury public treasury;
+
+    IFood public food;
     address public wood;
     address public iron;
     address public rock;
+
+    uint256 public baseFactor; // The base price of the cost of everything.
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -34,9 +39,10 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
     }
 
     function initialize(address _userManager, address _continentBeacon) initializer public {
-        setUserAccountManager(_userManager);// Has to be set here, before anything else!
+        __setUserAccountManager(_userManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
         continentBeacon = _continentBeacon;
+        baseFactor = 1 ether; // The base cost, this value will change depending the on the blockchain. E.g. Ethereum would 0.001 ether and FTM would be 1 ether.
     }
 
     function createContinent() external onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -63,12 +69,12 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable {
 
     function setTreasury(address _treasuryAddress) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        treasury = _treasuryAddress;
+        treasury = ITreasury(_treasuryAddress);
     }
 
     function setFood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        food = _address;
+        food = IFood(_address);
     }
 
     function setWood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
