@@ -29,8 +29,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     using EnumerableSet for EnumerableSet.AddressSet;
     using EventSetExtensions for EnumerableSet.AddressSet;
 
-    address private continentAddress;
-    IWorld public world;
+    IContinent internal continent;
+    IWorld internal world;
 
     string public name;
 
@@ -74,12 +74,12 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _disableInitializers();
     }
 
-    function initialize(string memory _name, address _owner, address _continent) initializer public {
+    function initialize(string memory _name, address _owner, IContinent _continent) initializer public {
         __AccessControl_init();
         _grantRole(OWNER_ROLE, _owner);
-        _grantRole(MINTER_ROLE, _continent);
-        continentAddress = _continent;
-        world = IContinent(continentAddress).World();
+        _grantRole(MINTER_ROLE, address(_continent));
+        continent = _continent;
+        world = continent.World();
         name = _name;
     }
 
@@ -88,9 +88,9 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         return world;
     }
 
-    function continent() public view override returns(address)
+    function Continent() public view override returns(IContinent)
     {
-        return continentAddress;
+        return continent;
     }
 
     function setVassal(address _user) external onlyRole(OWNER_ROLE)
@@ -102,47 +102,45 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        address eventAddress = world.structureManager().Build(address(this), _structureId, _count, _hero);
-        BuildEvent buildEvent = BuildEvent(eventAddress);
-
+        IBuildEvent buildEvent = world.StructureManager().Build(this, _structureId, _count, _hero);
+        
         // Check that there is mamPower enough to build the requested structures.
-        require(buildEvent.manPower() <= populationAvailable, "not enough population");
-        populationAvailable = populationAvailable - buildEvent.manPower();
+        require(buildEvent.ManPower() <= populationAvailable, "not enough population");
+        populationAvailable = populationAvailable - buildEvent.ManPower();
 
         // Spend the resouces on the behalf of the user
-        Continent(continentAddress).spendEvent(eventAddress); 
+        continent.spendEvent(buildEvent); 
         
         // Add the event to the list of activities on the province.
-        events.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
+        events.add(address(buildEvent)); // Needs some refactoring, as we do not know the type of event !
         
-        _grantRole(EVENT_ROLE, eventAddress); // Enable the event to perform actions on this provice.
+        _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
     }
 
-//     function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
-//         // check that the hero exist and is controlled by user.
-//         //IProvince provinceInstance = IProvince(msg.sender)
+    function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+        // check that the hero exist and is controlled by user.
+        //IProvince provinceInstance = IProvince(msg.sender)
 
-// //        (bool structureExist, address structureAddress) = provinceInstance.getStructure(_structureId);
-// //        require(structureExist,"Structure do not exist");
+        (bool structureExist, address structureAddress) = getStructure(_structureId);
+        require(structureExist,"YieldStructure do not exist on provice");
+
+        IYieldStructure structure = IYieldStructure(structureAddress);
+        require(structure.availableAmount() < _count, "Insufficient structures");
+
+        // Create a new Build event        
+        IYieldEvent yieldEvent =  world.StructureManager().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
+
+        // Check that there is mamPower enough to build the requested structures.
+        require(yieldEvent.ManPower() <= populationAvailable, "not enough population");
+        populationAvailable = populationAvailable - yieldEvent.ManPower();
+
+        structure.setAvailableAmount(structure.availableAmount() - _count);
+
+        // Add the event to the list of activities on the province.
+        events.add(address(yieldEvent)); // Needs some refactoring, as we do not know the type of event !
         
-//         // Create a new Build event        
-//         address eventAddress = StructureManager(Continent(continentAddress).structureManager()).CreateYieldEvent(address(this), _structureId, msg.sender, _count, _hero);
-//         YieldEvent yieldEvent = YieldEvent(eventAddress);
-
-//         // Check that there is mamPower enough to build the requested structures.
-//         require(yieldEvent.manPower() <= populationAvailable, "not enough population");
-//         populationAvailable = populationAvailable - yieldEvent.manPower();
-
-//         Structure structure = Structure(structureAddress);
-//         require(structure.availableAmount < _count, "Insufficient structures");
-
-//         structure.setAvailableAmount(structure.availableAmount() - _count);
-
-//         // Add the event to the list of activities on the province.
-//         events.add(eventAddress); // Needs some refactoring, as we do not know the type of event !
-        
-//         _grantRole(EVENT_ROLE, eventAddress); // Enable the event to perform actions on this provice.
-//     }
+        _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
+    }
 
 
 
@@ -165,7 +163,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
     function payForTime() public override  onlyRole(EVENT_ROLE) onlyEvent
     {
-        Continent(continentAddress).payForTime(msg.sender);
+        continent.payForTime(msg.sender);
     }
 
     function completeEvent() public override  onlyRole(EVENT_ROLE) onlyEvent
@@ -178,6 +176,6 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     function completeMint() public override onlyRole(EVENT_ROLE) onlyEvent
     {
         // Province calls continent on behalf of Event.
-        Continent(continentAddress).completeMint(msg.sender);
+        continent.completeMint(msg.sender);
     }
 }

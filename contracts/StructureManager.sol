@@ -30,7 +30,8 @@ contract StructureManager is
     EnumerableMap.UintToAddressMap private structureBeacons;
     EnumerableMap.UintToAddressMap private eventBeacons;
 
-    address public continent;
+    IContinent public continent;
+
 
     function initialize(IUserAccountManager _userAccountManager) initializer public virtual {
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
@@ -38,13 +39,13 @@ contract StructureManager is
     }
 
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(address) {
-        IProvince provinceInstance = IProvince(_province);
+    function Build(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
+
         // Check access to province
-        require(provinceInstance.hasRole(OWNER_ROLE, tx.origin) || provinceInstance.hasRole(VASSAL_ROLE, tx.origin), "No access");
+        require(_province.hasRole(OWNER_ROLE, tx.origin) || _province.hasRole(VASSAL_ROLE, tx.origin), "No access");
         // Get existing structure is exist, if not create a new but do not attach to province yet
 
-        (bool structureExist, address structureAddress) = provinceInstance.getStructure(_structureId);
+        (bool structureExist, address structureAddress) = _province.getStructure(_structureId);
         if(!structureExist) {
             BeaconProxy structureProxy = new BeaconProxy(structureBeacons.get(_structureId),abi.encodeWithSelector(Structure(address(0)).initialize.selector));
             structureAddress = address(structureProxy);
@@ -62,29 +63,28 @@ contract StructureManager is
             _count
          ));
         
-        return address(eventProxy);
+        return IBuildEvent(address(eventProxy));
     }
 
-    function CreateYieldEvent(address _province, address _structure, address _receiver, uint256 _count, uint256 _hero) public onlyRole(PROVINCE_ROLE) returns(address) {
-        IProvince provinceInstance = IProvince(_province);
+    function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IYieldEvent) {
+
         // Check access to province
-        require(provinceInstance.hasRole(OWNER_ROLE, tx.origin) || provinceInstance.hasRole(VASSAL_ROLE, tx.origin), "No access");
-        // Get existing structure is exist, if not create a new but do not attach to province yet
+        require(_province.hasRole(OWNER_ROLE, _receiver) || _province.hasRole(VASSAL_ROLE, _receiver), "No access");
+
+        // Check that the structure exist on the province!
 
         BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(YIELD_EVENT_ID), abi.encodeWithSelector(YieldEvent(address(0)).initialize.selector, 
             _province,
-            _receiver, // receiver
             _structure,
+            _receiver,
             _count,
             _hero
          ));
 
-         // Spend the resources for the event!
-        
-        return address(eventProxy);
+        return IYieldEvent(address(eventProxy));
     }
 
-    function setContinent(address _continent) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
         continent = _continent;
     }
 

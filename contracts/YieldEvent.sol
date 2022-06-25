@@ -15,11 +15,11 @@ import "./Food.sol";
 
 contract YieldEvent is Initializable, Event {
 
-    address public structure;
+    IYieldStructure public structure;
     uint256 public count;
     address public receiver;
 
-    function initialize(address _province, address _structure, address _receiver, uint256 _count, address _hero) initializer public {
+    function initialize(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, address _hero) initializer public {
         setupEvent(_province);
         structure = _structure;
         receiver = _receiver;
@@ -40,7 +40,7 @@ contract YieldEvent is Initializable, Event {
         // uint256 woodFactor,
         // uint256 rockFactor,
         // uint256 ironFactor) = IYieldStructure(structure).rewardFactor();
-        ResourceFactor memory factor = IYieldStructure(structure).rewardFactor();
+        ResourceFactor memory factor = structure.rewardFactor();
                                                    
 
         manPower = count * factor.manPower; // The cost in manPower
@@ -78,7 +78,7 @@ contract YieldEvent is Initializable, Event {
     {
         // Reward the user with commodities
         if(foodAmount > 0) {
-            world.food().mint_with_temp_account(receiver,foodAmount);
+            world.Food().mint_with_temp_account(receiver,foodAmount);
         }
     }
 

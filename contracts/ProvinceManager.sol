@@ -12,18 +12,19 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 import "./Beacon.sol";
 import "./ProvincesNFT.sol";
 import "./Province.sol";
+import "./Interfaces.sol";
 
 // Resources
 // https://programtheblockchain.com/posts/2018/04/20/storage-patterns-pagination/
 // https://github.com/kieranelby/KingOfTheEtherThrone/blob/v1.0/contracts/KingOfTheEtherThrone.sol
 // import '@openzeppelin/contracts/math/SafeMath.sol'; =>  using SafeMath for uint256;
 
-contract ProvinceManager is Beacon, ProvincesNFT {
+contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
     using Strings for uint256;
 
-    address public continent;
+    IContinent public continent;
 
-    mapping(uint256 => address) public provinces;
+    mapping(uint256 => IProvince) public provinces;
     mapping(uint256 => string) private svgResources; // the svg for the resource!
 
     string constant SVGHEADER = "<svg width='350px' height='350px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>";
@@ -35,34 +36,34 @@ contract ProvinceManager is Beacon, ProvincesNFT {
     //     provinceBeacon = _provinceBeacon;
     // }
     //
-    function mintProvince(string memory _name, address _owner) public onlyRole(MINTER_ROLE) returns(uint256, IProvince) {
+    function mintProvince(string memory _name, address _owner) public override onlyRole(MINTER_ROLE) returns(uint256, IProvince) {
         
         console.log("mintProvince: msg.sender: ", msg.sender);
         console.log("mintProvince: msg.origin: ", tx.origin);
         console.log("mintProvince: beaconAddress: ", beaconAddress);
         console.log("Owner: beaconAddress: ", _owner);
-        console.log("Continent: continent: ", continent);
+        console.log("Continent: continent: ", address(continent));
 
         uint256 tokenId = safeMint(_owner); 
        
         BeaconProxy proxy = new BeaconProxy(beaconAddress   ,abi.encodeWithSelector(Province(address(0)).initialize.selector    , _name, _owner, continent));
 
-        provinces[tokenId] = address(proxy);
+        provinces[tokenId] = IProvince(address(proxy));
         
         return (tokenId, IProvince(address(proxy)));
     }
     
-    function setContinent(address _continent) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
         continent = _continent;
     }
 
-    function addSvgResouces(uint256 id, string memory svg) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function addSvgResouces(uint256 id, string memory svg) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         svgResources[id] = svg;
     }
 
 
-    function getSvg(Province province) private view returns (string memory) {
+    function getSvg() private pure returns (string memory) {
         //uint32 wood = province.forest();
         //string memory image = svgResources[wood];
         string memory svg = string(abi.encodePacked(
@@ -74,12 +75,12 @@ contract ProvinceManager is Beacon, ProvincesNFT {
 
     function tokenURI(uint256 tokenId) override(ERC721Upgradeable) public view returns (string memory) {
 
-        Province province = Province(provinces[tokenId]);
+        IProvince province = IProvince(provinces[tokenId]);
 
         string memory name = tokenId.toString();
         bytes memory dataURI = abi.encodePacked(
             '{"name": "',name ,'",',
-            '"image_data": "', getSvg(province), '",',
+            '"image_data": "', getSvg(), '",',
             '"attributes": [',
             '{"trait_type": "Plains", "value": ', uint256(100).toString(), '},',
             '{"trait_type": "Forest", "value": ', uint256(100).toString(), '},',

@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+//import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 
 import "./GenericAccessControl.sol";
@@ -31,18 +31,12 @@ import "./Errors.sol";
 
 
 contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
-    using EnumerableSet for EnumerableSet.AddressSet;
-
-    //EnumerableSet.AddressSet private events;
-
-    string public name;
     uint256 constant provinceCost = 1 ether;
 
+    string public name;
     IProvinceManager internal provinceManager;
-
     IWorld internal world;
-    //address public treasury;
-    
+   
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -72,7 +66,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
         console.log("createProvince - get treasury address");
-        ITreasury treasury = world.treasury();
+        ITreasury treasury = world.Treasury();
         console.log("createProvince - get treasury");
         //Treasury tt = Treasury(treasuryAddress);
         console.log("createProvince - get Gold instance");
@@ -110,17 +104,16 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     //     events.add(_eventContract);
     // }
 
-    function spendEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
-        require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
+    function spendEvent(IEvent _eventContract) public override onlyRole(PROVINCE_ROLE) {
+        require(ERC165Checker.supportsInterface(address(_eventContract), type(IEvent).interfaceId), "Not a event contract");
 
-        ITreasury treasury = world.treasury();
-        Event eventContract = Event(_eventContract);
-
-        IFood food = world.food();
+        ITreasury treasury = world.Treasury();
+        
+        IFood food = world.Food();
         // spend the resources that the event requires
-        if(!food.transferFrom(tx.origin, address(treasury), eventContract.foodAmount()))
+        if(!food.transferFrom(tx.origin, address(treasury), _eventContract.FoodAmount()))
             revert InsuffcientFood({
-                minRequired: eventContract.foodAmount()
+                minRequired: _eventContract.FoodAmount()
             });
 
         // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
@@ -134,7 +127,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
 
 
-    function completeMint(address _eventContract) public onlyRole(PROVINCE_ROLE) 
+    function completeMint(address _eventContract) public override onlyRole(PROVINCE_ROLE) 
     {
         // require(provinceManager.containes(msg.sender)); // TODO: implement this functionality
 
@@ -159,14 +152,14 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     // }
 
     /// The user pays to reduce the time on a contract.
-    function payForTime(address _contract) public onlyRole(PROVINCE_ROLE) {
+    function payForTime(address _contract) public override onlyRole(PROVINCE_ROLE) {
         //check if contract is registred! 
         //require(knownContracts[_contract] != uint8(0), "Not known contract");
         require(ERC165Checker.supportsInterface(_contract, type(ITimeContract).interfaceId), "Not a time contract");
 
         ITimeContract timeContract = ITimeContract(_contract);
         uint256 timeCost = timeContract.priceForTime();
-        ITreasury treasury = world.treasury();
+        ITreasury treasury = world.Treasury();
 
         IKingsGold gold = treasury.Gold();
         require(timeCost <= gold.balanceOf(msg.sender), "Not enough gold");

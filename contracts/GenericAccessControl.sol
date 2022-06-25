@@ -8,7 +8,7 @@ import "./Interfaces.sol";
 //import "./UserAccountManager.sol";
 
 
-contract GenericAccessControl is Roles {
+contract GenericAccessControl is Roles, IGenericAccessControl {
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
     IUserAccountManager internal userAccountManager;
@@ -31,7 +31,7 @@ contract GenericAccessControl is Roles {
         userAccountManager =_userAccountManager;
     }
 
-    function userManager() public view returns(IUserAccountManager) {
+    function userManager() public view override returns(IUserAccountManager) {
         return userAccountManager;
     }
 

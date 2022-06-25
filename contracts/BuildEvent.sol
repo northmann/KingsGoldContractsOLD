@@ -14,7 +14,7 @@ contract BuildEvent is Initializable, Event {
     address public structure;
     uint256 public count;
 
-    function initialize(address _province, address _structure, uint256 _count, address _hero) initializer public {
+    function initialize(IProvince _province, address _structure, uint256 _count, address _hero) initializer public {
         setupEvent(_province);
         structure = _structure;
         count = _count;

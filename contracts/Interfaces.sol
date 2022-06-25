@@ -9,6 +9,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./ResourceFactor.sol";
 
 interface IEvent { 
+    function ManPower() external returns(uint256);
+    function FoodAmount() external returns(uint256);
     function completeEvent() external;
     function completeMint() external;
 }
@@ -26,7 +28,7 @@ interface IContractType {
 
 interface IProvince is IAccessControlUpgradeable { 
     function getEvents() external view returns(address[] memory);
-    function continent() external view returns(address);
+    function Continent() external view returns(IContinent);
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, address _structureContract) external;
     function setPoppulation(uint256 _manPower, uint256 _attrition) external;
@@ -37,6 +39,8 @@ interface IProvince is IAccessControlUpgradeable {
 }
 
 interface IProvinceManager {
+    function setContinent(IContinent _continent) external;
+    function addSvgResouces(uint256 id, string memory svg) external;
     function mintProvince(string memory _name, address _owner) external returns(uint256, IProvince);
 }
 
@@ -46,10 +50,13 @@ interface IGenericAccessControl {
 
 interface IContinent  { 
 
-    //function continent() external view returns(address);
+    //function Continent() external view returns(IContinent);
     //function userManager() external view returns(address);
     function World() external view returns(IWorld);
     function setProvinceManager(IProvinceManager _instance) external;
+    function spendEvent(IEvent _eventContract) external;
+    function payForTime(address _contract) external;
+    function completeMint(address _eventContract) external;
 }
 
 interface IUserAccountManager is IAccessControlUpgradeable { 
@@ -86,14 +93,24 @@ interface IYieldStructure is IStructure {
     function rewardFactor() external view returns(ResourceFactor memory);
 }
 
+interface IBuildEvent is IEvent {
+}
+
+
+interface IYieldEvent is IEvent {
+}
+
+
 interface IStructureManager {
-    function Build(address _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(address);
+    function Build(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
+    function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
+    function setContinent(IContinent _continent) external;
 }
 
 interface IWorld is IGenericAccessControl {
-    function food() external view returns(IFood);
-    function structureManager () external view returns(IStructureManager);
-    function treasury() external view returns(ITreasury);
+    function Food() external view returns(IFood);
+    function Treasury() external view returns(ITreasury);
+    function StructureManager() external view  returns(IStructureManager);
 }
 
 interface IFood is IERC20Upgradeable {

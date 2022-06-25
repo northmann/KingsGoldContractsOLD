@@ -16,7 +16,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     
     State public state;
 
-    address public province;
+    IProvince public province;
     //address public continent;
     IWorld public world;
 
@@ -28,8 +28,8 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     // The cost of resources for this event
     address public hero;
 
-    uint256 public manPower;
-    uint256 public foodAmount;
+    uint256 internal manPower;
+    uint256 internal foodAmount;
     uint256 public woodAmount;
     uint256 public rockAmount;
     uint256 public ironAmount;
@@ -77,9 +77,19 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
         _;
     }
 
-    function setupEvent(address _province) internal onlyInitializing {
+    function ManPower() public view override returns(uint256){
+        return manPower;
+    }
+
+    function FoodAmount() public view  override returns(uint256)
+    {
+        return foodAmount;
+    }
+
+
+    function setupEvent(IProvince _province) internal onlyInitializing {
         province = _province;
-        world = IProvince(_province).World();
+        world = _province.World();
         creationTime = block.timestamp;
 		_registerInterface(type(IEvent).interfaceId);
 		_registerInterface(type(ITimeContract).interfaceId);
