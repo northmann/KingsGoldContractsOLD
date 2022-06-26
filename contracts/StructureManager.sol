@@ -47,7 +47,7 @@ contract StructureManager is
 
         (bool structureExist, address structureAddress) = _province.getStructure(_structureId);
         if(!structureExist) {
-            BeaconProxy structureProxy = new BeaconProxy(structureBeacons.get(_structureId),abi.encodeWithSelector(Structure(address(0)).initialize.selector));
+            BeaconProxy structureProxy = new BeaconProxy(structureBeacons.get(_structureId),abi.encodeWithSelector(Structure(address(0)).initialize.selector, _province));
             structureAddress = address(structureProxy);
         }
         
@@ -59,7 +59,7 @@ contract StructureManager is
         //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
         BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(_structureId), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
             _province,
-            structureAddress,
+            IStructure(structureAddress),
             _count
          ));
         

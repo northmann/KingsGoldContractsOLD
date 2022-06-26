@@ -32,7 +32,7 @@ interface IProvince is IAccessControlUpgradeable {
     function getEvents() external view returns(address[] memory);
     function continent() external view returns(IContinent);
     function getStructure(uint256 _id) external returns(bool, address);
-    function setStructure(uint256 _id, address _structureContract) external;
+    function setStructure(uint256 _id, IStructure _structureContract) external;
     function setPoppulation(uint256 _manPower, uint256 _attrition) external;
     function payForTime() external;
     function completeEvent() external;
@@ -80,6 +80,7 @@ interface IUserAccount {
 }
 
 interface IStructure  { 
+    function province() external view returns(IProvince);
     function Id() external pure returns(uint256);
     function constuctionCost() external view returns(ResourceFactor memory);
     function availableAmount() external view returns(uint256);
@@ -90,15 +91,17 @@ interface IStructure  {
 
 
 interface IYieldStructure is IStructure { 
-
+    //function structure() external view returns(IYieldStructure);
     function rewardFactor() external view returns(ResourceFactor memory);
 }
 
 interface IBuildEvent is IEvent {
+    function structure() external view returns(IStructure);
 }
 
 
 interface IYieldEvent is IEvent {
+    function structure() external view returns(IYieldStructure);
 }
 
 

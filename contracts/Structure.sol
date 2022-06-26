@@ -13,7 +13,7 @@ import "./Interfaces.sol";
 
 contract Structure is Initializable, Roles, IStructure {
 
-    address public province;
+    IProvince public override province;
 
     ResourceFactor internal costFactor;
 
@@ -21,13 +21,13 @@ contract Structure is Initializable, Roles, IStructure {
     uint256 public totalAmount;
 
     modifier onlyRole(bytes32 role) {
-        require(Province(province).hasRole(role, msg.sender),"Access denied");
+        require(province.hasRole(role, msg.sender),"Access denied");
         _;
     }
     
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(Province(province).hasRole(role1, msg.sender) || Province(province).hasRole(role2, msg.sender),"Access denied");
+        require(province.hasRole(role1, msg.sender) || province.hasRole(role2, msg.sender),"Access denied");
         _;
     }
 
@@ -36,7 +36,8 @@ contract Structure is Initializable, Roles, IStructure {
         _disableInitializers();
     }
 
-    function initialize() initializer public {
+    function initialize(IProvince _province) initializer public {
+        province = _province;
         _init();
     }
 

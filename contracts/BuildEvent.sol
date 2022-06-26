@@ -9,12 +9,12 @@ import "./Event.sol";
 import "./ResourceFactor.sol";
 import "./Interfaces.sol";
 
-contract BuildEvent is Initializable, Event {
+contract BuildEvent is Initializable, Event, IBuildEvent {
 
-    address public structure;
+    IStructure public override structure;
     uint256 public count;
 
-    function initialize(IProvince _province, address _structure, uint256 _count, address _hero) initializer public {
+    function initialize(IProvince _province, IStructure _structure, uint256 _count, address _hero) initializer public {
         setupEvent(_province);
         structure = _structure;
         count = _count;
@@ -34,7 +34,7 @@ contract BuildEvent is Initializable, Event {
         // uint256 woodFactor,
         // uint256 rockFactor,
         // uint256 ironFactor) = IStructure(structure).constuctionCost();
-        ResourceFactor memory factor = IStructure(structure).constuctionCost();
+        ResourceFactor memory factor = structure.constuctionCost();
 
         manPower = count * factor.manPower;
         attrition = factor.attrition;
@@ -53,16 +53,16 @@ contract BuildEvent is Initializable, Event {
         return goldForTime;
     }
 
-    function completeEvent() public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired
+    function completeEvent() public override(Event, IEvent) onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired notState(State.Completed)
     {
 
         IStructure structureInstance = IStructure(structure);
         structureInstance.setAvailableAmount(structureInstance.availableAmount() + count);
         structureInstance.addTotalAmount(count);
         
-        IProvince(province).setStructure(IStructure(structure).Id(), structure);
-        IProvince(province).setPoppulation(manPower, 0);
-        IProvince(province).completeEvent();
+        province.setStructure(structure.Id(), structure);
+        province.setPoppulation(manPower, 0);
+        province.completeEvent();
 
         super.completeEvent();
         // Kill the contract??

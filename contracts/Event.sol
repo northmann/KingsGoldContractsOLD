@@ -123,7 +123,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
 
     // Only a Contract with minting rights can effectly call this function.
     // In this function only, the Event has minting rights on all commodities.
-    function completeMint() public override virtual timeExpired onlyMinter
+    function completeMint() public override virtual timeExpired onlyMinter notState(State.Completed)
     {
 
     }

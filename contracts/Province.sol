@@ -147,8 +147,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         return events.getEvents();
     }
 
-    function setStructure(uint256 _id, address _structureContract) public override onlyRole(EVENT_ROLE) onlyEvent {
-        structures.set(_id, _structureContract);
+    function setStructure(uint256 _id, IStructure _structureContract) public override onlyRole(EVENT_ROLE) onlyEvent {
+        structures.set(_id, address(_structureContract));
     }
 
     function setPoppulation(uint256 _manPower, uint256 _attrition) public override onlyRole(EVENT_ROLE) onlyEvent {

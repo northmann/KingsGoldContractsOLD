@@ -13,9 +13,9 @@ import "./Interfaces.sol";
 import "./Continent.sol";
 import "./Food.sol";
 
-contract YieldEvent is Initializable, Event {
+contract YieldEvent is Initializable, IYieldEvent, Event {
 
-    IYieldStructure public structure;
+    IYieldStructure public override structure;
     uint256 public count;
     address public receiver;
 
@@ -60,21 +60,21 @@ contract YieldEvent is Initializable, Event {
         return goldForTime;
     }
 
-    function completeEvent() public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired
+    function completeEvent() public override(Event, IEvent) onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired notState(State.Completed)
     {
         // Return manPower to population pool
-        IProvince(province).setPoppulation(manPower, 0);
+        province.setPoppulation(manPower, 0);
 
         // Payout the reward
-        IProvince(province).completeMint();
+        province.completeMint();
        
-        IProvince(province).completeEvent();
+        province.completeEvent();
 
-        super.completeEvent();
+        super.completeEvent(); // Set state = State.Completed; So the completeMint cannot run again.
         // Kill the contract??
     }
 
-    function completeMint() public override virtual timeExpired onlyMinter
+    function completeMint() public override(Event, IEvent) virtual timeExpired onlyMinter notState(State.Completed)
     {
         // Reward the user with commodities
         if(foodAmount > 0) {
