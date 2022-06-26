@@ -78,7 +78,7 @@ contract YieldEvent is Initializable, Event {
     {
         // Reward the user with commodities
         if(foodAmount > 0) {
-            world.Food().mint_with_temp_account(receiver,foodAmount);
+            world.food().mint_with_temp_account(receiver,foodAmount);
         }
     }
 

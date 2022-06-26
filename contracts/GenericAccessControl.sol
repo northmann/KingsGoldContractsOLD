@@ -11,7 +11,7 @@ import "./Interfaces.sol";
 contract GenericAccessControl is Roles, IGenericAccessControl {
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
-    IUserAccountManager internal userAccountManager;
+    IUserAccountManager public override userAccountManager;
 
     modifier onlyRole(bytes32 role) {
         require(userAccountManager.hasRole(role, msg.sender),"Access denied");
@@ -31,9 +31,9 @@ contract GenericAccessControl is Roles, IGenericAccessControl {
         userAccountManager =_userAccountManager;
     }
 
-    function userManager() public view override returns(IUserAccountManager) {
-        return userAccountManager;
-    }
+    // function userAccountManager() public view override returns(IUserAccountManager) {
+    //     return userAccountManager;
+    // }
 
 
     // modifier ownerOrVassel() {

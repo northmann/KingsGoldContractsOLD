@@ -9,6 +9,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./ResourceFactor.sol";
 
 interface IEvent { 
+    function province() external view returns(IProvince);
+    function world() external view returns(IWorld);
     function ManPower() external returns(uint256);
     function FoodAmount() external returns(uint256);
     function completeEvent() external;
@@ -28,31 +30,30 @@ interface IContractType {
 
 interface IProvince is IAccessControlUpgradeable { 
     function getEvents() external view returns(address[] memory);
-    function Continent() external view returns(IContinent);
+    function continent() external view returns(IContinent);
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, address _structureContract) external;
     function setPoppulation(uint256 _manPower, uint256 _attrition) external;
     function payForTime() external;
     function completeEvent() external;
     function completeMint() external;
-    function World() external view returns(IWorld);
+    function world() external view returns(IWorld);
 }
 
 interface IProvinceManager {
     function setContinent(IContinent _continent) external;
+    function continent() external view returns(IContinent);
     function addSvgResouces(uint256 id, string memory svg) external;
     function mintProvince(string memory _name, address _owner) external returns(uint256, IProvince);
 }
 
 interface IGenericAccessControl {
-    function userManager() external view returns(IUserAccountManager);
+    function userAccountManager() external view returns(IUserAccountManager);
 }
 
 interface IContinent  { 
 
-    //function Continent() external view returns(IContinent);
-    //function userManager() external view returns(address);
-    function World() external view returns(IWorld);
+    function world() external view returns(IWorld);
     function setProvinceManager(IProvinceManager _instance) external;
     function spendEvent(IEvent _eventContract) external;
     function payForTime(address _contract) external;
@@ -108,9 +109,10 @@ interface IStructureManager {
 }
 
 interface IWorld is IGenericAccessControl {
-    function Food() external view returns(IFood);
-    function Treasury() external view returns(ITreasury);
-    function StructureManager() external view  returns(IStructureManager);
+    function food() external view returns(IFood);
+    function treasury() external view returns(ITreasury);
+    function structureManager() external view  returns(IStructureManager);
+    function continentsCount() external view returns(uint256);
 }
 
 interface IFood is IERC20Upgradeable {

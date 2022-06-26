@@ -13,6 +13,23 @@ describe("UserAccountManager", function () {
     userAccountManager = await createUpgradeable("UserAccountManager", [userAccountBeacon.address]);
   });
 
+  // You can nest describe calls to create subsections.
+  describe("Deployment", function () {
+      // `it` is another Mocha function. This is the one you use to define your
+      // tests. It receives the test name, and a callback function.
+
+      // If the callback function is async, Mocha will `await` it.
+      it("Should set the right owner", async function () {
+          // Expect receives a value, and wraps it in an Assertion object. These
+          // objects have a lot of utility methods to assert values.
+
+          // This test expects the owner variable stored in the contract to be equal
+          // to our Signer's owner.
+          //expect(await userAccountManager.owner()).to.equal(owner.address);
+      });
+
+  });
+
   it('upgradeUserAccountBeacon', async () => {
     const tx = await userAccountManager.upgradeUserAccountBeacon(ethers.constants.AddressZero);
     await tx.wait();

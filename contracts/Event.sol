@@ -16,9 +16,9 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     
     State public state;
 
-    IProvince public province;
+    IProvince public override province;
     //address public continent;
-    IWorld public world;
+    IWorld public override world;
 
     uint256 public creationTime;
     uint256 public timeRequired;
@@ -49,14 +49,14 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     }
 
     modifier onlyRole(bytes32 role) {
-        require(IProvince(province).hasRole(role, msg.sender),"Access denied");
+        require(province.hasRole(role, msg.sender),"Access denied");
         _;
     }
 
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(IProvince(province).hasRole(role1, msg.sender) 
-            || IProvince(province).hasRole(role2, msg.sender)
+        require(province.hasRole(role1, msg.sender) 
+            || province.hasRole(role2, msg.sender)
             // || Province(province).hasRole(MINTER_ROLE, msg.sender)
             // || Province(province).hasRole(DEFAULT_ADMIN_ROLE, msg.sender)
             ,"Access denied");
@@ -64,7 +64,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
     }
 
     modifier onlyMinter() {
-        require(world.userManager().hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
+        require(world.userAccountManager().hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
         _;
     }
 
@@ -89,7 +89,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, ITimeContract {
 
     function setupEvent(IProvince _province) internal onlyInitializing {
         province = _province;
-        world = _province.World();
+        world = _province.world();
         creationTime = block.timestamp;
 		_registerInterface(type(IEvent).interfaceId);
 		_registerInterface(type(ITimeContract).interfaceId);

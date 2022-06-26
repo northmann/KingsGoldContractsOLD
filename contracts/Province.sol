@@ -29,8 +29,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     using EnumerableSet for EnumerableSet.AddressSet;
     using EventSetExtensions for EnumerableSet.AddressSet;
 
-    IContinent internal continent;
-    IWorld internal world;
+    IContinent public override continent;
+    IWorld public override world;
 
     string public name;
 
@@ -79,19 +79,14 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _grantRole(OWNER_ROLE, _owner);
         _grantRole(MINTER_ROLE, address(_continent));
         continent = _continent;
-        world = continent.World();
+        world = continent.world();
         name = _name;
     }
 
-    function World() public view override returns(IWorld)
-    {
-        return world;
-    }
-
-    function Continent() public view override returns(IContinent)
-    {
-        return continent;
-    }
+    // function Continent() public view override returns(IContinent)
+    // {
+    //     return continent;
+    // }
 
     function setVassal(address _user) external onlyRole(OWNER_ROLE)
     {
@@ -102,7 +97,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        IBuildEvent buildEvent = world.StructureManager().Build(this, _structureId, _count, _hero);
+        IBuildEvent buildEvent = world.structureManager().Build(this, _structureId, _count, _hero);
         
         // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.ManPower() <= populationAvailable, "not enough population");
@@ -128,7 +123,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         require(structure.availableAmount() < _count, "Insufficient structures");
 
         // Create a new Build event        
-        IYieldEvent yieldEvent =  world.StructureManager().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
+        IYieldEvent yieldEvent =  world.structureManager().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
 
         // Check that there is mamPower enough to build the requested structures.
         require(yieldEvent.ManPower() <= populationAvailable, "not enough population");

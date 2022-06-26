@@ -22,7 +22,7 @@ import "./Interfaces.sol";
 contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
     using Strings for uint256;
 
-    IContinent public continent;
+    IContinent public override continent;
 
     mapping(uint256 => IProvince) public provinces;
     mapping(uint256 => string) private svgResources; // the svg for the resource!

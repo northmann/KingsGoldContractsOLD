@@ -35,7 +35,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
     string public name;
     IProvinceManager internal provinceManager;
-    IWorld internal world;
+    IWorld public override world;
    
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -50,10 +50,10 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         world = _world;
     }
 
-    function World() public view override returns(IWorld)
-    {
-        return world;
-    }
+    // function world() public view override returns(IWorld)
+    // {
+    //     return world;
+    // }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
     function createProvince(string memory _name) external returns(uint256) {
@@ -66,7 +66,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
 
         console.log("createProvince - get treasury address");
-        ITreasury treasury = world.Treasury();
+        ITreasury treasury = world.treasury();
         console.log("createProvince - get treasury");
         //Treasury tt = Treasury(treasuryAddress);
         console.log("createProvince - get Gold instance");
@@ -107,9 +107,9 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     function spendEvent(IEvent _eventContract) public override onlyRole(PROVINCE_ROLE) {
         require(ERC165Checker.supportsInterface(address(_eventContract), type(IEvent).interfaceId), "Not a event contract");
 
-        ITreasury treasury = world.Treasury();
+        ITreasury treasury = world.treasury();
         
-        IFood food = world.Food();
+        IFood food = world.food();
         // spend the resources that the event requires
         if(!food.transferFrom(tx.origin, address(treasury), _eventContract.FoodAmount()))
             revert InsuffcientFood({
@@ -159,7 +159,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
         ITimeContract timeContract = ITimeContract(_contract);
         uint256 timeCost = timeContract.priceForTime();
-        ITreasury treasury = world.Treasury();
+        ITreasury treasury = world.treasury();
 
         IKingsGold gold = treasury.Gold();
         require(timeCost <= gold.balanceOf(msg.sender), "Not enough gold");

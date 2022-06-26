@@ -20,13 +20,13 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
 
     address private continentBeacon;
     IContinent[] public continents;
-
-    IStructureManager internal structureManager;
     address public armyManager;
 
-    ITreasury internal treasury;
+    IStructureManager public override structureManager;
+    ITreasury public override treasury;
 
-    IFood public food;
+    IFood public override food;
+
     address public wood;
     address public iron;
     address public rock;
@@ -53,11 +53,11 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
 
         //console.log("createContinent - now grant role to proxy");
         // Make sure that the mintProvince can create new UserAccounts.
-        //UserAccountManager(userManager).grantRole(MINTER_ROLE, address(proxy));
+        //UserAccountManager(userAccountManager).grantRole(MINTER_ROLE, address(proxy));
         //console.log("createContinent - now grant role to proxy - Done!!!");
     }
 
-    function getContinentsCount() external view returns(uint256) {
+    function continentsCount() external view override returns(uint256) {
         return continents.length;
     }
     
@@ -72,21 +72,10 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
         treasury = ITreasury(_treasuryAddress);
     }
 
-    function Treasury() public view override returns(ITreasury)
-    {
-        return treasury;
-    }
-
     function setFood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
         food = IFood(_address);
     }
-
-    function Food() public view override returns(IFood)
-    {
-        return food;
-    }
-
 
     function setWood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
     {
@@ -103,11 +92,6 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
         rock = _address;
     }
 
-
-    function StructureManager() public view override returns(IStructureManager)
-    {
-        return structureManager;
-    }
 
     function _authorizeUpgrade(address newImplementation)
         internal
