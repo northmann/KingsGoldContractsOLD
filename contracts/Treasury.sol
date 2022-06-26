@@ -17,7 +17,7 @@ import "./Roles.sol";
 contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, ITreasury {
 
 
-    IKingsGold internal gold;
+    IKingsGold public override gold;
 
     event Bought(uint256 amount);
     event Sold(uint256 amount);
@@ -31,11 +31,6 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
         gold = IKingsGold(_gold);
-    }
-
-    function Gold() external view override returns(IKingsGold)
-    {
-        return gold;
     }
 
     function setGold(address _gold) external onlyRole(DEFAULT_ADMIN_ROLE) {

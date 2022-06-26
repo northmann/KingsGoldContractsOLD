@@ -30,7 +30,7 @@ contract StructureManager is
     EnumerableMap.UintToAddressMap private structureBeacons;
     EnumerableMap.UintToAddressMap private eventBeacons;
 
-    IContinent public continent;
+    IContinent public override continent;
 
 
     function initialize(IUserAccountManager _userAccountManager) initializer public virtual {

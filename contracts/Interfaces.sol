@@ -106,6 +106,7 @@ interface IYieldEvent is IEvent {
 
 
 interface IStructureManager {
+    function continent() external view returns(IContinent);
     function Build(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
     function setContinent(IContinent _continent) external;
@@ -123,7 +124,7 @@ interface IFood is IERC20Upgradeable {
 }
 
 interface ITreasury {
-    function Gold() external view returns(IKingsGold);
+    function gold() external view returns(IKingsGold);
 }
 
 interface IKingsGold is IERC20 {

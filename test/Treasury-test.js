@@ -39,11 +39,11 @@ describe("Treasury", function () {
   });
 
   it('setGold', async () => {
-    let goldAddress = await treasury.Gold();
+    let goldAddress = await treasury.gold();
     expect(goldAddress).to.equal(token.address);
 
     await treasury.setGold(owner.address);
-    goldAddress = await treasury.Gold();
+    goldAddress = await treasury.gold();
     expect(goldAddress).to.equal(owner.address);
 
   });

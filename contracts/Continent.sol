@@ -70,7 +70,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         console.log("createProvince - get treasury");
         //Treasury tt = Treasury(treasuryAddress);
         console.log("createProvince - get Gold instance");
-        IKingsGold gold = treasury.Gold();
+        IKingsGold gold = treasury.gold();
         console.log("createProvince - check balanceOf user");
         require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
 
@@ -161,7 +161,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         uint256 timeCost = timeContract.priceForTime();
         ITreasury treasury = world.treasury();
 
-        IKingsGold gold = treasury.Gold();
+        IKingsGold gold = treasury.gold();
         require(timeCost <= gold.balanceOf(msg.sender), "Not enough gold");
 
         if(!gold.transferFrom(msg.sender, address(treasury), timeCost))
