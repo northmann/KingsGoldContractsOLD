@@ -61,7 +61,7 @@ describe("EventFactory", function () {
     buildEventBeacon = await createBeacon("BuildEvent");
     yieldEventBeacon = await createBeacon("YieldEvent");
 
-    farm = await deployContract("Farm");
+    farm = await deployContract("Farm"); // Dummy implementation
 
     eventFactory.setStructureBeacon(await farm.Id(), farmBeacon.address);
     eventFactory.setEventBeacon(getId("BUILD_EVENT"), buildEventBeacon.address);
@@ -91,7 +91,7 @@ describe("EventFactory", function () {
   });
 
 
-  it('build', async () => {
+  it('CreateBuildEvent', async () => {
     const [owner, addr1, addr2] = await ethers.getSigners();
 
     // Make sure that the owner can create the Events
@@ -103,6 +103,18 @@ describe("EventFactory", function () {
     let buildEventResult = await eventFactory.callStatic.CreateBuildEvent(provinceAddress, farmId, getId("BUILD_EVENT"), 1, 0);
     
     expect(buildEventResult).to.not.equal(ethers.constants.AddressZero);
+  });
+
+  it('CreateYieldEvent', async () => {
+    const [owner, addr1, addr2] = await ethers.getSigners();
+
+    // Make sure that the owner can create the Events
+    let roles = await getRoles();
+    userAccountManager.grantRole(await roles.PROVINCE_ROLE(), owner.address);
+
+    let yieldEventResult = await eventFactory.callStatic.CreateYieldEvent(provinceAddress, farm.address, owner.address, 1, 0);
+    
+    expect(yieldEventResult).to.not.equal(ethers.constants.AddressZero);
   });
 
   
