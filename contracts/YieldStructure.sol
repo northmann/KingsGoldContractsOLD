@@ -4,8 +4,6 @@ pragma solidity >0.8.2;
 import "hardhat/console.sol";
 
 import "./Structure.sol";
-// import "./StructureManager.sol";
-// import "./Roles.sol";
 import "./ResourceFactor.sol";
 
 

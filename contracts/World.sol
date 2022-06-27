@@ -22,7 +22,7 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
     IContinent[] public continents;
     address public armyManager;
 
-    IStructureManager public override structureManager;
+    IEventFactory public override eventFactory;
     ITreasury public override treasury;
 
     IFood public override food;

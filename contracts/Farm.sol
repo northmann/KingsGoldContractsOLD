@@ -7,8 +7,6 @@ import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 
 
 import "./YieldStructure.sol";
-//import "./StructureManager.sol";
-//import "./Roles.sol";
 import "./ResourceFactor.sol";
 
 uint256 constant FARM_STRUCTURE_ID = uint256(keccak256("FARM_STRUCTURE"));

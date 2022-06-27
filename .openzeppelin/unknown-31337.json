@@ -243,77 +243,77 @@
     },
     {
       "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0xe2a0101efb132526e8b3367d1781b606080f69a3d056c87572e894099a80ce77",
+      "txHash": "0x4312acb4c688af98bbca3da9e5cc3911a5b4890c77490809e0bcdf4d7774269d",
       "kind": "uups"
     },
     {
       "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0xf8794ce831ec443cb9a16f63df539539e0e83487ee7335bbd494c3c048b5f449",
+      "txHash": "0xdbca9d3d5993f35521838ae87f7541b1aeb80e6ed892012f6a1065c06f6e6bd8",
       "kind": "uups"
     },
     {
       "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0xf3e8597d9758783685fdb1e35b9139723e6d63e1bf4f2b8521371ac1b45491ad",
+      "txHash": "0x8028dea4f2939a042830d93cd81ee57e1399fde18593ff496d0f094356edd958",
       "kind": "uups"
     },
     {
       "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
-      "txHash": "0xf5fd8d289c4425a5b908e29f5c40c3139be1054c9650b6b58bd4f517f82dab00",
+      "txHash": "0x1e8db9485f3bf482179d179ba86ea5e626eeb1c0af462137bd9cbdbf8600c987",
       "kind": "uups"
     },
     {
       "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
-      "txHash": "0x15a76a0e578487c85f0af662410617f8df686bec11e01d17af6cf37b06c48971",
+      "txHash": "0x03e34c5226243b4a6a4cc0c6388af1bb9ade944497df0c4b171689e31fc4492d",
       "kind": "uups"
     },
     {
       "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
-      "txHash": "0x17d035a680f15d48ce448268de60ec6a64e577bc4e9149df99c52acd7e322c66",
+      "txHash": "0x063ae779ec76ab6857e2d4b98deeb905262325745f4fd11e3d24ec7aa635694b",
       "kind": "uups"
     },
     {
       "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
-      "txHash": "0x28acd6b599c5f8ac7831a3f8dff1ea5813cad0597631efec5edcea11c75b96d8",
+      "txHash": "0x2baa054dbb6785c2b22142a6d950c9bae295c958f69aa980dcdb19cd4821adc5",
       "kind": "uups"
     },
     {
       "address": "0x95401dc811bb5740090279Ba06cfA8fcF6113778",
-      "txHash": "0xe491cb89f33d524378defe22eab192b38b3dc1d5a1171fe5a44209a176bcd19d",
+      "txHash": "0x0fff87b21afa94fc707f4b6df1e1b56645b08153bef3e3503bfb6513e0432aa6",
       "kind": "uups"
     },
     {
       "address": "0x70e0bA845a1A0F2DA3359C97E0285013525FFC49",
-      "txHash": "0xba2a15c4a624c334c3c622176705df2b3e49f817c365a6987bf60f0d564d71c5",
+      "txHash": "0x77912368db19f1b6e8acea5eff9a6a7b7fb134029a99acfc495f49c273ac5220",
       "kind": "uups"
     },
     {
       "address": "0x99bbA657f2BbC93c02D617f8bA121cB8Fc104Acf",
-      "txHash": "0x399d15d1d030adb5dbe4a9bdad7605adaaca5a04310dadaf6d24b9fc4405b3b3",
+      "txHash": "0x8afedc006c67fb39e7dc8cb460f704b0cfb15c849b9b86e8b8de354e307a0b73",
       "kind": "uups"
     },
     {
       "address": "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
-      "txHash": "0xf40bbb6c1665b34664aba41fc7f22e821471ff7f17b8ad3f632ece38ec15204e",
+      "txHash": "0xc44c19c2d679acd61bcc0f865209f5f98c679fa40a994fe0485404b0d8b10ede",
       "kind": "uups"
     },
     {
       "address": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
-      "txHash": "0x7f4e6ca022af76808fb879392f4598fa1646628999c4d9cd50381226551fe841",
+      "txHash": "0x18310e062468ff277ecc74fe1eb54e858e2c6a9e065dd84f5538dbb498424d7f",
       "kind": "uups"
     },
     {
       "address": "0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575",
-      "txHash": "0x0a045e69012e6d73caf2598b50c483f5725982cf12f55d7d00f295b450fa85f2",
+      "txHash": "0x5ae39c417167c80ce918c10f110d1274d598ddd054f15e4bc85ded967fa12448",
       "kind": "uups"
     },
     {
       "address": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
-      "txHash": "0x5b73850c7fd219c937074c8158a68a0106eba05754d50cb933a193c2eda64a01",
+      "txHash": "0x5efa3854a14d698c734675038c38711e78dca3204914fef35fe396eaded169e0",
       "kind": "uups"
     },
     {
       "address": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
-      "txHash": "0xdd573fc2c89fdecd2ff573f83470d3603531b01d59f4b1439e66f5d4b2ce2e77",
+      "txHash": "0x3fbb10cb953e76524bdaca794bda89eeef4824bb56734fa0c3ed0b25529990a6",
       "kind": "uups"
     },
     {
@@ -2089,9 +2089,9 @@
         }
       }
     },
-    "53c43e98f58bc7704183b1456e1a383477f0a7dde942537db775a023c36dc5f5": {
+    "0cf864e306341d4b93648c025ec3d1932f22c6afdec4f694b92d110c1c56684e": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x56935979c041603567abef7f44e8130ffc3caaa6d083104ba61f40b136b3e854",
+      "txHash": "0xb67fcabefea91508817a87cd3e612f26d77b799a0c918245ca3d702ebdc28313",
       "layout": {
         "storage": [
           {
@@ -2198,9 +2198,9 @@
         }
       }
     },
-    "6df76bdae0af89c2a1b3eff5abc3554601a4cbeced4acf74c80a2bf84f7efa0f": {
+    "828fcfc64355a34f443b7bcb4af817ccca550deee04683b6d67afac691e051b3": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0xa1e9db2c117bf44c7618c27fd8fdd2bf3d134bb9d510c85b96cd9002de8d65e8",
+      "txHash": "0x099f6e5a6b25d50ca7a89ed40c319bac702e4e7c43bcb3d8c2de06532407b9d8",
       "layout": {
         "storage": [
           {
@@ -2347,9 +2347,9 @@
         }
       }
     },
-    "e3c6d2fa3125ab9ac679de34cb8c54c68b29f593384cf025a504037f7211cd68": {
+    "947937cef5ace7282f95100ed571fd7207cfb5b897cf317d7365e1b3ff29c1d9": {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xaa7b03d41e3496d27e407883e5d91a2bb91886b7888c9a9be17a3a5607147d4a",
+      "txHash": "0xb34cac1d9223da3e30e08cc608030184f7fef19bd75311749fdfc178ff3d02d1",
       "layout": {
         "storage": [
           {
@@ -2373,7 +2373,7 @@
             "label": "userAccountManager",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IUserAccountManager)9979",
+            "type": "t_contract(IUserAccountManager)9988",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2397,7 +2397,7 @@
             "label": "gold",
             "offset": 0,
             "slot": "101",
-            "type": "t_contract(IKingsGold)10152",
+            "type": "t_contract(IKingsGold)10185",
             "contract": "Treasury",
             "src": "contracts\\Treasury.sol:20"
           }
@@ -2411,11 +2411,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IKingsGold)10152": {
+          "t_contract(IKingsGold)10185": {
             "label": "contract IKingsGold",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9979": {
+          "t_contract(IUserAccountManager)9988": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
@@ -2430,9 +2430,9 @@
         }
       }
     },
-    "f410a5f549333ccabbeb5157aaf7c801c9dd6192ac10c23f38b9f4535fca4486": {
+    "d0b88203f5dbd962a23030157dfd5a20da284e51f2ef261b36c903d53201ab37": {
       "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-      "txHash": "0x4c17cf962c2b9af60064662ba244797a9011d004a8725b09f84f11062eb33bad",
+      "txHash": "0x7407bd1a5b8e9af6c0f3af6168084449e1dcc2944e4c350a68994584019c6adc",
       "layout": {
         "storage": [
           {
@@ -2456,7 +2456,7 @@
             "label": "userAccountManager",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IUserAccountManager)9979",
+            "type": "t_contract(IUserAccountManager)9988",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2472,7 +2472,7 @@
             "label": "provinceManager",
             "offset": 0,
             "slot": "2",
-            "type": "t_contract(IProvinceManager)9905",
+            "type": "t_contract(IProvinceManager)9914",
             "contract": "Continent",
             "src": "contracts\\Continent.sol:37"
           },
@@ -2480,7 +2480,7 @@
             "label": "world",
             "offset": 0,
             "slot": "3",
-            "type": "t_contract(IWorld)10132",
+            "type": "t_contract(IWorld)10165",
             "contract": "Continent",
             "src": "contracts\\Continent.sol:38"
           }
@@ -2490,15 +2490,15 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IProvinceManager)9905": {
+          "t_contract(IProvinceManager)9914": {
             "label": "contract IProvinceManager",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9979": {
+          "t_contract(IUserAccountManager)9988": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
-          "t_contract(IWorld)10132": {
+          "t_contract(IWorld)10165": {
             "label": "contract IWorld",
             "numberOfBytes": "20"
           },
@@ -2513,9 +2513,9 @@
         }
       }
     },
-    "8b7469b85ac90ae6241117893ddf73611e2be312e121f0f5f49ce47fc9727588": {
+    "f1367d0890169b509df1b09e635d8b93439f43e18de5898a5b4a28c58bf13e02": {
       "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0x666b85d25495582b3bb30495f1f88c9918dd481f5d388d181a6dd95a07f791c2",
+      "txHash": "0x27c5b92634144d875feef5cb5d4e638342a68bc0d092312d016175ac54203456",
       "layout": {
         "storage": [
           {
@@ -2539,7 +2539,7 @@
             "label": "userAccountManager",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IUserAccountManager)9979",
+            "type": "t_contract(IUserAccountManager)9988",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2571,7 +2571,7 @@
             "label": "continents",
             "offset": 0,
             "slot": "102",
-            "type": "t_array(t_contract(IContinent)9941)dyn_storage",
+            "type": "t_array(t_contract(IContinent)9950)dyn_storage",
             "contract": "World",
             "src": "contracts\\World.sol:22"
           },
@@ -2587,7 +2587,7 @@
             "label": "structureManager",
             "offset": 0,
             "slot": "104",
-            "type": "t_contract(IStructureManager)10106",
+            "type": "t_contract(IStructureManager)10139",
             "contract": "World",
             "src": "contracts\\World.sol:25"
           },
@@ -2595,7 +2595,7 @@
             "label": "treasury",
             "offset": 0,
             "slot": "105",
-            "type": "t_contract(ITreasury)10149",
+            "type": "t_contract(ITreasury)10182",
             "contract": "World",
             "src": "contracts\\World.sol:26"
           },
@@ -2603,7 +2603,7 @@
             "label": "food",
             "offset": 0,
             "slot": "106",
-            "type": "t_contract(IFood)10142",
+            "type": "t_contract(IFood)10175",
             "contract": "World",
             "src": "contracts\\World.sol:28"
           },
@@ -2645,7 +2645,7 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_contract(IContinent)9941)dyn_storage": {
+          "t_array(t_contract(IContinent)9950)dyn_storage": {
             "label": "contract IContinent[]",
             "numberOfBytes": "32"
           },
@@ -2657,23 +2657,23 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IContinent)9941": {
+          "t_contract(IContinent)9950": {
             "label": "contract IContinent",
             "numberOfBytes": "20"
           },
-          "t_contract(IFood)10142": {
+          "t_contract(IFood)10175": {
             "label": "contract IFood",
             "numberOfBytes": "20"
           },
-          "t_contract(IStructureManager)10106": {
+          "t_contract(IStructureManager)10139": {
             "label": "contract IStructureManager",
             "numberOfBytes": "20"
           },
-          "t_contract(ITreasury)10149": {
+          "t_contract(ITreasury)10182": {
             "label": "contract ITreasury",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9979": {
+          "t_contract(IUserAccountManager)9988": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
@@ -2688,9 +2688,9 @@
         }
       }
     },
-    "2c1d1c1d951be66d00cc169a721b3912c6fdb8361ea3b0ae939b931349c65e4a": {
+    "b68500e110ee6e188e420506dab4e05283837de5cad340895e3d59919f040add": {
       "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-      "txHash": "0xd2c4433ad58ace98aa30b6a56ed3262ef4de6270e639a4b66a75e549798bf445",
+      "txHash": "0xd5096fe2040b7cfaefb67ebfb21527f3435982ec90c32f93bbce1ab5ee203475",
       "layout": {
         "storage": [
           {
@@ -2842,7 +2842,7 @@
             "label": "userAccountManager",
             "offset": 0,
             "slot": "251",
-            "type": "t_contract(IUserAccountManager)9979",
+            "type": "t_contract(IUserAccountManager)9988",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2890,7 +2890,7 @@
             "label": "continent",
             "offset": 0,
             "slot": "404",
-            "type": "t_contract(IContinent)9941",
+            "type": "t_contract(IContinent)9950",
             "contract": "ProvinceManager",
             "src": "contracts\\ProvinceManager.sol:25"
           },
@@ -2898,7 +2898,7 @@
             "label": "provinces",
             "offset": 0,
             "slot": "405",
-            "type": "t_mapping(t_uint256,t_contract(IProvince)9873)",
+            "type": "t_mapping(t_uint256,t_contract(IProvince)9882)",
             "contract": "ProvinceManager",
             "src": "contracts\\ProvinceManager.sol:27"
           },
@@ -2940,15 +2940,15 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IContinent)9941": {
+          "t_contract(IContinent)9950": {
             "label": "contract IContinent",
             "numberOfBytes": "20"
           },
-          "t_contract(IProvince)9873": {
+          "t_contract(IProvince)9882": {
             "label": "contract IProvince",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9979": {
+          "t_contract(IUserAccountManager)9988": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
@@ -2972,7 +2972,7 @@
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_contract(IProvince)9873)": {
+          "t_mapping(t_uint256,t_contract(IProvince)9882)": {
             "label": "mapping(uint256 => contract IProvince)",
             "numberOfBytes": "32"
           },
@@ -3011,9 +3011,9 @@
         }
       }
     },
-    "0ccbf28d417ce168448989939c91201ccf9dfb6289a8a1126db87674624ee55a": {
+    "af7da236496867d7d6f43857451264bac110337b2411c28cab88adb067a661ff": {
       "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
-      "txHash": "0x95495b629d89da691ffeb260e438121e727ba88d89e1a34beedd161fdfadc15a",
+      "txHash": "0x1883d6cf5ce4caa71023a4ba103fb3ea580cdf6b0a02f8d27516c5de2d5c5115",
       "layout": {
         "storage": [
           {
@@ -3069,7 +3069,7 @@
             "label": "continent",
             "offset": 0,
             "slot": "151",
-            "type": "t_contract(IContinent)9941",
+            "type": "t_contract(IContinent)9950",
             "contract": "Province",
             "src": "contracts\\Province.sol:32"
           },
@@ -3077,7 +3077,7 @@
             "label": "world",
             "offset": 0,
             "slot": "152",
-            "type": "t_contract(IWorld)10132",
+            "type": "t_contract(IWorld)10165",
             "contract": "Province",
             "src": "contracts\\Province.sol:33"
           },
@@ -3243,11 +3243,11 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(IContinent)9941": {
+          "t_contract(IContinent)9950": {
             "label": "contract IContinent",
             "numberOfBytes": "20"
           },
-          "t_contract(IWorld)10132": {
+          "t_contract(IWorld)10165": {
             "label": "contract IWorld",
             "numberOfBytes": "20"
           },

@@ -18,12 +18,12 @@ import "./GenericAccessControl.sol";
 
 uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
 
-contract StructureManager is
+contract EventFactory is
     Initializable,
     Roles,
     GenericAccessControl,
     UUPSUpgradeable,
-    IStructureManager
+    IEventFactory
  {
     using EnumerableMap for EnumerableMap.UintToAddressMap;
 

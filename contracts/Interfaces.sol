@@ -105,7 +105,7 @@ interface IYieldEvent is IEvent {
 }
 
 
-interface IStructureManager {
+interface IEventFactory {
     function continent() external view returns(IContinent);
     function Build(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
@@ -115,7 +115,7 @@ interface IStructureManager {
 interface IWorld is IGenericAccessControl {
     function food() external view returns(IFood);
     function treasury() external view returns(ITreasury);
-    function structureManager() external view  returns(IStructureManager);
+    function eventFactory() external view  returns(IEventFactory);
     function continentsCount() external view returns(uint256);
 }
 

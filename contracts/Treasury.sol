@@ -49,7 +49,7 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
     function sell(uint256 amount) public {
         require(amount > 0, "You need to sell at least some tokens");
         uint256 allowance = gold.allowance(msg.sender, address(this));
-        require(allowance >= amount, "Check the token allowance");
+        require(allowance >= amount, "Not enough token allowance");
         gold.transferFrom(msg.sender, address(this), amount);
         
         payable(msg.sender).transfer(amount); // Withdrawal pattern is needed

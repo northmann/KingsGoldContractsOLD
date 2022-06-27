@@ -16,7 +16,7 @@ import "./BuildEvent.sol";
 import "./Interfaces.sol";
 import "./Continent.sol";
 import "./Roles.sol";
-import "./StructureManager.sol";
+import "./EventFactory.sol";
 import "./Structure.sol";
 import "./EventSetExtensions.sol";
 
@@ -97,7 +97,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        IBuildEvent buildEvent = world.structureManager().Build(this, _structureId, _count, _hero);
+        IBuildEvent buildEvent = world.eventFactory().Build(this, _structureId, _count, _hero);
         
         // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.ManPower() <= populationAvailable, "not enough population");
@@ -123,7 +123,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         require(structure.availableAmount() < _count, "Insufficient structures");
 
         // Create a new Build event        
-        IYieldEvent yieldEvent =  world.structureManager().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
+        IYieldEvent yieldEvent =  world.eventFactory().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
 
         // Check that there is mamPower enough to build the requested structures.
         require(yieldEvent.ManPower() <= populationAvailable, "not enough population");
