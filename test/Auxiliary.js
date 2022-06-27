@@ -1,6 +1,9 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
+var roles = undefined;
+
+
 async function createBeacon(contractName) {
     const Contract = await ethers.getContractFactory(contractName);
     const beacon = await upgrades.deployBeacon(Contract);
@@ -31,9 +34,21 @@ async function getContractInstance(name, contractAddress) {
     return instance;
 }
 
+function getId(name) {
+    return ethers.BigNumber.from((ethers.utils.keccak256(ethers.utils.toUtf8Bytes(name))));
+}
+
+async function getRoles() {
+    if(!roles) 
+        roles = await deployContract("Roles");
+    return roles;
+}
+
 module.exports = {
     createBeacon,
     createUpgradeable,
     deployContract,
-    getContractInstance
+    getContractInstance,
+    getId,
+    getRoles
   };

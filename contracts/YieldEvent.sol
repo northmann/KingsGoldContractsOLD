@@ -14,6 +14,7 @@ import "./Continent.sol";
 import "./Food.sol";
 
 contract YieldEvent is Initializable, IYieldEvent, Event {
+    uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
 
     IYieldStructure public override structure;
     uint256 public count;
@@ -27,6 +28,11 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
         hero = _hero;
 
         _calculateCost();
+    }
+
+    function Id() public pure override returns(uint256)
+    {
+        return YIELD_EVENT_ID;
     }
 
         /// The cost of the structures in total

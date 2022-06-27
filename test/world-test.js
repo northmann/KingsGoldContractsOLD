@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { createBeacon, createUpgradeable, deployContract, getContractInstance } = require("./Auxiliary.js");
+const { createBeacon, createUpgradeable, deployContract, getContractInstance, getId } = require("./Auxiliary.js");
 
 
 describe("World", function () {

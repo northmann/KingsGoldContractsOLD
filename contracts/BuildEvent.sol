@@ -10,6 +10,7 @@ import "./ResourceFactor.sol";
 import "./Interfaces.sol";
 
 contract BuildEvent is Initializable, Event, IBuildEvent {
+    uint256 constant BUILD_EVENT_ID = uint256(keccak256("BUILD_EVENT"));
 
     IStructure public override structure;
     uint256 public count;
@@ -46,6 +47,10 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
         ironAmount = count * factor.iron;
     }
 
+    function Id() public pure override returns(uint256)
+    {
+        return BUILD_EVENT_ID;
+    }
 
         /// The cost of the time to complete the event.
     function priceForTime() external view override returns(uint256)

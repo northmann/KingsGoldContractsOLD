@@ -9,6 +9,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./ResourceFactor.sol";
 
 interface IEvent { 
+    function Id() external pure returns(uint256);
     function province() external view returns(IProvince);
     function world() external view returns(IWorld);
     function ManPower() external returns(uint256);
@@ -31,6 +32,7 @@ interface IContractType {
 interface IProvince is IAccessControlUpgradeable { 
     function getEvents() external view returns(address[] memory);
     function continent() external view returns(IContinent);
+    function createStructure(uint256 _structureId, uint256 _buildEventId, uint256 _count, uint256 _hero) external;
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, IStructure _structureContract) external;
     function setPoppulation(uint256 _manPower, uint256 _attrition) external;
@@ -107,9 +109,13 @@ interface IYieldEvent is IEvent {
 
 interface IEventFactory {
     function continent() external view returns(IContinent);
-    function Build(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _buldEventId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
     function setContinent(IContinent _continent) external;
+    function setStructureBeacon(uint256 _id, address _beaconAddress) external;
+    function getStructureBeacon(uint256 _id) external view returns(bool, address);
+    function setEventBeacon(uint256 _id, address _beaconAddress) external;
+    function getEventBeacon(uint256 _id) external view returns(bool, address);
 }
 
 interface IWorld is IGenericAccessControl {

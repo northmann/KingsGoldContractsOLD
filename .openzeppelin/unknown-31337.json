@@ -27,11 +27,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0x23db3b0447c145c9020a673d2b82982a1af449ef372c8a8420aab02d005ada2a",
-      "kind": "uups"
-    },
-    {
       "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
       "txHash": "0x7989892d0e1f6b68756dbc699c36e8d65a413818b02a985ab0515349fc5c5b4d",
       "kind": "uups"
@@ -49,11 +44,6 @@
     {
       "address": "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
       "txHash": "0x37a862b5a21b44b5d0b6b867419f165f28a0fe23e56b4588d397a7b883cd7e2a",
-      "kind": "uups"
-    },
-    {
-      "address": "0x998abeb3E57409262aE5b751f60747921B33613E",
-      "txHash": "0xee29b469b1344d972bf2ed3408b681925420353d3970d2b951ac79d4cc5cc410",
       "kind": "uups"
     },
     {
@@ -152,11 +142,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-      "txHash": "0x71efb09dad973c70c2637759378310207bdef79a1a0da60d1c93f998c7fd2edf",
-      "kind": "uups"
-    },
-    {
       "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
       "txHash": "0xacd6241b79600b259ad3b4615cf9da24a96b6672e6ecfc4757ccf859e09f0174",
       "kind": "uups"
@@ -197,11 +182,6 @@
       "kind": "uups"
     },
     {
-      "address": "0xf953b3A269d80e3eB0F2947630Da976B896A8C5b",
-      "txHash": "0xe38547aaf13c43d5134971b874ecf8acef7fb0eceacc6b99ed295fa178919c9a",
-      "kind": "uups"
-    },
-    {
       "address": "0xe8D2A1E88c91DCd5433208d4152Cc4F399a7e91d",
       "txHash": "0xac92002c1eda35d03f5f3c192a7572e74e8ee4d87688d372a246e3a00d2d7f0c",
       "kind": "uups"
@@ -209,11 +189,6 @@
     {
       "address": "0x4b6aB5F819A515382B0dEB6935D793817bB4af28",
       "txHash": "0x3e4b4a3cb8b9796b7d3711eb90c6f71e93589ec3b52196c213e7e75fc9837a04",
-      "kind": "uups"
-    },
-    {
-      "address": "0xCace1b78160AE76398F486c8a18044da0d66d86D",
-      "txHash": "0xa74007265957be08a5dfaa9c18727e3fe01079bffd1350d78309c6f017a6ed28",
       "kind": "uups"
     },
     {
@@ -234,46 +209,6 @@
     {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
       "txHash": "0x8c115d700a0726bf0e045c3ff17994422ce2f49e8185b9a6fb218c49ddd32bb4",
-      "kind": "uups"
-    },
-    {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xba92dcaeba1d1d3a82bb724968d7695ea0229bd4946b7568e310eac507edbd48",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0x4312acb4c688af98bbca3da9e5cc3911a5b4890c77490809e0bcdf4d7774269d",
-      "kind": "uups"
-    },
-    {
-      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0xdbca9d3d5993f35521838ae87f7541b1aeb80e6ed892012f6a1065c06f6e6bd8",
-      "kind": "uups"
-    },
-    {
-      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0x8028dea4f2939a042830d93cd81ee57e1399fde18593ff496d0f094356edd958",
-      "kind": "uups"
-    },
-    {
-      "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
-      "txHash": "0x1e8db9485f3bf482179d179ba86ea5e626eeb1c0af462137bd9cbdbf8600c987",
-      "kind": "uups"
-    },
-    {
-      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
-      "txHash": "0x03e34c5226243b4a6a4cc0c6388af1bb9ade944497df0c4b171689e31fc4492d",
-      "kind": "uups"
-    },
-    {
-      "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
-      "txHash": "0x063ae779ec76ab6857e2d4b98deeb905262325745f4fd11e3d24ec7aa635694b",
-      "kind": "uups"
-    },
-    {
-      "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
-      "txHash": "0x2baa054dbb6785c2b22142a6d950c9bae295c958f69aa980dcdb19cd4821adc5",
       "kind": "uups"
     },
     {
@@ -307,16 +242,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
-      "txHash": "0x5efa3854a14d698c734675038c38711e78dca3204914fef35fe396eaded169e0",
-      "kind": "uups"
-    },
-    {
-      "address": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
-      "txHash": "0x3fbb10cb953e76524bdaca794bda89eeef4824bb56734fa0c3ed0b25529990a6",
-      "kind": "uups"
-    },
-    {
       "address": "0xB0D4afd8879eD9F52b28595d31B441D079B2Ca07",
       "txHash": "0x482b435bfed911bad6fe5ffc10998c4567beb43c3939ecdaaa0a07b52dcd5ca4",
       "kind": "uups"
@@ -324,16 +249,6 @@
     {
       "address": "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
       "txHash": "0x098619cf50e02b27a76017b4823d5d39c410191c13777fa057b51888342b70c9",
-      "kind": "uups"
-    },
-    {
-      "address": "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d",
-      "txHash": "0x60d93979c5911e2861fcd8c74ba4430cd6eac83af415afdc445e0319742434c3",
-      "kind": "uups"
-    },
-    {
-      "address": "0x04C89607413713Ec9775E14b954286519d836FEf",
-      "txHash": "0x966483137a67c1bcd1da5a8c5886b5eb41830fa56a9cf61b51367a7894e35b35",
       "kind": "uups"
     },
     {
@@ -347,16 +262,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x202CCe504e04bEd6fC0521238dDf04Bc9E8E15aB",
-      "txHash": "0x0c4523c83138252444eb78393343e27c1e92101700c979650825cd280111e2f3",
-      "kind": "uups"
-    },
-    {
-      "address": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
-      "txHash": "0x566af7f282b090c4f5f4bbf133861d61167f63ea9b71770325ca45697424a0d9",
-      "kind": "uups"
-    },
-    {
       "address": "0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d",
       "txHash": "0x5113ba302cfdce5c8846923844c8455990909f029eed4617ed5ea3bda9e1c080",
       "kind": "uups"
@@ -367,16 +272,6 @@
       "kind": "uups"
     },
     {
-      "address": "0x49fd2BE640DB2910c2fAb69bB8531Ab6E76127ff",
-      "txHash": "0xf0904d1383bc4b785f9dfb0910846e14d368063d00df862674735c96767ee7e0",
-      "kind": "uups"
-    },
-    {
-      "address": "0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D",
-      "txHash": "0xc6805221e9ae36aaa21b6fe33ca4330283372c0651cf32670564c0c2242eccd9",
-      "kind": "uups"
-    },
-    {
       "address": "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
       "txHash": "0x7681417563623a7a593395634b44bc3f658a6f27a01d045758d01b3fa18f8b35",
       "kind": "uups"
@@ -384,6 +279,191 @@
     {
       "address": "0x5c74c94173F05dA1720953407cbb920F3DF9f887",
       "txHash": "0x7bdb629dd77e3248e0cc36364d800732d074c1ebdac75f0e54fe4726ae31ac75",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+      "txHash": "0x1299f248c4ba1465593d85d718e7fb1f326137b48b8c0f3a778593270886f647",
+      "kind": "uups"
+    },
+    {
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "txHash": "0x2acafdb9cb96b3b3eebaf39de1b45c0c77066da5fba8c9b836021da81a42a2f6",
+      "kind": "uups"
+    },
+    {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0x31464355cc0cc02d0af3ef26320c6ff9edc252402625528f3fe7502686374f24",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0x9ca54517a34d819008e23800c3e0034886639b8ec30f8fee318be85a1c5da54e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0xffe28f46c60bcc7ac8354337c754d2fa699fd589fefa1f1a0fb20b69a7c5e937",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0x787835c1d480666e3ff88052e756f2c78af5a333909b63022ef4eb451508296d",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7a2088a1bFc9d81c55368AE168C2C02570cB814F",
+      "txHash": "0xdb14aaad201c2909e9eae5f97a74bd168c4af241d7eb199465621dfcfe24445a",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+      "txHash": "0x212aa94c7864f3496362272cd0383b3b33cd99dc27aedda956b662821f39ef6c",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+      "txHash": "0x732c3eebc22d63803037dc59d9fb1c6aebbc434cac4c6288c9429bd7256256ef",
+      "kind": "uups"
+    },
+    {
+      "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+      "txHash": "0x7c4732c16df2f6f39c8feeb0781d7232b7fbe69761fef016720137be3250f094",
+      "kind": "uups"
+    },
+    {
+      "address": "0x998abeb3E57409262aE5b751f60747921B33613E",
+      "txHash": "0x81fcbb397f8ea38327b07766d12474f08baee92efcecd4b025d5a9838eb39436",
+      "kind": "uups"
+    },
+    {
+      "address": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
+      "txHash": "0x75036f613fb225924aed2651172ac7c215ebf0bedc1dbc7b3f581124306638a3",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+      "txHash": "0xead358d9f9b77ff594081e0ac0349b2af9457213a1fc380b0b51ed218f8508c9",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc351628EB244ec633d5f21fBD6621e1a683B1181",
+      "txHash": "0xe3c711e0775532c452777b2762b14eb0b0a4dfb84611b18a7ecc4bf69620f141",
+      "kind": "uups"
+    },
+    {
+      "address": "0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc",
+      "txHash": "0xdb8713d754054474db58f976df78fc4aa8c810bd64e02202d9434b0486d3a058",
+      "kind": "uups"
+    },
+    {
+      "address": "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d",
+      "txHash": "0x5e3d78c92b14c73c65f5f65ad58629c918541e8526733b46316d78b25a641e90",
+      "kind": "uups"
+    },
+    {
+      "address": "0x04C89607413713Ec9775E14b954286519d836FEf",
+      "txHash": "0x70407d3daf2cecd227fb072a84bd263350cadc618c69618b5479a954360d1687",
+      "kind": "uups"
+    },
+    {
+      "address": "0x21dF544947ba3E8b3c32561399E88B52Dc8b2823",
+      "txHash": "0x63afd13a6fc0d3ef2c1ec7870c32c52213a2c73891a49284d7f7641f02a26f53",
+      "kind": "uups"
+    },
+    {
+      "address": "0xD8a5a9b31c3C0232E196d518E89Fd8bF83AcAd43",
+      "txHash": "0x4f5027d1a4d9760eeb0530ca1f8432ea76891f371339b811b14c8f9b99c9960d",
+      "kind": "uups"
+    },
+    {
+      "address": "0x202CCe504e04bEd6fC0521238dDf04Bc9E8E15aB",
+      "txHash": "0x700d51344417d5a144c4ff5009896bf31ab8ffc70ea1ee5a376c42daeb94b267",
+      "kind": "uups"
+    },
+    {
+      "address": "0x172076E0166D1F9Cc711C77Adf8488051744980C",
+      "txHash": "0xff6465bc1b9696b9158f1d8e6329d2ee9c2aebd83e15741ff669573e2a814ba8",
+      "kind": "uups"
+    },
+    {
+      "address": "0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25",
+      "txHash": "0xcf5620128f51b69cfb557e3b829cebb1064f3bd0fa740916e3521e43077a56da",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2B0d36FACD61B71CC05ab8F3D2355ec3631C0dd5",
+      "txHash": "0x28317d109c0d08d034bc56a2c3503127e44d302f530088a11dd63840b08a0005",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4C2F7092C2aE51D986bEFEe378e50BD4dB99C901",
+      "txHash": "0x3366ab1b9340f144a1b55f2895064398028901fee82cf21bbe3c69afa75da39a",
+      "kind": "uups"
+    },
+    {
+      "address": "0x49fd2BE640DB2910c2fAb69bB8531Ab6E76127ff",
+      "txHash": "0xa8a75818a27cbb521ad06d425332067277ca00f269a1ce0bba71ef4f7c995c31",
+      "kind": "uups"
+    },
+    {
+      "address": "0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D",
+      "txHash": "0x34140b01f0ec1eb6bca56488e4151d780bc70b0c5c42de4af8a2eb457165b791",
+      "kind": "uups"
+    },
+    {
+      "address": "0xf953b3A269d80e3eB0F2947630Da976B896A8C5b",
+      "txHash": "0x0e79a49868e0c786c2c5d61886598989cd78525ee25e0e58da116017d67ab599",
+      "kind": "uups"
+    },
+    {
+      "address": "0x18E317A7D70d8fBf8e6E893616b52390EbBdb629",
+      "txHash": "0xb0e7e0874c383315854ef0aa5556b2ecfb858a95472cf021f9c75baa2d6468e0",
+      "kind": "uups"
+    },
+    {
+      "address": "0xCace1b78160AE76398F486c8a18044da0d66d86D",
+      "txHash": "0x2066fcfc68ecf5ed007353b1ca2b7fcf487928f3b61b49af2a00d0e052584ebe",
+      "kind": "uups"
+    },
+    {
+      "address": "0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397",
+      "txHash": "0x72726421001a02c2819597439a8bb9ee9d6c83961aff1f9834ca4f27cb6120ad",
+      "kind": "uups"
+    },
+    {
+      "address": "0xD0141E899a65C95a556fE2B27e5982A6DE7fDD7A",
+      "txHash": "0xd2df922f4889d30358578e100671e37feb0f75dd6c63805f081d5eb68dacc0e9",
+      "kind": "uups"
+    },
+    {
+      "address": "0xA7c59f010700930003b33aB25a7a0679C860f29c",
+      "txHash": "0x53dc84ab53f1a54eced948b0f240da8f3f457f8dc8e3d68442eb7433c4f63802",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3347B4d90ebe72BeFb30444C9966B2B990aE9FcB",
+      "txHash": "0xb5c5f21e9cecb6faa4bc9493a5875bd4f5b75bfebe4bfc970bee1fee60240596",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3aAde2dCD2Df6a8cAc689EE797591b2913658659",
+      "txHash": "0xaf970c6163753e5a8f89d02dcb53ff7a1fadd9bb34bc6fa2046ff09616361134",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE3011A37A904aB90C8881a99BD1F6E21401f1522",
+      "txHash": "0x285df96b1fde4f45439aef068c0de1abe6cd7f21e68a946af1f1518ea86a6357",
+      "kind": "uups"
+    },
+    {
+      "address": "0x525C7063E7C20997BaaE9bDa922159152D0e8417",
+      "txHash": "0x310c1496de2a58d5deff7cb869305f613197e267949d4e704e7422292c2a74b1",
+      "kind": "uups"
+    },
+    {
+      "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+      "txHash": "0xdd3229ae7251504fc6aa429222db9e64c6896d2e559e9ed5563d6be3f4b158fc",
       "kind": "uups"
     }
   ],
@@ -2089,9 +2169,9 @@
         }
       }
     },
-    "0cf864e306341d4b93648c025ec3d1932f22c6afdec4f694b92d110c1c56684e": {
+    "eab6a79f96eeaed83b46e127944eb8e2ef787be22addc4de90d6c9aaf1ce40a8": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0xb67fcabefea91508817a87cd3e612f26d77b799a0c918245ca3d702ebdc28313",
+      "txHash": "0x86ddb9eddaa89b6bf26bfd4a21b17fb98b54a0d7d0d62f64aae2c5562fc122bd",
       "layout": {
         "storage": [
           {
@@ -2198,9 +2278,9 @@
         }
       }
     },
-    "828fcfc64355a34f443b7bcb4af817ccca550deee04683b6d67afac691e051b3": {
+    "7e507ec84ed9424e9ba764362f4b55df2df5ec5fe10bda6d9a8480321274eea6": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x099f6e5a6b25d50ca7a89ed40c319bac702e4e7c43bcb3d8c2de06532407b9d8",
+      "txHash": "0x7e9950442467c00457c8a1a5fbb9c922f3adb7593c4cdc70ebfefe0a1ffee36e",
       "layout": {
         "storage": [
           {
@@ -2347,9 +2427,9 @@
         }
       }
     },
-    "947937cef5ace7282f95100ed571fd7207cfb5b897cf317d7365e1b3ff29c1d9": {
+    "6ef484349c47b7d4eb119e39b505bdd266000ed8a57de39c44fddde5f6dad8d2": {
       "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0xb34cac1d9223da3e30e08cc608030184f7fef19bd75311749fdfc178ff3d02d1",
+      "txHash": "0x4bc2ed85e6657f0677dcc02d7fcf550af913ab874db25017fb186f7cbbb7a6d8",
       "layout": {
         "storage": [
           {
@@ -2373,7 +2453,7 @@
             "label": "userAccountManager",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IUserAccountManager)9988",
+            "type": "t_contract(IUserAccountManager)10376",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2397,7 +2477,7 @@
             "label": "gold",
             "offset": 0,
             "slot": "101",
-            "type": "t_contract(IKingsGold)10185",
+            "type": "t_contract(IKingsGold)10607",
             "contract": "Treasury",
             "src": "contracts\\Treasury.sol:20"
           }
@@ -2411,11 +2491,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IKingsGold)10185": {
+          "t_contract(IKingsGold)10607": {
             "label": "contract IKingsGold",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9988": {
+          "t_contract(IUserAccountManager)10376": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
@@ -2430,9 +2510,9 @@
         }
       }
     },
-    "d0b88203f5dbd962a23030157dfd5a20da284e51f2ef261b36c903d53201ab37": {
+    "515867f9fc0733e6f8d47f5ac2a65d16c9fc71aaf3c5d08e06289b7f63ba8ba8": {
       "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-      "txHash": "0x7407bd1a5b8e9af6c0f3af6168084449e1dcc2944e4c350a68994584019c6adc",
+      "txHash": "0xdac7d2768d8def8f2a5695c12464b289431722e1e92375a044bd471a98233aea",
       "layout": {
         "storage": [
           {
@@ -2456,7 +2536,7 @@
             "label": "userAccountManager",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IUserAccountManager)9988",
+            "type": "t_contract(IUserAccountManager)10376",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2472,7 +2552,7 @@
             "label": "provinceManager",
             "offset": 0,
             "slot": "2",
-            "type": "t_contract(IProvinceManager)9914",
+            "type": "t_contract(IProvinceManager)10302",
             "contract": "Continent",
             "src": "contracts\\Continent.sol:37"
           },
@@ -2480,7 +2560,7 @@
             "label": "world",
             "offset": 0,
             "slot": "3",
-            "type": "t_contract(IWorld)10165",
+            "type": "t_contract(IWorld)10587",
             "contract": "Continent",
             "src": "contracts\\Continent.sol:38"
           }
@@ -2490,15 +2570,15 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IProvinceManager)9914": {
+          "t_contract(IProvinceManager)10302": {
             "label": "contract IProvinceManager",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9988": {
+          "t_contract(IUserAccountManager)10376": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
-          "t_contract(IWorld)10165": {
+          "t_contract(IWorld)10587": {
             "label": "contract IWorld",
             "numberOfBytes": "20"
           },
@@ -2513,9 +2593,9 @@
         }
       }
     },
-    "f1367d0890169b509df1b09e635d8b93439f43e18de5898a5b4a28c58bf13e02": {
+    "7add75bd8ef77b48054b48bfb1109ca64899b0611f14c8e8ba24839c7a53800c": {
       "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
-      "txHash": "0x27c5b92634144d875feef5cb5d4e638342a68bc0d092312d016175ac54203456",
+      "txHash": "0xde5d26f07e7262e90b51d611f9b25cd42a5c4b79bb86108e81dd2cf548f8ce0d",
       "layout": {
         "storage": [
           {
@@ -2539,7 +2619,7 @@
             "label": "userAccountManager",
             "offset": 2,
             "slot": "0",
-            "type": "t_contract(IUserAccountManager)9988",
+            "type": "t_contract(IUserAccountManager)10376",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2571,7 +2651,7 @@
             "label": "continents",
             "offset": 0,
             "slot": "102",
-            "type": "t_array(t_contract(IContinent)9950)dyn_storage",
+            "type": "t_array(t_contract(IContinent)10338)dyn_storage",
             "contract": "World",
             "src": "contracts\\World.sol:22"
           },
@@ -2584,10 +2664,10 @@
             "src": "contracts\\World.sol:23"
           },
           {
-            "label": "structureManager",
+            "label": "eventFactory",
             "offset": 0,
             "slot": "104",
-            "type": "t_contract(IStructureManager)10139",
+            "type": "t_contract(IEventFactory)10561",
             "contract": "World",
             "src": "contracts\\World.sol:25"
           },
@@ -2595,7 +2675,7 @@
             "label": "treasury",
             "offset": 0,
             "slot": "105",
-            "type": "t_contract(ITreasury)10182",
+            "type": "t_contract(ITreasury)10604",
             "contract": "World",
             "src": "contracts\\World.sol:26"
           },
@@ -2603,7 +2683,7 @@
             "label": "food",
             "offset": 0,
             "slot": "106",
-            "type": "t_contract(IFood)10175",
+            "type": "t_contract(IFood)10597",
             "contract": "World",
             "src": "contracts\\World.sol:28"
           },
@@ -2645,7 +2725,7 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_contract(IContinent)9950)dyn_storage": {
+          "t_array(t_contract(IContinent)10338)dyn_storage": {
             "label": "contract IContinent[]",
             "numberOfBytes": "32"
           },
@@ -2657,23 +2737,23 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IContinent)9950": {
+          "t_contract(IContinent)10338": {
             "label": "contract IContinent",
             "numberOfBytes": "20"
           },
-          "t_contract(IFood)10175": {
+          "t_contract(IEventFactory)10561": {
+            "label": "contract IEventFactory",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IFood)10597": {
             "label": "contract IFood",
             "numberOfBytes": "20"
           },
-          "t_contract(IStructureManager)10139": {
-            "label": "contract IStructureManager",
-            "numberOfBytes": "20"
-          },
-          "t_contract(ITreasury)10182": {
+          "t_contract(ITreasury)10604": {
             "label": "contract ITreasury",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9988": {
+          "t_contract(IUserAccountManager)10376": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
@@ -2688,9 +2768,9 @@
         }
       }
     },
-    "b68500e110ee6e188e420506dab4e05283837de5cad340895e3d59919f040add": {
+    "70d6d50f7978225d9349b9de68501deae98e4271a94b20eac433472bc674e85f": {
       "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-      "txHash": "0xd5096fe2040b7cfaefb67ebfb21527f3435982ec90c32f93bbce1ab5ee203475",
+      "txHash": "0x052db9551947958f89f5a16e1cc56f45858b52a361e6163aaec85b923bc3a4b7",
       "layout": {
         "storage": [
           {
@@ -2842,7 +2922,7 @@
             "label": "userAccountManager",
             "offset": 0,
             "slot": "251",
-            "type": "t_contract(IUserAccountManager)9988",
+            "type": "t_contract(IUserAccountManager)10376",
             "contract": "GenericAccessControl",
             "src": "contracts\\GenericAccessControl.sol:14"
           },
@@ -2890,7 +2970,7 @@
             "label": "continent",
             "offset": 0,
             "slot": "404",
-            "type": "t_contract(IContinent)9950",
+            "type": "t_contract(IContinent)10338",
             "contract": "ProvinceManager",
             "src": "contracts\\ProvinceManager.sol:25"
           },
@@ -2898,7 +2978,7 @@
             "label": "provinces",
             "offset": 0,
             "slot": "405",
-            "type": "t_mapping(t_uint256,t_contract(IProvince)9882)",
+            "type": "t_mapping(t_uint256,t_contract(IProvince)10270)",
             "contract": "ProvinceManager",
             "src": "contracts\\ProvinceManager.sol:27"
           },
@@ -2940,15 +3020,15 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IContinent)9950": {
+          "t_contract(IContinent)10338": {
             "label": "contract IContinent",
             "numberOfBytes": "20"
           },
-          "t_contract(IProvince)9882": {
+          "t_contract(IProvince)10270": {
             "label": "contract IProvince",
             "numberOfBytes": "20"
           },
-          "t_contract(IUserAccountManager)9988": {
+          "t_contract(IUserAccountManager)10376": {
             "label": "contract IUserAccountManager",
             "numberOfBytes": "20"
           },
@@ -2972,7 +3052,7 @@
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_contract(IProvince)9882)": {
+          "t_mapping(t_uint256,t_contract(IProvince)10270)": {
             "label": "mapping(uint256 => contract IProvince)",
             "numberOfBytes": "32"
           },
@@ -3011,9 +3091,9 @@
         }
       }
     },
-    "af7da236496867d7d6f43857451264bac110337b2411c28cab88adb067a661ff": {
+    "5572879e8e8fb35b0b1e0ffe1aede47a156d5193e104406c4a168faf2c955187": {
       "address": "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
-      "txHash": "0x1883d6cf5ce4caa71023a4ba103fb3ea580cdf6b0a02f8d27516c5de2d5c5115",
+      "txHash": "0xb3504789db76411ed34fbfed2795675d6c2b43945b8e0d150eadc93452a3ec46",
       "layout": {
         "storage": [
           {
@@ -3069,7 +3149,7 @@
             "label": "continent",
             "offset": 0,
             "slot": "151",
-            "type": "t_contract(IContinent)9950",
+            "type": "t_contract(IContinent)10338",
             "contract": "Province",
             "src": "contracts\\Province.sol:32"
           },
@@ -3077,7 +3157,7 @@
             "label": "world",
             "offset": 0,
             "slot": "152",
-            "type": "t_contract(IWorld)10165",
+            "type": "t_contract(IWorld)10587",
             "contract": "Province",
             "src": "contracts\\Province.sol:33"
           },
@@ -3243,11 +3323,11 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(IContinent)9950": {
+          "t_contract(IContinent)10338": {
             "label": "contract IContinent",
             "numberOfBytes": "20"
           },
-          "t_contract(IWorld)10165": {
+          "t_contract(IWorld)10587": {
             "label": "contract IWorld",
             "numberOfBytes": "20"
           },
@@ -3368,6 +3448,728 @@
           "t_uint32": {
             "label": "uint32",
             "numberOfBytes": "4"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "36754bfe34dbbb1554ceeffbb3acd36dcfc70dce455d9ab4102f831e5bf43147": {
+      "address": "0x95401dc811bb5740090279Ba06cfA8fcF6113778",
+      "txHash": "0x66a07ade8f8d133ea92a46478dd9e89961391833c56f35b369b2991e88816c83",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "userAccountManager",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_contract(IUserAccountManager)10376",
+            "contract": "GenericAccessControl",
+            "src": "contracts\\GenericAccessControl.sol:14"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\ERC1967\\ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "structureBeacons",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_struct(UintToAddressMap)7130_storage",
+            "contract": "EventFactory",
+            "src": "contracts\\EventFactory.sol:30"
+          },
+          {
+            "label": "eventBeacons",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_struct(UintToAddressMap)7130_storage",
+            "contract": "EventFactory",
+            "src": "contracts\\EventFactory.sol:31"
+          },
+          {
+            "label": "continent",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_contract(IContinent)10338",
+            "contract": "EventFactory",
+            "src": "contracts\\EventFactory.sol:33"
+          }
+        ],
+        "types": {
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IContinent)10338": {
+            "label": "contract IContinent",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IUserAccountManager)10376": {
+            "label": "contract IUserAccountManager",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_bytes32,t_bytes32)": {
+            "label": "mapping(bytes32 => bytes32)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_uint256)": {
+            "label": "mapping(bytes32 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Bytes32Set)7818_storage": {
+            "label": "struct EnumerableSet.Bytes32Set",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Set)7624_storage",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(Bytes32ToBytes32Map)6900_storage": {
+            "label": "struct EnumerableMap.Bytes32ToBytes32Map",
+            "members": [
+              {
+                "label": "_keys",
+                "type": "t_struct(Bytes32Set)7818_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_values",
+                "type": "t_mapping(t_bytes32,t_bytes32)",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Set)7624_storage": {
+            "label": "struct EnumerableSet.Set",
+            "members": [
+              {
+                "label": "_values",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_indexes",
+                "type": "t_mapping(t_bytes32,t_uint256)",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(UintToAddressMap)7130_storage": {
+            "label": "struct EnumerableMap.UintToAddressMap",
+            "members": [
+              {
+                "label": "_inner",
+                "type": "t_struct(Bytes32ToBytes32Map)6900_storage",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "152310a9b713114a6b1a19d24cf2fc938ca6c8e092425091bffd9b6b6ec38ec4": {
+      "address": "0x4826533B4897376654Bb4d4AD88B7faFD0C98528",
+      "txHash": "0x36ac273ad61c3c698bb862bec4b44558c8fc378e72fb26fdcd87d5e5b275e3bf",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "province",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_contract(IProvince)10270",
+            "contract": "Structure",
+            "src": "contracts\\Structure.sol:16"
+          },
+          {
+            "label": "costFactor",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_struct(ResourceFactor)11907_storage",
+            "contract": "Structure",
+            "src": "contracts\\Structure.sol:18"
+          },
+          {
+            "label": "_availableAmount",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "Structure",
+            "src": "contracts\\Structure.sol:20"
+          },
+          {
+            "label": "totalAmount",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "Structure",
+            "src": "contracts\\Structure.sol:21"
+          },
+          {
+            "label": "yieldRewardFactor",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_struct(ResourceFactor)11907_storage",
+            "contract": "YieldStructure",
+            "src": "contracts\\YieldStructure.sol:14"
+          }
+        ],
+        "types": {
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IProvince)10270": {
+            "label": "contract IProvince",
+            "numberOfBytes": "20"
+          },
+          "t_struct(ResourceFactor)11907_storage": {
+            "label": "struct ResourceFactor",
+            "members": [
+              {
+                "label": "manPower",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "attrition",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "time",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "goldForTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "food",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "wood",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "rock",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "iron",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "d9689342a7db2759868d700a0167cfd6eed5cbec24cf778ca297ca0c5568b4bd": {
+      "address": "0x0E801D84Fa97b50751Dbf25036d067dCf18858bF",
+      "txHash": "0x173533a9d9c0fc51c68e494d4895f9d2b1c7e0c6442494ed3847360f1eaf3c11",
+      "layout": {
+        "storage": [
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165Storage",
+            "src": "@openzeppelin\\contracts\\utils\\introspection\\ERC165Storage.sol:18"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "state",
+            "offset": 2,
+            "slot": "1",
+            "type": "t_enum(State)9288",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:17"
+          },
+          {
+            "label": "province",
+            "offset": 3,
+            "slot": "1",
+            "type": "t_contract(IProvince)10270",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:19"
+          },
+          {
+            "label": "world",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(IWorld)10587",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:21"
+          },
+          {
+            "label": "creationTime",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:23"
+          },
+          {
+            "label": "timeRequired",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:24"
+          },
+          {
+            "label": "goldForTime",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:25"
+          },
+          {
+            "label": "attrition",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:26"
+          },
+          {
+            "label": "hero",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:29"
+          },
+          {
+            "label": "manPower",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:31"
+          },
+          {
+            "label": "foodAmount",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:32"
+          },
+          {
+            "label": "woodAmount",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:33"
+          },
+          {
+            "label": "rockAmount",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:34"
+          },
+          {
+            "label": "ironAmount",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:35"
+          },
+          {
+            "label": "structure",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_contract(IStructure)10454",
+            "contract": "BuildEvent",
+            "src": "contracts\\BuildEvent.sol:15"
+          },
+          {
+            "label": "count",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_uint256",
+            "contract": "BuildEvent",
+            "src": "contracts\\BuildEvent.sol:16"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes4": {
+            "label": "bytes4",
+            "numberOfBytes": "4"
+          },
+          "t_contract(IProvince)10270": {
+            "label": "contract IProvince",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IStructure)10454": {
+            "label": "contract IStructure",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IWorld)10587": {
+            "label": "contract IWorld",
+            "numberOfBytes": "20"
+          },
+          "t_enum(State)9288": {
+            "label": "enum Event.State",
+            "members": [
+              "Initialized",
+              "Activated",
+              "PaidFor",
+              "Completed"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "251f17d43cc9742574267c78ca3c9655748008189ff8af42728782584a1d0127": {
+      "address": "0x9d4454B023096f34B160D6B654540c56A1F81688",
+      "txHash": "0x644f7b03ff633e8316ebfe82f64c1f10912e3e4e8a5e33911d5be2a81d0bfeec",
+      "layout": {
+        "storage": [
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165Storage",
+            "src": "@openzeppelin\\contracts\\utils\\introspection\\ERC165Storage.sol:18"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "1",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "state",
+            "offset": 2,
+            "slot": "1",
+            "type": "t_enum(State)9288",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:17"
+          },
+          {
+            "label": "province",
+            "offset": 3,
+            "slot": "1",
+            "type": "t_contract(IProvince)10270",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:19"
+          },
+          {
+            "label": "world",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(IWorld)10587",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:21"
+          },
+          {
+            "label": "creationTime",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:23"
+          },
+          {
+            "label": "timeRequired",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:24"
+          },
+          {
+            "label": "goldForTime",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:25"
+          },
+          {
+            "label": "attrition",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:26"
+          },
+          {
+            "label": "hero",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:29"
+          },
+          {
+            "label": "manPower",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:31"
+          },
+          {
+            "label": "foodAmount",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:32"
+          },
+          {
+            "label": "woodAmount",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:33"
+          },
+          {
+            "label": "rockAmount",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:34"
+          },
+          {
+            "label": "ironAmount",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint256",
+            "contract": "Event",
+            "src": "contracts\\Event.sol:35"
+          },
+          {
+            "label": "structure",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_contract(IYieldStructure)10463",
+            "contract": "YieldEvent",
+            "src": "contracts\\YieldEvent.sol:19"
+          },
+          {
+            "label": "count",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_uint256",
+            "contract": "YieldEvent",
+            "src": "contracts\\YieldEvent.sol:20"
+          },
+          {
+            "label": "receiver",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_address",
+            "contract": "YieldEvent",
+            "src": "contracts\\YieldEvent.sol:21"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes4": {
+            "label": "bytes4",
+            "numberOfBytes": "4"
+          },
+          "t_contract(IProvince)10270": {
+            "label": "contract IProvince",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IWorld)10587": {
+            "label": "contract IWorld",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IYieldStructure)10463": {
+            "label": "contract IYieldStructure",
+            "numberOfBytes": "20"
+          },
+          "t_enum(State)9288": {
+            "label": "enum Event.State",
+            "members": [
+              "Initialized",
+              "Activated",
+              "PaidFor",
+              "Completed"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
           },
           "t_uint8": {
             "label": "uint8",

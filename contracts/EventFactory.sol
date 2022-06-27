@@ -38,8 +38,24 @@ contract EventFactory is
         __UUPSUpgradeable_init();
     }
 
+    function setStructureBeacon(uint256 _id, address _beaconAddress) external override onlyRole(UPGRADER_ROLE) {
+        structureBeacons.set(_id, _beaconAddress);
+    }
+    function getStructureBeacon(uint256 _id) external view override returns(bool, address) {
+        return structureBeacons.tryGet(_id);
+    }
+
+
+    function setEventBeacon(uint256 _id, address _beaconAddress) external override onlyRole(UPGRADER_ROLE) {
+        eventBeacons.set(_id, _beaconAddress);
+    }
+    function getEventBeacon(uint256 _id) external view override returns(bool, address) {
+        return eventBeacons.tryGet(_id);
+    }
+
+
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function Build(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _buldEventId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
 
         // Check access to province
         require(_province.hasRole(OWNER_ROLE, tx.origin) || _province.hasRole(VASSAL_ROLE, tx.origin), "No access");
@@ -47,6 +63,7 @@ contract EventFactory is
 
         (bool structureExist, address structureAddress) = _province.getStructure(_structureId);
         if(!structureExist) {
+            console.log("Before create Struture");
             BeaconProxy structureProxy = new BeaconProxy(structureBeacons.get(_structureId),abi.encodeWithSelector(Structure(address(0)).initialize.selector, _province));
             structureAddress = address(structureProxy);
         }
@@ -57,10 +74,11 @@ contract EventFactory is
         //populationAvailable = populationAvailable - populationUsed;
 
         //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
-        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(_structureId), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
+        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(_buldEventId), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
             _province,
             IStructure(structureAddress),
-            _count
+            _count,
+            _hero
          ));
         
         return IBuildEvent(address(eventProxy));

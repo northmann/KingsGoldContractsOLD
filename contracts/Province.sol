@@ -83,21 +83,16 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         name = _name;
     }
 
-    // function Continent() public view override returns(IContinent)
-    // {
-    //     return continent;
-    // }
-
     function setVassal(address _user) external onlyRole(OWNER_ROLE)
     {
         _setupRole(VASSAL_ROLE, _user);
     }
 
-    function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createStructure(uint256 _structureId, uint256 _buildEventId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
         
         // Create a new Build event        
-        IBuildEvent buildEvent = world.eventFactory().Build(this, _structureId, _count, _hero);
+        IBuildEvent buildEvent = world.eventFactory().CreateBuildEvent(this, _structureId, _buildEventId, _count, _hero);
         
         // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.ManPower() <= populationAvailable, "not enough population");
