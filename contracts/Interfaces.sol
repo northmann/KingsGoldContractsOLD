@@ -109,10 +109,10 @@ interface IYieldEvent is IEvent {
 
 
 interface IEventFactory {
-    function continent() external view returns(IContinent);
+    //function continent() external view returns(IContinent);
     function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
-    function setContinent(IContinent _continent) external;
+    //function setContinent(IContinent _continent) external;
     function setStructureBeacon(uint256 _id, address _beaconAddress) external;
     function getStructureBeacon(uint256 _id) external view returns(bool, address);
     function setEventBeacon(uint256 _id, address _beaconAddress) external;
@@ -127,8 +127,11 @@ interface IWorld is IGenericAccessControl {
     function continentsCount() external view returns(uint256);
 }
 
-interface IFood is IERC20Upgradeable {
+interface ICommondity is IERC20Upgradeable {
     function mint_with_temp_account(address to, uint256 amount) external;
+}
+
+interface IFood is ICommondity {
 }
 
 interface ITreasury {

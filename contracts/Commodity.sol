@@ -16,7 +16,7 @@ import "./Interfaces.sol";
 // Minimal change-----
 // Roles added
 // GenericAccessControl added
-contract OpenZeppelinFood is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, PausableUpgradeable, Roles, GenericAccessControl, UUPSUpgradeable {
+contract Commodity is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, PausableUpgradeable, Roles, GenericAccessControl, UUPSUpgradeable, ICommondity {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -24,10 +24,14 @@ contract OpenZeppelinFood is Initializable, ERC20Upgradeable, ERC20BurnableUpgra
 
     function initialize(IUserAccountManager _userAccountManager) initializer virtual public {
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
-        __ERC20_init("KingsGold Food", "KSGF");
+        __ERC20_init("KingsGold Commodity", "KSGC");
         __ERC20Burnable_init();
         __Pausable_init();
         __UUPSUpgradeable_init();
+    }
+
+    function mint_with_temp_account(address to, uint256 amount) public override onlyRole(TEMPORARY_MINTER_ROLE) {
+        _mint(to, amount);
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {

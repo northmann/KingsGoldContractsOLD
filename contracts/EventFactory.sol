@@ -32,7 +32,7 @@ contract EventFactory is
     EnumerableMap.UintToAddressMap private structureBeacons;
     EnumerableMap.UintToAddressMap private eventBeacons;
 
-    IContinent public override continent;
+    //IContinent public override continent;
 
 
     function initialize(IUserAccountManager _userAccountManager) initializer public virtual {
@@ -111,9 +111,9 @@ contract EventFactory is
         return IYieldEvent(address(eventProxy));
     }
 
-    function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
-        continent = _continent;
-    }
+    // function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
+    //     continent = _continent;
+    // }
 
     function _authorizeUpgrade(address newImplementation)
         internal

@@ -8,10 +8,10 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Commodity.sol";
 
 
-contract Food is Initializable, Commodity, IFood {
+contract Iron is Initializable, Commodity, IFood {
 
     function initialize(IUserAccountManager _userAccountManager) initializer override public {
         super.initialize(_userAccountManager);
-        __ERC20_init("KingsGold Food", "KSGF");
+        __ERC20_init("KingsGold Iron", "KSGI");
     }
 }

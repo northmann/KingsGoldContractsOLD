@@ -86,9 +86,10 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
         userAccountManager.grantProvinceRole(province); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
 
-        console.log("createProvince - add province to user");
+        console.log("createProvince - add province to user address: ", address(user));
         user.addProvince(province);
 
+        console.log("createProvince - Done - returning tokenId: ", tokenId);
         return tokenId;
     }
 

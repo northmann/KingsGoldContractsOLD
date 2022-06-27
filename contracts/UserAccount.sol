@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
 pragma solidity >0.8.2;
+import "hardhat/console.sol";
 
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
@@ -40,6 +41,7 @@ contract UserAccount is Initializable, IUserAccount {
     }
 
     function addProvince(IProvince _province) public override {
+        console.log("addProvince - add province: ",  address(_province));
         provinces.add(address(_province));
     }
 

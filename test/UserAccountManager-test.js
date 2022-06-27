@@ -1,31 +1,28 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { createBeacon, createUpgradeable } = require("./Auxiliary.js");
+const { getId } = require("../scripts/Auxiliary.js");
+const builder = require("../scripts/builder.js");
 
 
 describe("UserAccountManager", function () {
 
-  let userAccountBeacon;
   let userAccountManager;
+  let roles;
 
   beforeEach(async function () {
-    userAccountBeacon = await createBeacon("UserAccount");
-    userAccountManager = await createUpgradeable("UserAccountManager", [userAccountBeacon.address]);
+    roles = await builder.addRoles();
+    userAccountManager = await builder.addUserAccountManager();
   });
 
   // You can nest describe calls to create subsections.
   describe("Deployment", function () {
-      // `it` is another Mocha function. This is the one you use to define your
-      // tests. It receives the test name, and a callback function.
 
-      // If the callback function is async, Mocha will `await` it.
-      it("Should set the right owner", async function () {
-          // Expect receives a value, and wraps it in an Assertion object. These
-          // objects have a lot of utility methods to assert values.
+    it('hasRole', async () => {
+          const [owner, addr1, addr2] = await ethers.getSigners();
 
-          // This test expects the owner variable stored in the contract to be equal
-          // to our Signer's owner.
-          //expect(await userAccountManager.owner()).to.equal(owner.address);
+          //expect(await userAccountManager.hasRole(await roles.DEFAULT_ADMIN_ROLE(), owner.address )).to.equal(true);
+          expect(await userAccountManager.hasRole(await roles.MINTER_ROLE(), owner.address )).to.equal(true);
+          expect(await userAccountManager.hasRole(await roles.UPGRADER_ROLE(), owner.address )).to.equal(true);
       });
 
   });

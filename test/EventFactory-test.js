@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { createBeacon, createUpgradeable, deployContract, getId, getRoles, getContractInstance } = require("./Auxiliary.js");
+const { getId, deployContract } = require("../scripts/Auxiliary.js");
+const builder = require("../scripts/builder.js");
 
 
 describe("EventFactory", function () {
@@ -22,85 +23,45 @@ describe("EventFactory", function () {
   let farmBeacon;
   let buildEventBeacon;
   let yieldEventBeacon;
+  let container;
 
   before(async function () {
     [owner, addr1, addr2] = await ethers.getSigners();
 
-    userAccountBeacon = await createBeacon("UserAccount");
-    userAccountManager = await createUpgradeable("UserAccountManager", [userAccountBeacon.address]);
-    token = await deployContract("KingsGold");
-    treasury = await createUpgradeable("Treasury", [userAccountManager.address, token.address]);
-    continentBeacon = await createBeacon("Continent");
-    world = await createUpgradeable("World", [userAccountManager.address, continentBeacon.address]);
-
-    let tx = await world.createContinent(); // Make a continent
-    await tx.wait(); // wait until the transaction is mined
-
-    continentAddress = await world.continents(0);
-    console.log("Continent address: ", continentAddress);
-
-    const Continent = await ethers.getContractFactory("Continent");
-    continent = Continent.attach(continentAddress);
-
-    provinceManager = await createUpgradeable("ProvinceManager", [userAccountManager.address]);
-    provinceBeacon = await createBeacon("Province");
-    provinceManager.setBeacon(provinceBeacon.address);
-    provinceManager.setContinent(continentAddress);
-
-    continent.setProvinceManager(provinceManager.address);
-
-    tx = await provinceManager.mintProvince("Test", owner.address);
-    let result = await tx.wait();
-
-    provinceAddress = await provinceManager.provinces(0);
-
-    eventFactory = await createUpgradeable("EventFactory", [userAccountManager.address]);
-    eventFactory.setContinent(continentAddress);
-
-    farmBeacon = await createBeacon("Farm");
-    buildEventBeacon = await createBeacon("BuildEvent");
-    yieldEventBeacon = await createBeacon("YieldEvent");
-
-    farm = await deployContract("Farm"); // Dummy implementation
-
-    eventFactory.setStructureBeacon(await farm.Id(), farmBeacon.address);
-    eventFactory.setEventBeacon(getId("BUILD_EVENT"), buildEventBeacon.address);
-    eventFactory.setEventBeacon(getId("YIELD_EVENT"), yieldEventBeacon.address);
-
+    roles = await builder.addRoles();
+    userAccountManager = await builder.addUserAccountManager();
+    await builder.addTreasury(owner);
+    await builder.addCommodities(owner);
+    container = await  builder.addEventFactory();
   });
 
   beforeEach(async function () {
-  });
-
-
-  it('checkId', async () => {
-    let farmId = getId("FARM_STRUCTURE");
-    
-    let contractFarmId = await farm.Id();
-
-    expect(contractFarmId).to.equal(farmId);
   });
 
   it('getStructureBeacon', async () => {
     let farmId = getId("FARM_STRUCTURE");
 
     // Tuple result (bool, address)
-    let farmBeaconResult = await eventFactory.getStructureBeacon(farmId);
+    let farmBeaconResult = await container.eventFactory.getStructureBeacon(farmId);
 
-    expect(farmBeaconResult[1]).to.equal(farmBeacon.address);
+    expect(farmBeaconResult[1]).to.equal(container.farmBeacon.address);
   });
 
 
   it('CreateBuildEvent', async () => {
     const [owner, addr1, addr2] = await ethers.getSigners();
 
-    // Make sure that the owner can create the Events
-    let roles = await getRoles();
+    world = await builder.addWorld();
+    await builder.addContinent();
+    await builder.addProvinceManager();
+    province = await builder.addProvince(owner);
+
+    // // Make sure that the owner can create the Events
     userAccountManager.grantRole(await roles.PROVINCE_ROLE(), owner.address);
 
-    let farmId = await farm.Id();
+    let farmId = getId("FARM_STRUCTURE");
 
-    let buildEventResult = await eventFactory.callStatic.CreateBuildEvent(provinceAddress, farmId, 1, 0);
+    let buildEventResult = await container.eventFactory.callStatic.CreateBuildEvent(province.address, farmId, 1, 0);
     
     expect(buildEventResult).to.not.equal(ethers.constants.AddressZero);
   });
@@ -108,11 +69,17 @@ describe("EventFactory", function () {
   it('CreateYieldEvent', async () => {
     const [owner, addr1, addr2] = await ethers.getSigners();
 
-    // Make sure that the owner can create the Events
-    let roles = await getRoles();
+    world = await builder.addWorld();
+    await builder.addContinent();
+    await builder.addProvinceManager();
+    province = await builder.addProvince(owner);
+
+    // // Make sure that the owner can create the Events
     userAccountManager.grantRole(await roles.PROVINCE_ROLE(), owner.address);
 
-    let yieldEventResult = await eventFactory.callStatic.CreateYieldEvent(provinceAddress, farm.address, owner.address, 1, 0);
+    let farm = await deployContract("Farm"); // Dummy
+
+    let yieldEventResult = await container.eventFactory.callStatic.CreateYieldEvent(province.address, farm.address, owner.address, 1, 0);
     
     expect(yieldEventResult).to.not.equal(ethers.constants.AddressZero);
   });
