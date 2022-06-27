@@ -49,7 +49,7 @@ contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
         BeaconProxy proxy = new BeaconProxy(beaconAddress   ,abi.encodeWithSelector(Province(address(0)).initialize.selector    , _name, _owner, continent));
 
         provinces[tokenId] = IProvince(address(proxy));
-        
+
         return (tokenId, IProvince(address(proxy)));
     }
     

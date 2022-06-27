@@ -22,8 +22,8 @@ contract OpenZeppelinFood is Initializable, ERC20Upgradeable, ERC20BurnableUpgra
         _disableInitializers();
     }
 
-    function initialize(IUserAccountManager _userAccountManager) initializer public {
-        setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
+    function initialize(IUserAccountManager _userAccountManager) initializer virtual public {
+        __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __ERC20_init("KingsGold Food", "KSGF");
         __ERC20Burnable_init();
         __Pausable_init();

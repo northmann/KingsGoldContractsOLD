@@ -66,6 +66,11 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
         continentBeacon = _beaconAddress;
     }
 
+    function setEventFactory(IEventFactory _eventFactory) external override onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        eventFactory = _eventFactory;
+    }
+
 
     function setTreasury(address _treasuryAddress) external onlyRole(DEFAULT_ADMIN_ROLE)
     {

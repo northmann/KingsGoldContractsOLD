@@ -32,7 +32,7 @@ interface IContractType {
 interface IProvince is IAccessControlUpgradeable { 
     function getEvents() external view returns(address[] memory);
     function continent() external view returns(IContinent);
-    function createStructure(uint256 _structureId, uint256 _buildEventId, uint256 _count, uint256 _hero) external;
+    function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external;
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, IStructure _structureContract) external;
     function setPoppulation(uint256 _manPower, uint256 _attrition) external;
@@ -56,6 +56,7 @@ interface IGenericAccessControl {
 interface IContinent  { 
 
     function world() external view returns(IWorld);
+    function createProvince(string memory _name, address owner) external returns(uint256);
     function setProvinceManager(IProvinceManager _instance) external;
     function spendEvent(IEvent _eventContract) external;
     function payForTime(address _contract) external;
@@ -109,7 +110,7 @@ interface IYieldEvent is IEvent {
 
 interface IEventFactory {
     function continent() external view returns(IContinent);
-    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _buldEventId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
     function setContinent(IContinent _continent) external;
     function setStructureBeacon(uint256 _id, address _beaconAddress) external;
@@ -122,6 +123,7 @@ interface IWorld is IGenericAccessControl {
     function food() external view returns(IFood);
     function treasury() external view returns(ITreasury);
     function eventFactory() external view  returns(IEventFactory);
+    function setEventFactory(IEventFactory _eventFactory) external;
     function continentsCount() external view returns(uint256);
 }
 

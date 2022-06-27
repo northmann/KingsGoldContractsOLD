@@ -58,7 +58,7 @@ describe("Continent", function () {
     await token.mint(owner.address, amount);        // Give me a lot of new coins
     await token.approve(continentAddress, amount);  // Approve Continent to spend my coins
 
-    const tx = await continent.createProvince("Test");
+    const tx = await continent.createProvince("Test", owner.address);
     await tx.wait();
     
     // Check userAccount provinces

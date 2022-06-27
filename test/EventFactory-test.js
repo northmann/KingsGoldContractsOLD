@@ -100,7 +100,7 @@ describe("EventFactory", function () {
 
     let farmId = await farm.Id();
 
-    let buildEventResult = await eventFactory.callStatic.CreateBuildEvent(provinceAddress, farmId, getId("BUILD_EVENT"), 1, 0);
+    let buildEventResult = await eventFactory.callStatic.CreateBuildEvent(provinceAddress, farmId, 1, 0);
     
     expect(buildEventResult).to.not.equal(ethers.constants.AddressZero);
   });

@@ -16,7 +16,6 @@ import "./Roles.sol";
 import "./Interfaces.sol";
 import "./GenericAccessControl.sol";
 
-uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
 
 contract EventFactory is
     Initializable,
@@ -25,6 +24,9 @@ contract EventFactory is
     UUPSUpgradeable,
     IEventFactory
  {
+    uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
+    uint256 constant BUILD_EVENT_ID = uint256(keccak256("BUILD_EVENT"));
+
     using EnumerableMap for EnumerableMap.UintToAddressMap;
 
     EnumerableMap.UintToAddressMap private structureBeacons;
@@ -55,17 +57,23 @@ contract EventFactory is
 
 
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _buldEventId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
 
+        console.log("EventFactory-CreateBuildEvent: check roles");
+        console.log("EventFactory-CreateBuildEvent: tx.origin: ", tx.origin);
         // Check access to province
         require(_province.hasRole(OWNER_ROLE, tx.origin) || _province.hasRole(VASSAL_ROLE, tx.origin), "No access");
         // Get existing structure is exist, if not create a new but do not attach to province yet
 
         (bool structureExist, address structureAddress) = _province.getStructure(_structureId);
         if(!structureExist) {
-            console.log("Before create Struture");
+            console.log("EventFactory-CreateBuildEvent: Before create Struture");
+            console.log("EventFactory-CreateBuildEvent: Structure beacon address: ", structureBeacons.get(_structureId));
+            console.log("EventFactory-CreateBuildEvent: Structure province address: ", address(_province));
+
             BeaconProxy structureProxy = new BeaconProxy(structureBeacons.get(_structureId),abi.encodeWithSelector(Structure(address(0)).initialize.selector, _province));
             structureAddress = address(structureProxy);
+            console.log("EventFactory-CreateBuildEvent: Structure address: ", structureAddress);
         }
         
         // Create an event
@@ -73,8 +81,9 @@ contract EventFactory is
         // check that the hero exist and is controlled by user.
         //populationAvailable = populationAvailable - populationUsed;
 
+        console.log("EventFactory-CreateBuildEvent: eventBeacons.get(BUILD_EVENT_ID): ", eventBeacons.get(BUILD_EVENT_ID));
         //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
-        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(_buldEventId), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
+        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(BUILD_EVENT_ID), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
             _province,
             IStructure(structureAddress),
             _count,

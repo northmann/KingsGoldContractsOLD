@@ -56,7 +56,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     // }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
-    function createProvince(string memory _name) external returns(uint256) {
+    function createProvince(string memory _name, address owner) external override returns(uint256) {
         console.log("createProvince - Start");
         // Check name, no illegal chars
         IUserAccount user = userAccountManager.ensureUserAccount(); // Just make sure that the user account exist!
@@ -80,8 +80,9 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
         console.log("createProvince - mintProvince with ProvinceManager: ", address(provinceManager));
 
-        (uint256 tokenId, IProvince province) = provinceManager.mintProvince(_name, tx.origin);
+        (uint256 tokenId, IProvince province) = provinceManager.mintProvince(_name, owner);
 
+        //province.setPoppulation(100,0); // Default 100 population Requires a EVENT_ROLE
         console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
         userAccountManager.grantProvinceRole(province); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
 
@@ -108,13 +109,21 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         require(ERC165Checker.supportsInterface(address(_eventContract), type(IEvent).interfaceId), "Not a event contract");
 
         ITreasury treasury = world.treasury();
+        console.log("spendEvent: treasury address : ", address(treasury));
+        
         
         IFood food = world.food();
-        // spend the resources that the event requires
-        if(!food.transferFrom(tx.origin, address(treasury), _eventContract.FoodAmount()))
-            revert InsuffcientFood({
-                minRequired: _eventContract.FoodAmount()
-            });
+        console.log("spendEvent: food address : ", address(food));
+        console.log("spendEvent: owner (tx.origin) : ", tx.origin);
+        console.log("spendEvent: food amount : ", _eventContract.FoodAmount());
+        
+        if(_eventContract.FoodAmount() > 0) {
+            // spend the resources that the event requires
+            if(!food.transferFrom(tx.origin, address(treasury), _eventContract.FoodAmount()))
+                revert InsuffcientFood({
+                    minRequired: _eventContract.FoodAmount()
+                });
+        }
 
         // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
         //     revert();

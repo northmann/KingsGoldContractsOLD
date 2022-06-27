@@ -14,12 +14,12 @@ contract GenericAccessControl is Roles, IGenericAccessControl {
     IUserAccountManager public override userAccountManager;
 
     modifier onlyRole(bytes32 role) {
-        require(userAccountManager.hasRole(role, msg.sender),"Access denied");
+        require(userAccountManager.hasRole(role, msg.sender),"GenericAccessControl.onlyRole : Access denied");
         _;
     }
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(userAccountManager.hasRole(role1, msg.sender) || userAccountManager.hasRole(role2, msg.sender),"Access denied");
+        require(userAccountManager.hasRole(role1, msg.sender) || userAccountManager.hasRole(role2, msg.sender),"GenericAccessControl.onlyRoles : Access denied");
         _;
     }
 

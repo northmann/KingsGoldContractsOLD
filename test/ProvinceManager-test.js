@@ -100,11 +100,3 @@ describe("ProvinceManager", function () {
 
   
 });
-/*
-Get data!?
-
-let toAddr = '0xBc25A51F63AA4Db0FFff0C34467c8EE6DCb2d0FC';
-let incomingTokenTransferEvents = await book.getPastEvents('Transfer', { filter: {'to': toAddr}, fromBlock: 0, toBlock: 'latest'})
-incomingTokenTransferEvents.forEach( (event) => console.log(event.returnValues.tokenId));
-
-*/

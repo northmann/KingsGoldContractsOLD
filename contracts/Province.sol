@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
 pragma solidity >0.8.2;
+import "hardhat/console.sol";
 
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -59,7 +60,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
 
     modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"Access denied");
+        require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"onlyRoles: Access denied");
         _;
     }
 
@@ -81,6 +82,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         continent = _continent;
         world = continent.world();
         name = _name;
+        populationAvailable = 100;
+        populationTotal = populationAvailable;
     }
 
     function setVassal(address _user) external onlyRole(OWNER_ROLE)
@@ -88,22 +91,28 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _setupRole(VASSAL_ROLE, _user);
     }
 
-    function createStructure(uint256 _structureId, uint256 _buildEventId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
-        
+        console.log("createStructure start");
+
+        console.log("createStructure call CreateBuildEvent");
         // Create a new Build event        
-        IBuildEvent buildEvent = world.eventFactory().CreateBuildEvent(this, _structureId, _buildEventId, _count, _hero);
+        IBuildEvent buildEvent = world.eventFactory().CreateBuildEvent(this, _structureId, _count, _hero);
         
+        console.log("createStructure check manpower");
         // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.ManPower() <= populationAvailable, "not enough population");
         populationAvailable = populationAvailable - buildEvent.ManPower();
 
+        console.log("createStructure spendEvent");
         // Spend the resouces on the behalf of the user
         continent.spendEvent(buildEvent); 
         
+        console.log("createStructure add event");
         // Add the event to the list of activities on the province.
         events.add(address(buildEvent)); // Needs some refactoring, as we do not know the type of event !
         
+        console.log("createStructure grant role");
         _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
     }
 
