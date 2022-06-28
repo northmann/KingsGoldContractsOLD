@@ -51,12 +51,11 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
         // uint256 rockFactor,
         // uint256 ironFactor) = IYieldStructure(structure).rewardFactor();
         ResourceFactor memory factor = structure.rewardFactor();
-                                                   
 
         manPower = count * factor.manPower; // The cost in manPower
         attrition = factor.attrition;
         timeRequired = factor.time; // Change in manPower could alter this.
-        goldForTime = count * factor.goldForTime;
+        goldForTime = count * factor.goldForTime * province.world().baseGoldCost();
         foodAmount = count * factor.food;
         woodAmount = count * factor.wood;
         rockAmount = count * factor.rock;
@@ -64,17 +63,20 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
     }
 
 
-    //     /// The cost of the time to complete the event.
-    // function priceForTime() external view override returns(uint256)
-    // {
-    //     return goldForTime;
-    // }
-
     function completeMint() public override virtual timeExpired onlyMinter notState(State.Completed) notState(State.Minted)
     {
         // Reward the user with commodities
         if(foodAmount > 0) {
             world.food().mint_with_temp_account(receiver,foodAmount);
+        }
+        if(woodAmount > 0) {
+            world.wood().mint_with_temp_account(receiver,woodAmount);
+        }
+        if(rockAmount > 0) {
+            world.rock().mint_with_temp_account(receiver,rockAmount);
+        }
+        if(ironAmount > 0) {
+            world.iron().mint_with_temp_account(receiver,ironAmount);
         }
 
         state = State.Minted;

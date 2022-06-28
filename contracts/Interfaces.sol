@@ -16,6 +16,9 @@ interface IEvent {
     function world() external view returns(IWorld);
     function manPower() external returns(uint256);
     function foodAmount() external returns(uint256);
+    function woodAmount() external returns(uint256);
+    function rockAmount() external returns(uint256);
+    function ironAmount() external returns(uint256);
 
     function priceForTime() external returns(uint256);
     function payForTime() external;
@@ -33,11 +36,16 @@ interface IProvince is IAccessControlUpgradeable {
     function continent() external view returns(IContinent);
     function setVassal(address _user) external;
     function removeVassal(address _user) external;
+
+    function populationTotal() external view returns(uint256);
+    function populationAvailable() external view returns(uint256);
+    function setPopulationTotal(uint256 _count) external;
+    function setPopulationAvailable(uint256 _count) external;
+
     function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external;
     function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external;
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, IStructure _structureContract) external;
-    function setPoppulation(uint256 _manPower, uint256 _attrition) external;
     function payForTime(IEvent _event) external;
     function completeEvent(IEvent _event) external;
     //function completeMint() external;
@@ -63,7 +71,7 @@ interface IContinent  {
     function world() external view returns(IWorld);
     function createProvince(string memory _name, address owner) external returns(uint256);
     function setProvinceManager(IProvinceManager _instance) external;
-    function spendEvent(IEvent _eventContract) external;
+    function spendEvent(IEvent _event, address _user) external;
     function payForTime(IEvent _event) external;
     function completeMint(IYieldEvent _event) external;
     // function completeMint(IYieldEvent _yieldEvent) external;
@@ -93,9 +101,9 @@ interface IStructure  {
     function typeId() external pure returns(uint256);
     function constuctionCost() external view returns(ResourceFactor memory);
     function availableAmount() external view returns(uint256);
+    function totalAmount() external view returns(uint256);
     function setAvailableAmount(uint256 _availableAmount) external;
-    function addTotalAmount(uint256 _amount) external;
-    function removeTotalAmount(uint256 _amount) external;
+    function setTotalAmount(uint256 _amount) external;
 }
 
 
@@ -130,10 +138,15 @@ interface IWorld is IGenericAccessControl {
     function baseGoldCost() external view returns(uint256);
     function setBaseGoldCost(uint256 _cost) external;
     function food() external view returns(IFood);
-    function setFood(address _address) external;
-    function setWood(address _address) external;
-    function setIron(address _address) external;
-    function setRock(address _address) external;
+    function wood() external view returns(IWood);
+    function rock() external view returns(IRock);
+    function iron() external view returns(IIron);
+ 
+    function setFood(IFood _food) external;
+    function setWood(IWood _wood) external;
+    function setRock(IRock _rock) external;
+    function setIron(IIron _iron) external;
+    
     function treasury() external view returns(ITreasury);
     function setTreasury(address _treasuryAddress) external;
     function eventFactory() external view  returns(IEventFactory);
@@ -148,6 +161,14 @@ interface ICommondity is IERC20Upgradeable {
 
 interface IFood is ICommondity {
 }
+interface IWood is ICommondity {
+}
+interface IRock is ICommondity {
+}
+interface IIron is ICommondity {
+}
+
+
 
 interface ITreasury {
     function gold() external view returns(IKingsGold);

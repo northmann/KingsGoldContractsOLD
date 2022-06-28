@@ -40,7 +40,7 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
         manPower = count * factor.manPower;
         attrition = factor.attrition;
         timeRequired = factor.time; // Change in manPower could alter this.
-        goldForTime = count * factor.goldForTime;
+        goldForTime = count * factor.goldForTime * province.world().baseGoldCost();
         foodAmount = count * factor.food;
         woodAmount = count * factor.wood;
         rockAmount = count * factor.rock;
@@ -53,20 +53,14 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
     }
 
 
-    function completeEvent() public override(Event, IEvent) onlyMinter timeExpired notState(State.Completed)
+    function completeEvent() public override(Event, IEvent) onlyProvince timeExpired notState(State.Completed)
     {
-
-        IStructure structureInstance = IStructure(structure);
-        structureInstance.setAvailableAmount(structureInstance.availableAmount() + count);
-        structureInstance.addTotalAmount(count);
+        structure.setAvailableAmount(structure.availableAmount() + count);
+        structure.setTotalAmount(structure.totalAmount() + count);
         
-        province.setStructure(structure.typeId(), structure);
-
-        //province.setPoppulation(manPower, 0);
-        //province.completeEvent();
+        province.setStructure(structure.typeId(), structure); // Make sure that the structure is added to the province structure list.
 
         super.completeEvent();
-        // Kill the contract??
     }
 
 }

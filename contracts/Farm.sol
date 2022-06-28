@@ -18,7 +18,7 @@ contract Farm is YieldStructure  {
     function _init() internal override {
         costFactor = ResourceFactor({
                     manPower:10,
-                    attrition:1000,
+                    attrition: 2e16, // 2 % base = 1 ether
                     time:4 hours,
                     goldForTime: 0.1 ether,
                     food:0,
@@ -29,7 +29,7 @@ contract Farm is YieldStructure  {
 
         yieldRewardFactor = ResourceFactor({
             manPower: 10,
-            attrition: 100, // 1 %
+            attrition: 2e16, // 2 %
             time: 4 hours,
             goldForTime: 0.1 ether,
             food:100,

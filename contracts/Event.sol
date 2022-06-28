@@ -13,6 +13,7 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
     enum State { Active, PaidFor, Minted, Completed }
 
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
+    uint256 public constant baseUnit = 1 ether;
     
     State public state;
 
@@ -30,9 +31,9 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
 
     uint256 public override manPower;
     uint256 public override foodAmount;
-    uint256 public woodAmount;
-    uint256 public rockAmount;
-    uint256 public ironAmount;
+    uint256 public override woodAmount;
+    uint256 public override rockAmount;
+    uint256 public override ironAmount;
 
 
     modifier onlyMinter() {
@@ -118,7 +119,19 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
 
     function completeEvent() public override virtual timeExpired onlyProvince notState(State.Completed)
     {
-        province.completeEvent(this);
+        updatePopulation();
         state = State.Completed;
     }
+
+    function updatePopulation() internal virtual
+    {
+        assert(attrition <= 1e18); // Cannot be more than 100%
+        // Calc mamPower Attrition
+        uint256 attritionCost = ((manPower * attrition) / baseUnit); // Calculate the percentage of the attrition.
+        uint256 manPowerLeft = manPower - attritionCost;
+
+        province.setPopulationAvailable(province.populationAvailable() + manPowerLeft);
+        province.setPopulationTotal(province.populationTotal() - attritionCost);
+    }
+
 }

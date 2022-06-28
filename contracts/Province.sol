@@ -49,8 +49,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     uint32 public mountain; // Stone
     uint32 public hills;    // Gold and iron ore
 
-    uint256 public populationTotal;
-    uint256 public populationAvailable;
+    uint256 public override populationTotal;
+    uint256 public override populationAvailable;
     address public armyContract;
 
     EnumerableMap.AddressToUintMap internal events;
@@ -70,6 +70,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
     modifier onlyEvent() {
         require(events.contains(msg.sender)); //Event must be listed on the province's events.
+        require(hasRole(EVENT_ROLE, msg.sender),"Event do not have the EVENT_ROLE");
         _;
     }
 
@@ -111,11 +112,12 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         console.log("createStructure check manpower");
         // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.manPower() <= populationAvailable, "not enough population");
+
         populationAvailable = populationAvailable - buildEvent.manPower();
 
         console.log("createStructure spendEvent");
         // Spend the resouces on the behalf of the user
-        continent.spendEvent(buildEvent); 
+        continent.spendEvent(buildEvent, msg.sender); 
         
         console.log("createStructure add event");
         // Add the event to the list of activities on the province.
@@ -160,14 +162,18 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         return events.getEvents();
     }
 
-    function setStructure(uint256 _id, IStructure _structureContract) public override onlyRole(EVENT_ROLE) onlyEvent {
+    function setStructure(uint256 _id, IStructure _structureContract) public override onlyEvent {
         structures.set(_id, address(_structureContract));
     }
 
-    function setPoppulation(uint256 _manPower, uint256 _attrition) public override onlyRole(EVENT_ROLE) onlyEvent {
-        populationAvailable += _manPower; // Return the manPower to the available pool. Attrition is included in manPower.
-        populationTotal -= _attrition; // Remove some of the population because of attrition.
+    function setPopulationTotal(uint256 _count) public override onlyRole(EVENT_ROLE) onlyEvent {
+        populationTotal = _count;
+
     }
+    function setPopulationAvailable(uint256 _count) public override onlyRole(EVENT_ROLE) onlyEvent {
+        populationAvailable = _count;
+    }
+
 
     function payForTime(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
     {
@@ -188,8 +194,6 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         require(events.contains(address(_event)),"Event unknown by province");
         require(hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
-
-        setPoppulation(_event.manPower(), 0);
 
         if(ERC165Checker.supportsInterface(address(_event), type(IYieldEvent).interfaceId)) {
             // Province calls continent on behalf of Event.

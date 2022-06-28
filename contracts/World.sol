@@ -29,9 +29,9 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
     uint256 public override baseGoldCost;
     
     IFood public override food;
-    address public wood;
-    address public iron;
-    address public rock;
+    IWood public override wood;
+    IRock public override rock;
+    IIron public override iron;
 
     
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -82,24 +82,24 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
         treasury = ITreasury(_treasuryAddress);
     }
 
-    function setFood(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
+    function setFood(IFood _food) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        food = IFood(_address);
+        food = _food;
     }
 
-    function setWood(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
+    function setWood(IWood _wood) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        wood = _address;
+        wood = _wood;
     }
 
-    function setIron(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
+    function setIron(IIron _iron) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        iron = _address;
+        iron = _iron;
     }
     
-    function setRock(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
+    function setRock(IRock _rock) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
-        rock = _address;
+        rock = _rock;
     }
 
 

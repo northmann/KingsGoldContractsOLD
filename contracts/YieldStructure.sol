@@ -17,8 +17,4 @@ contract YieldStructure is Structure, IYieldStructure  {
     {
         return yieldRewardFactor;
     }
-
-    function makeYield(uint256 _count) public virtual {
-        
-    }    
 }

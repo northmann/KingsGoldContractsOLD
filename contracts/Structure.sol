@@ -17,8 +17,8 @@ contract Structure is Initializable, Roles, IStructure {
 
     ResourceFactor internal costFactor;
 
-    uint256 internal _availableAmount;
-    uint256 public totalAmount;
+    uint256 public override availableAmount;
+    uint256 public override totalAmount;
 
     modifier onlyRole(bytes32 role) {
         require(province.hasRole(role, msg.sender),"Access denied");
@@ -36,7 +36,7 @@ contract Structure is Initializable, Roles, IStructure {
         _disableInitializers();
     }
 
-    function initialize(IProvince _province) initializer public {
+    function initialize(IProvince _province) initializer public virtual {
         province = _province;
         _init();
     }
@@ -56,29 +56,13 @@ contract Structure is Initializable, Roles, IStructure {
         return costFactor;
     }
 
-    function availableAmount() public view override returns(uint256)
-    {
-        return _availableAmount;
-    }
-
-
     function setAvailableAmount(uint256 _availableAmount) public override onlyRoles(PROVINCE_ROLE,EVENT_ROLE) {
-        _availableAmount = _availableAmount;
+        availableAmount = _availableAmount;
     }
 
-    function addTotalAmount(uint256 _amount) public override onlyRoles(PROVINCE_ROLE,EVENT_ROLE) {
+    function setTotalAmount(uint256 _amount) public override onlyRoles(PROVINCE_ROLE,EVENT_ROLE) {
         totalAmount += _amount;
     }
-
-    function removeTotalAmount(uint256 _amount) public override onlyRoles(PROVINCE_ROLE,EVENT_ROLE) {
-        totalAmount -= _amount;
-    }
-
-
-    // function Build(uint256 manPower, uint256 _hero, uint256 food, uint256 wood, uint256 rock, uint256 iron) external virtual {
-
-    // }
-
 
 
     function getSvg() public view virtual returns (string memory) {

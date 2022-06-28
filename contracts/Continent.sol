@@ -87,7 +87,6 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
         (uint256 tokenId, IProvince province) = provinceManager.mintProvince(_name, owner);
 
-        //province.setPoppulation(100,0); // Default 100 population Requires a EVENT_ROLE
         console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
         userAccountManager.grantProvinceRole(province); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
 
@@ -111,7 +110,8 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     //     events.add(_event);
     // }
 
-    function spendEvent(IEvent _event) public override onlyProvince {
+    function spendEvent(IEvent _event, address _user) public override onlyProvince {
+        require(_user != address(0),"User cannot be empty");
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not a event contract");
         IProvince province = _event.province();
 
@@ -124,23 +124,37 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         
         IFood food = world.food();
         console.log("spendEvent: food address : ", address(food));
-        console.log("spendEvent: owner (tx.origin) : ", tx.origin);
+        console.log("spendEvent: user (tx.origin) : ", _user);
         console.log("spendEvent: food amount : ", _event.foodAmount());
         
         if(_event.foodAmount() > 0) {
             // spend the resources that the event requires
-            if(!food.transferFrom(tx.origin, address(treasury), _event.foodAmount()))
+            if(!world.food().transferFrom(_user, address(treasury), _event.foodAmount()))
                 revert InsuffcientFood({
                     minRequired: _event.foodAmount()
                 });
         }
-
-        // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
-        //     revert();
-        // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
-        //     revert();
-        // if(!Food(food).transferFrom(msg.sender, treasuryAddress, eventContract.food()))
-        //     revert();
+        if(_event.woodAmount() > 0) {
+            // spend the resources that the event requires
+            if(!world.wood().transferFrom(_user, address(treasury), _event.woodAmount()))
+                revert InsuffcientWood({
+                    minRequired: _event.woodAmount()
+                });
+        }
+        if(_event.rockAmount() > 0) {
+            // spend the resources that the event requires
+            if(!world.rock().transferFrom(_user, address(treasury), _event.rockAmount()))
+                revert InsuffcientRock({
+                    minRequired: _event.rockAmount()
+                });
+        }
+        if(_event.ironAmount() > 0) {
+            // spend the resources that the event requires
+            if(!world.iron().transferFrom(_user, address(treasury), _event.ironAmount()))
+                revert InsuffcientIron({
+                    minRequired: _event.ironAmount()
+                });
+        }
     }
 
     // function createHeroTransfer() external returns(address) {
