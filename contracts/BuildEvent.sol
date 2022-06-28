@@ -52,13 +52,8 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
         return BUILD_EVENT_ID;
     }
 
-        /// The cost of the time to complete the event.
-    function priceForTime() external view override returns(uint256)
-    {
-        return goldForTime;
-    }
 
-    function completeEvent() public override(Event, IEvent) onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired notState(State.Completed)
+    function completeEvent() public override(Event, IEvent) onlyWorldRole(PROVINCE_ROLE) timeExpired notState(State.Completed)
     {
 
         IStructure structureInstance = IStructure(structure);
@@ -66,8 +61,9 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
         structureInstance.addTotalAmount(count);
         
         province.setStructure(structure.Id(), structure);
-        province.setPoppulation(manPower, 0);
-        province.completeEvent();
+
+        //province.setPoppulation(manPower, 0);
+        //province.completeEvent();
 
         super.completeEvent();
         // Kill the contract??

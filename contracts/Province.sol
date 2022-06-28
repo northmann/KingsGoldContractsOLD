@@ -27,8 +27,10 @@ import "./EventSetExtensions.sol";
 //, Roles, 
 contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     using EnumerableMap for EnumerableMap.UintToAddressMap;
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
     using EnumerableSet for EnumerableSet.AddressSet;
-    using EventSetExtensions for EnumerableSet.AddressSet;
+    using EventListExtensions for EnumerableMap.AddressToUintMap;
+    using EventListExtensions for EventListExtensions.History;
 
     IContinent public override continent;
     IWorld public override world;
@@ -50,7 +52,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     uint256 public populationAvailable;
     address public armyContract;
 
-    EnumerableSet.AddressSet private events;
+    EnumerableMap.AddressToUintMap internal events;
+    EventListExtensions.History internal eventHistory;
 
     EnumerableMap.UintToAddressMap private structures;
 
@@ -110,13 +113,13 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         
         console.log("createStructure add event");
         // Add the event to the list of activities on the province.
-        events.add(address(buildEvent)); // Needs some refactoring, as we do not know the type of event !
+        events.set(address(buildEvent), buildEvent.Id()); // Needs some refactoring, as we do not know the type of event !
         
         console.log("createStructure grant role");
         _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
     }
 
-    function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
         //IProvince provinceInstance = IProvince(msg.sender)
 
@@ -136,7 +139,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         structure.setAvailableAmount(structure.availableAmount() - _count);
 
         // Add the event to the list of activities on the province.
-        events.add(address(yieldEvent)); // Needs some refactoring, as we do not know the type of event !
+        events.set(address(yieldEvent), yieldEvent.Id()); // Needs some refactoring, as we do not know the type of event !
         
         _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
     }
@@ -147,7 +150,9 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         return structures.tryGet(_id);
     }
 
-    function getEvents() public view override returns(address[] memory)  {
+
+
+    function getEvents() public view override returns(EventListExtensions.ActionEvent[] memory)  {
         return events.getEvents();
     }
 
@@ -160,21 +165,38 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         populationTotal -= _attrition; // Remove some of the population because of attrition.
     }
 
-    function payForTime() public override  onlyRole(EVENT_ROLE) onlyEvent
+    function payForTime(IEvent _event) public override onlyRole(MINTER_ROLE) onlyEvent
     {
-        continent.payForTime(msg.sender);
+        require(events.contains(address(_event)),"Event unknown by province");
+
+        _event.payForTime(); // More check locally
     }
 
-    function completeEvent() public override  onlyRole(EVENT_ROLE) onlyEvent
+    function completeEvent(IEvent _event) public override  onlyRole(MINTER_ROLE) onlyEvent
     {
+        require(events.contains(address(_event)),"Event unknown by province");
+        require(address(_event.province()) == address(this),"Event point to invalid province");
+                
+
+        setPoppulation(_event.ManPower(), 0);
+
+        _event.completeEvent();
+
         // Province calls continent on behalf of Event.
-        events.remove(msg.sender);
+        events.remove(address(_event));
+        eventHistory.add(address(_event), _event.Id());       
+
     }
 
-
-    function completeMint() public override onlyRole(EVENT_ROLE) onlyEvent
+    function containsEvent(IEvent _event) public view override returns(bool)
     {
-        // Province calls continent on behalf of Event.
-        continent.completeMint(msg.sender);
+        return events.contains(address(_event));
     }
+
+
+    // function completeMint() public override onlyRole(EVENT_ROLE) onlyEvent
+    // {
+    //     // Province calls continent on behalf of Event.
+    //     continent.completeMint(msg.sender);
+    // }
 }

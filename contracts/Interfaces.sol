@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 import "./ResourceFactor.sol";
+import "./EventSetExtensions.sol";
+
 
 interface IEvent { 
     function Id() external pure returns(uint256);
@@ -14,15 +16,12 @@ interface IEvent {
     function world() external view returns(IWorld);
     function ManPower() external returns(uint256);
     function FoodAmount() external returns(uint256);
-    function completeEvent() external;
-    function completeMint() external;
-}
-
-interface ITimeContract is IEvent {   
 
     function priceForTime() external returns(uint256);
     function payForTime() external;
     function paidForTime() external;
+
+    function completeEvent() external;
 }
 
 interface IContractType {
@@ -30,16 +29,18 @@ interface IContractType {
 }
 
 interface IProvince is IAccessControlUpgradeable { 
-    function getEvents() external view returns(address[] memory);
+    function getEvents() external view returns(EventListExtensions.ActionEvent[] memory);
     function continent() external view returns(IContinent);
     function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external;
+    function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external;
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, IStructure _structureContract) external;
     function setPoppulation(uint256 _manPower, uint256 _attrition) external;
-    function payForTime() external;
-    function completeEvent() external;
-    function completeMint() external;
+    function payForTime(IEvent _event) external;
+    function completeEvent(IEvent _event) external;
+    //function completeMint() external;
     function world() external view returns(IWorld);
+    function containsEvent(IEvent _event) external view returns(bool);
 }
 
 interface IProvinceManager {
@@ -47,6 +48,7 @@ interface IProvinceManager {
     function continent() external view returns(IContinent);
     function addSvgResouces(uint256 id, string memory svg) external;
     function mintProvince(string memory _name, address _owner) external returns(uint256, IProvince);
+    function getTokenId(address _provinceAddress) external returns(uint256);
 }
 
 interface IGenericAccessControl {
@@ -59,8 +61,9 @@ interface IContinent  {
     function createProvince(string memory _name, address owner) external returns(uint256);
     function setProvinceManager(IProvinceManager _instance) external;
     function spendEvent(IEvent _eventContract) external;
-    function payForTime(address _contract) external;
-    function completeMint(address _eventContract) external;
+    function payForTime(IEvent _event) external;
+    function completeEvent(IEvent _event) external;
+    // function completeMint(IYieldEvent _yieldEvent) external;
 }
 
 interface IUserAccountManager is IAccessControlUpgradeable { 
@@ -96,6 +99,7 @@ interface IStructure  {
 interface IYieldStructure is IStructure { 
     //function structure() external view returns(IYieldStructure);
     function rewardFactor() external view returns(ResourceFactor memory);
+    
 }
 
 interface IBuildEvent is IEvent {
@@ -105,14 +109,14 @@ interface IBuildEvent is IEvent {
 
 interface IYieldEvent is IEvent {
     function structure() external view returns(IYieldStructure);
+    function completeMint() external;
 }
 
 
 interface IEventFactory {
-    //function continent() external view returns(IContinent);
+    function ensureStructure(IProvince _province, uint256 _structureId) external returns(IStructure);
     function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
-    //function setContinent(IContinent _continent) external;
     function setStructureBeacon(uint256 _id, address _beaconAddress) external;
     function getStructureBeacon(uint256 _id) external view returns(bool, address);
     function setEventBeacon(uint256 _id, address _beaconAddress) external;

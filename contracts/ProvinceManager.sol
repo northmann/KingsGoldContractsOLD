@@ -25,6 +25,7 @@ contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
     IContinent public override continent;
 
     mapping(uint256 => IProvince) public provinces;
+    mapping(address => uint256) internal lookup;
     mapping(uint256 => string) private svgResources; // the svg for the resource!
 
     string constant SVGHEADER = "<svg width='350px' height='350px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>";
@@ -49,10 +50,16 @@ contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
         BeaconProxy proxy = new BeaconProxy(beaconAddress   ,abi.encodeWithSelector(Province(address(0)).initialize.selector    , _name, _owner, continent));
 
         provinces[tokenId] = IProvince(address(proxy));
+        lookup[address(proxy)] = tokenId;
 
         return (tokenId, IProvince(address(proxy)));
     }
     
+    function getTokenId(address _provinceAddress) external override returns(uint256)
+    {
+        return lookup[_provinceAddress];
+    }
+
     function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
         continent = _continent;
     }

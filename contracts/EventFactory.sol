@@ -56,15 +56,11 @@ contract EventFactory is
     }
 
 
-    //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
-
-        console.log("EventFactory-CreateBuildEvent: check roles");
-        console.log("EventFactory-CreateBuildEvent: tx.origin: ", tx.origin);
-        // Check access to province
+    function ensureStructure(IProvince _province, uint256 _structureId) public override onlyRole(PROVINCE_ROLE) returns(IStructure)
+    {
         require(_province.hasRole(OWNER_ROLE, tx.origin) || _province.hasRole(VASSAL_ROLE, tx.origin), "No access");
-        // Get existing structure is exist, if not create a new but do not attach to province yet
 
+        // Get existing structure is exist, if not create a new but do not attach to province yet
         (bool structureExist, address structureAddress) = _province.getStructure(_structureId);
         if(!structureExist) {
             console.log("EventFactory-CreateBuildEvent: Before create Struture");
@@ -75,17 +71,24 @@ contract EventFactory is
             structureAddress = address(structureProxy);
             console.log("EventFactory-CreateBuildEvent: Structure address: ", structureAddress);
         }
-        
-        // Create an event
-        //require(populationUsed <= populationAvailable, "not enough population");
-        // check that the hero exist and is controlled by user.
-        //populationAvailable = populationAvailable - populationUsed;
+        return IStructure(structureAddress);
+    }
 
+    //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
+
+        console.log("EventFactory-CreateBuildEvent: check roles");
+        console.log("EventFactory-CreateBuildEvent: tx.origin: ", tx.origin);
+        // Check access to province
+        require(_province.hasRole(OWNER_ROLE, tx.origin) || _province.hasRole(VASSAL_ROLE, tx.origin), "No access");
+
+        IStructure structure = ensureStructure(_province, _structureId);
+        
         console.log("EventFactory-CreateBuildEvent: eventBeacons.get(BUILD_EVENT_ID): ", eventBeacons.get(BUILD_EVENT_ID));
         //(address _provinceAddress, address _hero, uint256 _populationUsed, uint256 _provinceFarmYieldFactor, uint256 _attritionFactor) initializer public {
         BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(BUILD_EVENT_ID), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
             _province,
-            IStructure(structureAddress),
+            structure,
             _count,
             _hero
          ));

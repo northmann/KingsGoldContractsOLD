@@ -20,8 +20,12 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
     uint256 public count;
     address public receiver;
 
+
     function initialize(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, address _hero) initializer public {
         setupEvent(_province);
+
+        _registerInterface(type(IYieldEvent).interfaceId);
+
         structure = _structure;
         receiver = _receiver;
         count = _count;
@@ -60,32 +64,22 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
     }
 
 
-        /// The cost of the time to complete the event.
-    function priceForTime() external view override returns(uint256)
-    {
-        return goldForTime;
-    }
+    //     /// The cost of the time to complete the event.
+    // function priceForTime() external view override returns(uint256)
+    // {
+    //     return goldForTime;
+    // }
 
-    function completeEvent() public override(Event, IEvent) onlyRoles(OWNER_ROLE, VASSAL_ROLE) timeExpired notState(State.Completed)
-    {
-        // Return manPower to population pool
-        province.setPoppulation(manPower, 0);
-
-        // Payout the reward
-        province.completeMint();
-       
-        province.completeEvent();
-
-        super.completeEvent(); // Set state = State.Completed; So the completeMint cannot run again.
-        // Kill the contract??
-    }
-
-    function completeMint() public override(Event, IEvent) virtual timeExpired onlyMinter notState(State.Completed)
+    function completeMint() public override virtual timeExpired onlyMinter notState(State.Completed) notState(State.Minted)
     {
         // Reward the user with commodities
         if(foodAmount > 0) {
             world.food().mint_with_temp_account(receiver,foodAmount);
         }
+
+        state = State.Minted;
     }
+
+
 
 }
