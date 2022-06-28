@@ -46,7 +46,7 @@ contract Structure is Initializable, Roles, IStructure {
     }
 
 
-    function Id() public pure override virtual returns(uint256)
+    function typeId() public pure override virtual returns(uint256)
     {
         return 0;
     }

@@ -28,18 +28,23 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
     // The cost of resources for this event
     address public hero;
 
-    uint256 internal manPower;
-    uint256 internal foodAmount;
+    uint256 public override manPower;
+    uint256 public override foodAmount;
     uint256 public woodAmount;
     uint256 public rockAmount;
     uint256 public ironAmount;
 
 
     modifier onlyMinter() {
-        require(world.userAccountManager().hasRole(MINTER_ROLE, msg.sender), "Need MINTER_ROLE in completeMint()");
+        require(world.userAccountManager().hasRole(MINTER_ROLE, msg.sender), "Caller do not have the MINTER_ROLE");
         _;
     }
 
+    modifier onlyProvince() {
+        require(world.userAccountManager().hasRole(PROVINCE_ROLE, msg.sender), "Caller do not have the PROVINCE_ROLE");
+        require(msg.sender == address(province),"The caller is not the event's province");
+        _;
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -84,16 +89,6 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
         _;
     }
 
-    function ManPower() public view override returns(uint256){
-        return manPower;
-    }
-
-    function FoodAmount() public view  override returns(uint256)
-    {
-        return foodAmount;
-    }
-
-
     function setupEvent(IProvince _province) internal onlyInitializing {
         province = _province;
         world = _province.world();
@@ -110,19 +105,20 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
     }
 
     /// When a user has paid for time, this method gets called.
-    function payForTime() external override virtual onlyWorldRole(PROVINCE_ROLE) isState(State.Active)
+    function payForTime() public override virtual onlyProvince isState(State.Active)
     {
     }
 
     // Callback funcation from above after the event has been paid for.
-    function paidForTime() external override virtual onlyMinter isState(State.Active)
+    function paidForTime() public override virtual onlyProvince isState(State.Active)
     {
         state = State.PaidFor;
         timeRequired = 0;
     }
 
-    function completeEvent() public override virtual timeExpired onlyWorldRole(PROVINCE_ROLE) notState(State.Completed)
+    function completeEvent() public override virtual timeExpired onlyProvince notState(State.Completed)
     {
+        province.completeEvent(this);
         state = State.Completed;
     }
 }

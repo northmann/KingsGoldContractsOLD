@@ -33,12 +33,16 @@ contract EventFactory is
     EnumerableMap.UintToAddressMap private eventBeacons;
 
     //IContinent public override continent;
-
-
     function initialize(IUserAccountManager _userAccountManager) initializer public virtual {
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
     }
+
+    // modifier onlyProvince() {
+    //     require(world.userAccountManager().hasRole(PROVINCE_ROLE, msg.sender), "Caller do not have the PROVINCE_ROLE");
+    //     require(msg.sender == address(province),"The caller is not the event's province");
+    //     _;
+    // }
 
     function setStructureBeacon(uint256 _id, address _beaconAddress) external override onlyRole(UPGRADER_ROLE) {
         structureBeacons.set(_id, _beaconAddress);

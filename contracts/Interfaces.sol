@@ -11,11 +11,11 @@ import "./EventSetExtensions.sol";
 
 
 interface IEvent { 
-    function Id() external pure returns(uint256);
+    function typeId() external pure returns(uint256);
     function province() external view returns(IProvince);
     function world() external view returns(IWorld);
-    function ManPower() external returns(uint256);
-    function FoodAmount() external returns(uint256);
+    function manPower() external returns(uint256);
+    function foodAmount() external returns(uint256);
 
     function priceForTime() external returns(uint256);
     function payForTime() external;
@@ -31,6 +31,8 @@ interface IContractType {
 interface IProvince is IAccessControlUpgradeable { 
     function getEvents() external view returns(EventListExtensions.ActionEvent[] memory);
     function continent() external view returns(IContinent);
+    function setVassal(address _user) external;
+    function removeVassal(address _user) external;
     function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external;
     function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external;
     function getStructure(uint256 _id) external returns(bool, address);
@@ -49,6 +51,7 @@ interface IProvinceManager {
     function addSvgResouces(uint256 id, string memory svg) external;
     function mintProvince(string memory _name, address _owner) external returns(uint256, IProvince);
     function getTokenId(address _provinceAddress) external returns(uint256);
+    function contains(address _provinceAddress) external returns(bool);
 }
 
 interface IGenericAccessControl {
@@ -62,7 +65,7 @@ interface IContinent  {
     function setProvinceManager(IProvinceManager _instance) external;
     function spendEvent(IEvent _eventContract) external;
     function payForTime(IEvent _event) external;
-    function completeEvent(IEvent _event) external;
+    function completeMint(IYieldEvent _event) external;
     // function completeMint(IYieldEvent _yieldEvent) external;
 }
 
@@ -87,7 +90,7 @@ interface IUserAccount {
 
 interface IStructure  { 
     function province() external view returns(IProvince);
-    function Id() external pure returns(uint256);
+    function typeId() external pure returns(uint256);
     function constuctionCost() external view returns(ResourceFactor memory);
     function availableAmount() external view returns(uint256);
     function setAvailableAmount(uint256 _availableAmount) external;
@@ -124,11 +127,19 @@ interface IEventFactory {
 }
 
 interface IWorld is IGenericAccessControl {
+    function baseGoldCost() external view returns(uint256);
+    function setBaseGoldCost(uint256 _cost) external;
     function food() external view returns(IFood);
+    function setFood(address _address) external;
+    function setWood(address _address) external;
+    function setIron(address _address) external;
+    function setRock(address _address) external;
     function treasury() external view returns(ITreasury);
+    function setTreasury(address _treasuryAddress) external;
     function eventFactory() external view  returns(IEventFactory);
     function setEventFactory(IEventFactory _eventFactory) external;
     function continentsCount() external view returns(uint256);
+    function upgradeContinentBeacon(address _beaconAddress) external;
 }
 
 interface ICommondity is IERC20Upgradeable {

@@ -47,20 +47,20 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
         ironAmount = count * factor.iron;
     }
 
-    function Id() public pure override returns(uint256)
+    function typeId() public pure override returns(uint256)
     {
         return BUILD_EVENT_ID;
     }
 
 
-    function completeEvent() public override(Event, IEvent) onlyWorldRole(PROVINCE_ROLE) timeExpired notState(State.Completed)
+    function completeEvent() public override(Event, IEvent) onlyMinter timeExpired notState(State.Completed)
     {
 
         IStructure structureInstance = IStructure(structure);
         structureInstance.setAvailableAmount(structureInstance.availableAmount() + count);
         structureInstance.addTotalAmount(count);
         
-        province.setStructure(structure.Id(), structure);
+        province.setStructure(structure.typeId(), structure);
 
         //province.setPoppulation(manPower, 0);
         //province.completeEvent();

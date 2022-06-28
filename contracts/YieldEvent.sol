@@ -34,7 +34,7 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
         _calculateCost();
     }
 
-    function Id() public pure override returns(uint256)
+    function typeId() public pure override returns(uint256)
     {
         return YIELD_EVENT_ID;
     }

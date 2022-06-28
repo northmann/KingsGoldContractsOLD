@@ -25,14 +25,15 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
     IEventFactory public override eventFactory;
     ITreasury public override treasury;
 
+    // The base price of the cost of everything.
+    uint256 public override baseGoldCost;
+    
     IFood public override food;
-
     address public wood;
     address public iron;
     address public rock;
 
-    uint256 public baseFactor; // The base price of the cost of everything.
-
+    
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -42,7 +43,7 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
         continentBeacon = _continentBeacon;
-        baseFactor = 1 ether; // The base cost, this value will change depending the on the blockchain. E.g. Ethereum would 0.001 ether and FTM would be 1 ether.
+        baseGoldCost = 1 ether; // The base cost, this value will change depending the on the blockchain. E.g. Ethereum would 0.001 ether and FTM would be 1 ether.
     }
 
     function createContinent() external onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -62,7 +63,7 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
     }
     
         /// Upgrade the UserAccount template
-    function upgradeContinentBeacon(address _beaconAddress) external onlyRole(UPGRADER_ROLE) {
+    function upgradeContinentBeacon(address _beaconAddress) external override onlyRole(UPGRADER_ROLE) {
         continentBeacon = _beaconAddress;
     }
 
@@ -71,28 +72,32 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
         eventFactory = _eventFactory;
     }
 
+    function setBaseGoldCost(uint256 _cost) external override onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        baseGoldCost = _cost;
+    }
 
-    function setTreasury(address _treasuryAddress) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setTreasury(address _treasuryAddress) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         treasury = ITreasury(_treasuryAddress);
     }
 
-    function setFood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setFood(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         food = IFood(_address);
     }
 
-    function setWood(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setWood(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         wood = _address;
     }
 
-    function setIron(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setIron(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         iron = _address;
     }
     
-    function setRock(address _address) external onlyRole(DEFAULT_ADMIN_ROLE)
+    function setRock(address _address) external override onlyRole(DEFAULT_ADMIN_ROLE)
     {
         rock = _address;
     }

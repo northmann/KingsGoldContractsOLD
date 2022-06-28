@@ -10,6 +10,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 
 //import "./Statics.sol"; Only ProvinceID
 import "./BuildEvent.sol";
@@ -89,9 +90,14 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         populationTotal = populationAvailable;
     }
 
-    function setVassal(address _user) external onlyRole(OWNER_ROLE)
+    function setVassal(address _user) external override onlyRole(OWNER_ROLE)
     {
-        _setupRole(VASSAL_ROLE, _user);
+        _grantRole(VASSAL_ROLE, _user);
+    }
+
+    function removeVassal(address _user) external override onlyRole(OWNER_ROLE)
+    {
+        _revokeRole(VASSAL_ROLE, _user);
     }
 
     function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
@@ -104,8 +110,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         
         console.log("createStructure check manpower");
         // Check that there is mamPower enough to build the requested structures.
-        require(buildEvent.ManPower() <= populationAvailable, "not enough population");
-        populationAvailable = populationAvailable - buildEvent.ManPower();
+        require(buildEvent.manPower() <= populationAvailable, "not enough population");
+        populationAvailable = populationAvailable - buildEvent.manPower();
 
         console.log("createStructure spendEvent");
         // Spend the resouces on the behalf of the user
@@ -113,7 +119,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         
         console.log("createStructure add event");
         // Add the event to the list of activities on the province.
-        events.set(address(buildEvent), buildEvent.Id()); // Needs some refactoring, as we do not know the type of event !
+        events.set(address(buildEvent), buildEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
         
         console.log("createStructure grant role");
         _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
@@ -133,13 +139,13 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         IYieldEvent yieldEvent =  world.eventFactory().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
 
         // Check that there is mamPower enough to build the requested structures.
-        require(yieldEvent.ManPower() <= populationAvailable, "not enough population");
-        populationAvailable = populationAvailable - yieldEvent.ManPower();
+        require(yieldEvent.manPower() <= populationAvailable, "not enough population");
+        populationAvailable = populationAvailable - yieldEvent.manPower();
 
         structure.setAvailableAmount(structure.availableAmount() - _count);
 
         // Add the event to the list of activities on the province.
-        events.set(address(yieldEvent), yieldEvent.Id()); // Needs some refactoring, as we do not know the type of event !
+        events.set(address(yieldEvent), yieldEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
         
         _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
     }
@@ -149,8 +155,6 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     function getStructure(uint256 _id) public view override returns(bool, address) {
         return structures.tryGet(_id);
     }
-
-
 
     function getEvents() public view override returns(EventListExtensions.ActionEvent[] memory)  {
         return events.getEvents();
@@ -165,26 +169,37 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         populationTotal -= _attrition; // Remove some of the population because of attrition.
     }
 
-    function payForTime(IEvent _event) public override onlyRole(MINTER_ROLE) onlyEvent
+    function payForTime(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
     {
+        require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         require(events.contains(address(_event)),"Event unknown by province");
+        require(hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
 
         _event.payForTime(); // More check locally
+
+        // Execute the payment
+        continent.payForTime(_event);
+
+        _event.paidForTime();
     }
 
-    function completeEvent(IEvent _event) public override  onlyRole(MINTER_ROLE) onlyEvent
+    function completeEvent(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
     {
+        require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         require(events.contains(address(_event)),"Event unknown by province");
-        require(address(_event.province()) == address(this),"Event point to invalid province");
-                
+        require(hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
 
-        setPoppulation(_event.ManPower(), 0);
+        setPoppulation(_event.manPower(), 0);
+
+        if(ERC165Checker.supportsInterface(address(_event), type(IYieldEvent).interfaceId)) {
+            // Province calls continent on behalf of Event.
+            continent.completeMint(IYieldEvent(address(_event)));
+        }
 
         _event.completeEvent();
 
-        // Province calls continent on behalf of Event.
         events.remove(address(_event));
-        eventHistory.add(address(_event), _event.Id());       
+        eventHistory.add(address(_event), _event.typeId());       
 
     }
 
@@ -192,11 +207,4 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     {
         return events.contains(address(_event));
     }
-
-
-    // function completeMint() public override onlyRole(EVENT_ROLE) onlyEvent
-    // {
-    //     // Province calls continent on behalf of Event.
-    //     continent.completeMint(msg.sender);
-    // }
 }

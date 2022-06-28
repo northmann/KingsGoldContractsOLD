@@ -41,7 +41,7 @@ contract Farm is YieldStructure  {
     }
 
 
-    function Id() public pure override returns(uint256) {
+    function typeId() public pure override returns(uint256) {
         return FARM_STRUCTURE_ID;
     }
 

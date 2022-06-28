@@ -37,6 +37,11 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     IProvinceManager internal provinceManager;
     IWorld public override world;
    
+    modifier onlyProvince() {
+        require(provinceManager.contains(msg.sender),"No Province in Continent"); //Event must be listed on the province's events.
+        require(userAccountManager.hasRole(PROVINCE_ROLE, msg.sender), "Province missing role");
+        _;
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -100,14 +105,18 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
 
     // // Adds an event to a collaction to keep track of created events. Used for security.
-    // function addEvent(address _eventContract) public onlyRole(PROVINCE_ROLE) {
-    //     require(ERC165Checker.supportsInterface(_eventContract, type(IEvent).interfaceId), "Not a event contract");
+    // function addEvent(address _event) public onlyRole(PROVINCE_ROLE) {
+    //     require(ERC165Checker.supportsInterface(_event, type(IEvent).interfaceId), "Not a event contract");
 
-    //     events.add(_eventContract);
+    //     events.add(_event);
     // }
 
-    function spendEvent(IEvent _eventContract) public override onlyRole(PROVINCE_ROLE) {
-        require(ERC165Checker.supportsInterface(address(_eventContract), type(IEvent).interfaceId), "Not a event contract");
+    function spendEvent(IEvent _event) public override onlyProvince {
+        require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not a event contract");
+        IProvince province = _event.province();
+
+        require(province.hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
+        require(province.containsEvent(_event),"Province has not registred the event");
 
         ITreasury treasury = world.treasury();
         console.log("spendEvent: treasury address : ", address(treasury));
@@ -116,13 +125,13 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         IFood food = world.food();
         console.log("spendEvent: food address : ", address(food));
         console.log("spendEvent: owner (tx.origin) : ", tx.origin);
-        console.log("spendEvent: food amount : ", _eventContract.FoodAmount());
+        console.log("spendEvent: food amount : ", _event.foodAmount());
         
-        if(_eventContract.FoodAmount() > 0) {
+        if(_event.foodAmount() > 0) {
             // spend the resources that the event requires
-            if(!food.transferFrom(tx.origin, address(treasury), _eventContract.FoodAmount()))
+            if(!food.transferFrom(tx.origin, address(treasury), _event.foodAmount()))
                 revert InsuffcientFood({
-                    minRequired: _eventContract.FoodAmount()
+                    minRequired: _event.foodAmount()
                 });
         }
 
@@ -143,21 +152,13 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     // }
 
     /// The user pays to reduce the time on a contract.
-    function payForTime(IEvent _event) external override onlyRole(USER_ROLE) {
+    function payForTime(IEvent _event) public override onlyProvince {
 
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         IProvince province = _event.province();
-
-        uint256 tokenId = provinceManager.getTokenId(address(province));
-        require(tokenId != 0, "Cannot find province on continent");
-        
-        // Check that the user is the owner/vassal of the province with the attached event.
-        require(province.hasRole(OWNER_ROLE, msg.sender) || province.hasRole(VASSAL_ROLE, msg.sender),"You are not the owner of the event");
+       
         require(province.hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
         require(province.containsEvent(_event),"Province has not registred the event");
-
-        //check if contract is registred! 
-        province.payForTime(_event); // More checks locally
 
         uint256 timeCost = _event.priceForTime();
         ITreasury treasury = world.treasury();
@@ -169,34 +170,25 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
             revert InsuffcientGold({
                 minRequired: timeCost
             });
-
-        _event.paidForTime();
     }
 
-    function completeEvent(IEvent _event) public override onlyRole(USER_ROLE) 
+    function completeMint(IYieldEvent _event) public override onlyProvince
     {
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
-        
         IProvince province = _event.province();
-        require(address(province) != address(0),"Cannot be empty province");
+        require(address(province) == msg.sender,"Cannot be empty province");
         
-        uint256 tokenId = provinceManager.getTokenId(address(province));
-        require(tokenId != 0, "Cannot find province on continent");
-
-        require(province.hasRole(OWNER_ROLE, msg.sender) || province.hasRole(VASSAL_ROLE, msg.sender),"User is not owner or vassal on province");
+        // require(province.hasRole(OWNER_ROLE, msg.sender) || province.hasRole(VASSAL_ROLE, msg.sender),"User is not owner or vassal on province");
         require(province.hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
         require(province.containsEvent(_event),"Province has not registred the event");
 
-        if(ERC165Checker.supportsInterface(address(_event), type(IYieldEvent).interfaceId)) {
-            // give the _event permission to mint at wood, rock, food, iron.
-            userAccountManager.grantTemporaryMinterRole(address(_event));
+        // give the _event permission to mint at wood, rock, food, iron.
+        userAccountManager.grantTemporaryMinterRole(address(_event));
 
-            IYieldEvent(address(_event)).completeMint();
+        IYieldEvent(address(_event)).completeMint();
 
-            // remove the _event permission to mint at wood, rock, food, iron.
-            userAccountManager.revokeTemporaryMinterRole(address(_event));
-        }
+        // remove the _event permission to mint at wood, rock, food, iron.
+        userAccountManager.revokeTemporaryMinterRole(address(_event));
 
-        province.completeEvent(_event);
     }
 }

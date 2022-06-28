@@ -60,6 +60,12 @@ contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
         return lookup[_provinceAddress];
     }
 
+    function contains(address _provinceAddress) external override returns(bool)
+    {
+        return lookup[_provinceAddress] != 0;
+    }
+    
+
     function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
         continent = _continent;
     }
