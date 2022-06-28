@@ -3,40 +3,42 @@
 pragma solidity >0.8.2;
 import "hardhat/console.sol";
 
-// import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
-//import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
 import "./Beacon.sol";
-import "./ProvincesNFT.sol";
+import "./GenericNFT.sol";
 import "./Province.sol";
 import "./Interfaces.sol";
 
-// Resources
-// https://programtheblockchain.com/posts/2018/04/20/storage-patterns-pagination/
-// https://github.com/kieranelby/KingOfTheEtherThrone/blob/v1.0/contracts/KingOfTheEtherThrone.sol
-// import '@openzeppelin/contracts/math/SafeMath.sol'; =>  using SafeMath for uint256;
-
-contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
+contract ProvinceManager is Initializable, GenericNFT, IProvinceManager {
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
     using Strings for uint256;
 
     IContinent public override continent;
+    address public beaconAddress;
 
     mapping(uint256 => IProvince) public provinces;
-    mapping(address => uint256) internal lookup;
+    EnumerableMap.AddressToUintMap internal lookup;
+
     mapping(uint256 => string) private svgResources; // the svg for the resource!
 
     string constant SVGHEADER = "<svg width='350px' height='350px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>";
     string constant SVGFOOTER = "</svg>";
 
     // Just takes up space!!!
-    // function initialize(address _userManager, address _provinceBeacon) initializer public {
-    //     super.initialize(_userManager); // Call parent ProvincesNFT
-    //     provinceBeacon = _provinceBeacon;
-    // }
-    //
+    function initialize(IUserAccountManager _userUserManager) initializer override public {
+        super.initialize(_userUserManager); // Call parent GenericNFT
+        __ERC721_init("KingsGold Provinces", "KSGP");
+    }
+
+    function setProvinceBeacon(address _template) external override onlyRole(UPGRADER_ROLE) {
+        beaconAddress = _template;
+    }
+    
     function mintProvince(string memory _name, address _owner) public override onlyRole(MINTER_ROLE) returns(uint256, IProvince) {
         
         console.log("mintProvince: msg.sender: ", msg.sender);
@@ -49,22 +51,25 @@ contract ProvinceManager is Beacon, ProvincesNFT, IProvinceManager {
        
         BeaconProxy proxy = new BeaconProxy(beaconAddress   ,abi.encodeWithSelector(Province(address(0)).initialize.selector    , _name, _owner, continent));
 
+
+        console.log("mintProvince: adding province to provinces list");
         provinces[tokenId] = IProvince(address(proxy));
-        lookup[address(proxy)] = tokenId;
+
+        console.log("mintProvince: setting province to lookup list");
+        lookup.set(address(proxy), tokenId);
 
         return (tokenId, IProvince(address(proxy)));
     }
     
-    function getTokenId(address _provinceAddress) external override returns(uint256)
-    {
-        return lookup[_provinceAddress];
-    }
+    // function getTokenId(address _provinceAddress) external view override returns(uint256)
+    // {
+    //     return lookup.tryGet(_provinceAddress);
+    // }
 
-    function contains(address _provinceAddress) external override returns(bool)
+    function contains(address _provinceAddress) external view override returns(bool)
     {
-        return lookup[_provinceAddress] != 0;
+        return lookup.contains(_provinceAddress);
     }
-    
 
     function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
         continent = _continent;

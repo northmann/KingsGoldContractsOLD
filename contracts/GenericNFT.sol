@@ -15,9 +15,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./GenericAccessControl.sol";
 
-
-//AccessControlUpgradeable
-contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, PausableUpgradeable, GenericAccessControl, ERC721BurnableUpgradeable, UUPSUpgradeable {
+contract GenericNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, PausableUpgradeable, GenericAccessControl, ERC721BurnableUpgradeable, UUPSUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
@@ -29,7 +27,7 @@ contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgra
 
     function initialize(IUserAccountManager _userAccountManager) initializer public virtual {
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
-        __ERC721_init("KingsGold Provinces", "KSGP");
+        __ERC721_init("KingsGold GenericNFT", "KSG GNFT");
         __ERC721Enumerable_init();
         __Pausable_init();
         __ERC721Burnable_init();
@@ -45,7 +43,7 @@ contract ProvincesNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgra
     }
 
     function safeMint(address to) public onlyRole(MINTER_ROLE) returns(uint256) {
-        console.log("safeMint: msg.sender: ", msg.sender, " is requisting access to MINTER_ROLE");
+        console.log("safeMint: msg.sender: ", msg.sender, " is minting a NFT");
 
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();

@@ -130,7 +130,7 @@ async function addProvinceManager() {
 
     provinceManager = await createUpgradeable("ProvinceManager", [userAccountManager.address]);
     provinceBeacon = await createBeacon("Province");
-    await provinceManager.setBeacon(provinceBeacon.address);
+    await provinceManager.setProvinceBeacon(provinceBeacon.address);
 
     if(continentAddress) await provinceManager.setContinent(continentAddress);
     if(continent)        await continent.setProvinceManager(provinceManager.address);

@@ -54,12 +54,14 @@ interface IProvince is IAccessControlUpgradeable {
 }
 
 interface IProvinceManager {
+    
+    function setProvinceBeacon(address _template) external;
     function setContinent(IContinent _continent) external;
     function continent() external view returns(IContinent);
     function addSvgResouces(uint256 id, string memory svg) external;
     function mintProvince(string memory _name, address _owner) external returns(uint256, IProvince);
-    function getTokenId(address _provinceAddress) external returns(uint256);
-    function contains(address _provinceAddress) external returns(bool);
+    //function getTokenId(address _provinceAddress) external view returns(uint256);
+    function contains(address _provinceAddress) external view returns(bool);
 }
 
 interface IGenericAccessControl {
@@ -146,7 +148,7 @@ interface IWorld is IGenericAccessControl {
     function setWood(IWood _wood) external;
     function setRock(IRock _rock) external;
     function setIron(IIron _iron) external;
-    
+
     function treasury() external view returns(ITreasury);
     function setTreasury(address _treasuryAddress) external;
     function eventFactory() external view  returns(IEventFactory);

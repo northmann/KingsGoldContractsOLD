@@ -109,6 +109,13 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         // Create a new Build event        
         IBuildEvent buildEvent = world.eventFactory().CreateBuildEvent(this, _structureId, _count, _hero);
         
+        console.log("createStructure add event");
+        // Add the event to the list of activities on the province.
+        events.set(address(buildEvent), buildEvent.typeId()); 
+
+        console.log("createStructure grant role");
+        _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
+
         console.log("createStructure check manpower");
         // Check that there is mamPower enough to build the requested structures.
         require(buildEvent.manPower() <= populationAvailable, "not enough population");
@@ -119,12 +126,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         // Spend the resouces on the behalf of the user
         continent.spendEvent(buildEvent, msg.sender); 
         
-        console.log("createStructure add event");
-        // Add the event to the list of activities on the province.
-        events.set(address(buildEvent), buildEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
-        
-        console.log("createStructure grant role");
-        _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
+       
     }
 
     function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {

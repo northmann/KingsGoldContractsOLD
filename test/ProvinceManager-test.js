@@ -35,7 +35,7 @@ describe("ProvinceManager", function () {
 
     provinceManager = await createUpgradeable("ProvinceManager", [userAccountManager.address]);
     provinceBeacon = await createBeacon("Province");
-    provinceManager.setBeacon(provinceBeacon.address);
+    provinceManager.setProvinceBeacon(provinceBeacon.address);
     provinceManager.setContinent(continentAddress);
   });
 
@@ -79,6 +79,9 @@ describe("ProvinceManager", function () {
       console.log("Token ID: ", tokenId);
       const province = await provinceManager.provinces(tokenId);
       console.log("Province address: ", province);
+      
+      expect(await provinceManager.contains(province)).to.equal(true);
+
       expect(province).to.not.equal(ethers.constants.AddressZero);
     }
 
