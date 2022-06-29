@@ -48,7 +48,7 @@ interface IProvince is IAccessControlUpgradeable {
 
     function createStructureEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external;
     function createYieldEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external;
-    function createGrowPopulationEvent(uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) external returns(IPopulationEvent);
+    function createGrowPopulationEvent(uint256 _rounds, uint256 _manPower, uint256 _hero) external returns(IPopulationEvent);
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, IStructure _structureContract) external;
     function payForTime(IEvent _event) external;
@@ -138,7 +138,7 @@ interface IEventFactory {
     function ensureStructure(IProvince _province, uint256 _structureId) external returns(IStructure);
     function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external returns(IBuildEvent);
     function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _multiplier, uint256 _rounds, uint256 _hero) external returns(IYieldEvent);
-    function createGrowPopulationEvent(IProvince _province, uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) external returns(IPopulationEvent);
+    function createGrowPopulationEvent(IProvince _province, uint256 _rounds, uint256 _manPower, uint256 _hero) external returns(IPopulationEvent);
     function setStructureBeacon(uint256 _id, address _beaconAddress) external;
     function getStructureBeacon(uint256 _id) external view returns(bool, address);
     function setEventBeacon(uint256 _id, address _beaconAddress) external;

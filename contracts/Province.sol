@@ -154,8 +154,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
     }
 
-    function createGrowPopulationEvent(uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) returns(IPopulationEvent) {
-        IPopulationEvent populationEvent =  world.eventFactory().createGrowPopulationEvent(this, _multiplier, _rounds, _manPower, _hero);
+    function createGrowPopulationEvent(uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) returns(IPopulationEvent) {
+        IPopulationEvent populationEvent =  world.eventFactory().createGrowPopulationEvent(this,  _rounds, _manPower, _hero);
 
         // Check that there is mamPower enough to build the requested structures.
         require(_manPower <= populationAvailable, "not enough population");

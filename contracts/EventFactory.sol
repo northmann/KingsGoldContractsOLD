@@ -122,13 +122,12 @@ contract EventFactory is
         return IYieldEvent(address(eventProxy));
     }
 
-    function createGrowPopulationEvent(IProvince _province, uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IPopulationEvent) {
-
-        // Check that the structure exist on the province!
+    function createGrowPopulationEvent(IProvince _province, uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IPopulationEvent) {
+        require(_rounds > 0);
+        require(_manPower > 0);
 
         BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(POPULATION_EVENT_ID), abi.encodeWithSelector(PopulationEvent(address(0)).initialize.selector, 
             _province,
-            _multiplier,
             _rounds,
             _manPower,
             _hero
@@ -136,11 +135,6 @@ contract EventFactory is
 
         return IPopulationEvent(address(eventProxy));
     }
-
-
-    // function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
-    //     continent = _continent;
-    // }
 
     function _authorizeUpgrade(address newImplementation)
         internal
