@@ -13,12 +13,12 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
     uint256 constant BUILD_EVENT_ID = uint256(keccak256("BUILD_EVENT"));
 
     IStructure public override structure;
-    uint256 public count;
 
-    function initialize(IProvince _province, IStructure _structure, uint256 _count, address _hero) initializer public {
+    function initialize(IProvince _province, IStructure _structure, uint256 _multiplier, uint256 _rounds, address _hero) initializer public {
         setupEvent(_province);
         structure = _structure;
-        count = _count;
+        multiplier = _multiplier;
+        rounds = _rounds;
         hero = _hero;
 
         _calculateCost();
@@ -37,14 +37,15 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
         // uint256 ironFactor) = IStructure(structure).constuctionCost();
         ResourceFactor memory factor = structure.constuctionCost();
 
-        manPower = count * factor.manPower;
+        manPower = multiplier * factor.manPower;
         attrition = factor.attrition;
-        timeRequired = factor.time; // Change in manPower could alter this.
-        goldForTime = count * factor.goldForTime * province.world().baseGoldCost();
-        foodAmount = count * factor.food;
-        woodAmount = count * factor.wood;
-        rockAmount = count * factor.rock;
-        ironAmount = count * factor.iron;
+        penalty = factor.penalty;
+        timeRequired = rounds * factor.time; // Change in manPower could alter this.
+        goldForTime = rounds * multiplier * factor.goldForTime * province.world().baseGoldCost();
+        foodAmount = rounds * multiplier * factor.food;
+        woodAmount = rounds * multiplier * factor.wood;
+        rockAmount = rounds * multiplier * factor.rock;
+        ironAmount = rounds * multiplier * factor.iron;
     }
 
     function typeId() public pure override returns(uint256)
@@ -53,14 +54,14 @@ contract BuildEvent is Initializable, Event, IBuildEvent {
     }
 
 
-    function completeEvent() public override(Event, IEvent) onlyProvince timeExpired notState(State.Completed)
+    function complete() public override(Event, IEvent) onlyProvince timeExpired notState(State.Completed)
     {
-        structure.setAvailableAmount(structure.availableAmount() + count);
-        structure.setTotalAmount(structure.totalAmount() + count);
+        structure.setAvailableAmount(structure.availableAmount() + multiplier);
+        structure.setTotalAmount(structure.totalAmount() + multiplier);
         
         province.setStructure(structure.typeId(), structure); // Make sure that the structure is added to the province structure list.
 
-        super.completeEvent();
+        super.complete();
     }
 
 }

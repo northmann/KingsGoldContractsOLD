@@ -19,6 +19,7 @@ contract Farm is YieldStructure  {
         costFactor = ResourceFactor({
                     manPower:10,
                     attrition: 2e16, // 2 % base = 1 ether
+                    penalty: 50e16, // 50 % base = 1 ether
                     time:4 hours,
                     goldForTime: 0.1 ether,
                     food:0,
@@ -30,6 +31,7 @@ contract Farm is YieldStructure  {
         yieldRewardFactor = ResourceFactor({
             manPower: 10,
             attrition: 2e16, // 2 %
+            penalty: 50e16, // 50 % base = 1 ether
             time: 4 hours,
             goldForTime: 0.1 ether,
             food:100,

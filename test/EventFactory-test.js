@@ -61,7 +61,7 @@ describe("EventFactory", function () {
 
     let farmId = getId("FARM_STRUCTURE");
 
-    let buildEventResult = await container.eventFactory.callStatic.CreateBuildEvent(province.address, farmId, 1, 0);
+    let buildEventResult = await container.eventFactory.callStatic.CreateBuildEvent(province.address, farmId, 1, 1, 0);
     
     expect(buildEventResult).to.not.equal(ethers.constants.AddressZero);
   });
@@ -79,7 +79,7 @@ describe("EventFactory", function () {
 
     let farm = await deployContract("Farm"); // Dummy
 
-    let yieldEventResult = await container.eventFactory.callStatic.CreateYieldEvent(province.address, farm.address, owner.address, 1, 0);
+    let yieldEventResult = await container.eventFactory.callStatic.CreateYieldEvent(province.address, farm.address, owner.address, 1, 1, 0);
     
     expect(yieldEventResult).to.not.equal(ethers.constants.AddressZero);
   });

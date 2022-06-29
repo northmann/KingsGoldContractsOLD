@@ -6,6 +6,7 @@ pragma solidity >0.8.2;
 struct ResourceFactor {
     uint256 manPower;
     uint256 attrition;
+    uint256 penalty;
     uint256 time;
     uint256 goldForTime;
     uint256 food;

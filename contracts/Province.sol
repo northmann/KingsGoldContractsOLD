@@ -101,13 +101,13 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _revokeRole(VASSAL_ROLE, _user);
     }
 
-    function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createStructureEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
         console.log("createStructure start");
 
         console.log("createStructure call CreateBuildEvent");
         // Create a new Build event        
-        IBuildEvent buildEvent = world.eventFactory().CreateBuildEvent(this, _structureId, _count, _hero);
+        IBuildEvent buildEvent = world.eventFactory().CreateBuildEvent(this, _structureId, _multiplier, _rounds, _hero);
         
         console.log("createStructure add event");
         // Add the event to the list of activities on the province.
@@ -129,7 +129,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
        
     }
 
-    function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createYieldEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
         // check that the hero exist and is controlled by user.
         //IProvince provinceInstance = IProvince(msg.sender)
 
@@ -137,16 +137,16 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         require(structureExist,"YieldStructure do not exist on provice");
 
         IYieldStructure structure = IYieldStructure(structureAddress);
-        require(structure.availableAmount() < _count, "Insufficient structures");
+        require(structure.availableAmount() < _multiplier, "Insufficient structures");
 
         // Create a new Build event        
-        IYieldEvent yieldEvent =  world.eventFactory().CreateYieldEvent(this, structure, msg.sender, _count, _hero);
+        IYieldEvent yieldEvent =  world.eventFactory().CreateYieldEvent(this, structure, msg.sender, _multiplier, _rounds, _hero);
 
         // Check that there is mamPower enough to build the requested structures.
         require(yieldEvent.manPower() <= populationAvailable, "not enough population");
         populationAvailable = populationAvailable - yieldEvent.manPower();
 
-        structure.setAvailableAmount(structure.availableAmount() - _count);
+        structure.setAvailableAmount(structure.availableAmount() - _multiplier);
 
         // Add the event to the list of activities on the province.
         events.set(address(yieldEvent), yieldEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
@@ -154,7 +154,20 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
     }
 
+    function createGrowPopulationEvent(uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) returns(IPopulationEvent) {
+        IPopulationEvent populationEvent =  world.eventFactory().createGrowPopulationEvent(this, _multiplier, _rounds, _manPower, _hero);
 
+        // Check that there is mamPower enough to build the requested structures.
+        require(_manPower <= populationAvailable, "not enough population");
+        populationAvailable = populationAvailable - _manPower;
+
+        // Add the event to the list of activities on the province.
+        events.set(address(populationEvent), populationEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
+        
+        _grantRole(EVENT_ROLE, address(populationEvent)); // Enable the event to perform actions on this provice.
+
+        return populationEvent;
+    }
 
     function getStructure(uint256 _id) public view override returns(bool, address) {
         return structures.tryGet(_id);
@@ -168,12 +181,12 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         structures.set(_id, address(_structureContract));
     }
 
-    function setPopulationTotal(uint256 _count) public override onlyRole(EVENT_ROLE) onlyEvent {
-        populationTotal = _count;
+    function setPopulationTotal(uint256 _multiplier) public override onlyRole(EVENT_ROLE) onlyEvent {
+        populationTotal = _multiplier;
 
     }
-    function setPopulationAvailable(uint256 _count) public override onlyRole(EVENT_ROLE) onlyEvent {
-        populationAvailable = _count;
+    function setPopulationAvailable(uint256 _multiplier) public override onlyRole(EVENT_ROLE) onlyEvent {
+        populationAvailable = _multiplier;
     }
 
 
@@ -202,12 +215,34 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
             continent.completeMint(IYieldEvent(address(_event)));
         }
 
-        _event.completeEvent();
+        _event.complete();
 
         events.remove(address(_event));
         eventHistory.add(address(_event), _event.typeId());       
 
     }
+
+    function cancelEvent(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    {
+        require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
+        require(events.contains(address(_event)),"Event unknown by province");
+        require(hasRole(EVENT_ROLE, address(_event)),"Event do not have the EVENT_ROLE");
+
+        if(ERC165Checker.supportsInterface(address(_event), type(IYieldEvent).interfaceId)) {
+            
+            IYieldEvent yieldEvent = IYieldEvent(address(_event));
+            yieldEvent.penalizeCommodities(); 
+            // Province calls continent on behalf of Event.
+            continent.completeMint(yieldEvent);
+        }
+
+        _event.cancel();
+
+        events.remove(address(_event));
+        eventHistory.add(address(_event), _event.typeId());       
+
+    }
+
 
     function containsEvent(IEvent _event) public view override returns(bool)
     {

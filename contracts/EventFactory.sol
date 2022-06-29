@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 //import "./Farm.sol";
 import "./YieldEvent.sol";
 import "./BuildEvent.sol";
+import "./PopulationEvent.sol";
 import "./Structure.sol";
 import "./Roles.sol";
 import "./Interfaces.sol";
@@ -26,6 +27,7 @@ contract EventFactory is
  {
     uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
     uint256 constant BUILD_EVENT_ID = uint256(keccak256("BUILD_EVENT"));
+    uint256 constant POPULATION_EVENT_ID = uint256(keccak256("POPULATION_EVENT"));
 
     using EnumerableMap for EnumerableMap.UintToAddressMap;
 
@@ -79,7 +81,7 @@ contract EventFactory is
     }
 
     //override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
-    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IBuildEvent) {
 
         console.log("EventFactory-CreateBuildEvent: check roles");
         console.log("EventFactory-CreateBuildEvent: tx.origin: ", tx.origin);
@@ -93,14 +95,15 @@ contract EventFactory is
         BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(BUILD_EVENT_ID), abi.encodeWithSelector(BuildEvent(address(0)).initialize.selector, 
             _province,
             structure,
-            _count,
+            _multiplier,
+            _rounds,
             _hero
          ));
         
         return IBuildEvent(address(eventProxy));
     }
 
-    function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IYieldEvent) {
+    function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _multiplier, uint256 _rounds, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IYieldEvent) {
 
         // Check access to province
         require(_province.hasRole(OWNER_ROLE, _receiver) || _province.hasRole(VASSAL_ROLE, _receiver), "No access");
@@ -111,12 +114,29 @@ contract EventFactory is
             _province,
             _structure,
             _receiver,
-            _count,
+            _multiplier,
+            _rounds,
             _hero
          ));
 
         return IYieldEvent(address(eventProxy));
     }
+
+    function createGrowPopulationEvent(IProvince _province, uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRole(PROVINCE_ROLE) returns(IPopulationEvent) {
+
+        // Check that the structure exist on the province!
+
+        BeaconProxy eventProxy = new BeaconProxy(eventBeacons.get(POPULATION_EVENT_ID), abi.encodeWithSelector(PopulationEvent(address(0)).initialize.selector, 
+            _province,
+            _multiplier,
+            _rounds,
+            _manPower,
+            _hero
+         ));
+
+        return IPopulationEvent(address(eventProxy));
+    }
+
 
     // function setContinent(IContinent _continent) external override onlyRole(DEFAULT_ADMIN_ROLE) {
     //     continent = _continent;

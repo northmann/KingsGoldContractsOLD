@@ -17,18 +17,18 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
     uint256 constant YIELD_EVENT_ID = uint256(keccak256("YIELD_EVENT"));
 
     IYieldStructure public override structure;
-    uint256 public count;
     address public receiver;
 
 
-    function initialize(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, address _hero) initializer public {
+    function initialize(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _multiplier, uint256 _rounds, address _hero) initializer public {
         setupEvent(_province);
 
         _registerInterface(type(IYieldEvent).interfaceId);
 
         structure = _structure;
         receiver = _receiver;
-        count = _count;
+        multiplier = _multiplier;
+        rounds = _rounds;
         hero = _hero;
 
         _calculateCost();
@@ -52,14 +52,15 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
         // uint256 ironFactor) = IYieldStructure(structure).rewardFactor();
         ResourceFactor memory factor = structure.rewardFactor();
 
-        manPower = count * factor.manPower; // The cost in manPower
+        manPower = multiplier * factor.manPower; // The cost in manPower
         attrition = factor.attrition;
-        timeRequired = factor.time; // Change in manPower could alter this.
-        goldForTime = count * factor.goldForTime * province.world().baseGoldCost();
-        foodAmount = count * factor.food;
-        woodAmount = count * factor.wood;
-        rockAmount = count * factor.rock;
-        ironAmount = count * factor.iron;
+        penalty = factor.penalty;
+        timeRequired = factor.time * rounds; // Change in manPower could alter this.
+        goldForTime = factor.goldForTime;
+        foodAmount = multiplier * factor.food;
+        woodAmount = multiplier * factor.wood;
+        rockAmount = multiplier * factor.rock;
+        ironAmount = multiplier * factor.iron;
     }
 
 
@@ -82,6 +83,24 @@ contract YieldEvent is Initializable, IYieldEvent, Event {
         state = State.Minted;
     }
 
+    // function cancel() public override(IEvent, Event) onlyProvince notState(State.Minted) notState(State.Completed) notState(State.Cancelled)
+    // {
+    //     // E.g;
+    //     // Calculate penalty
+    //     //penalizeCommodities();
+    //     //mint()
+    //     updatePopulation();
+
+    //     //updatePopulation();
+    //     state = State.Cancelled;
+    // }
+
+    function penalizeCommodities() public override onlyProvince notState(State.Minted) notState(State.Completed) notState(State.Cancelled) {
+        foodAmount = penalizeAmount(foodAmount); // Reduce the yield by time and penalty.
+        woodAmount = penalizeAmount(woodAmount); // Reduce the yield by time and penalty.
+        rockAmount = penalizeAmount(rockAmount); // Reduce the yield by time and penalty.
+        ironAmount = penalizeAmount(ironAmount); // Reduce the yield by time and penalty.
+    }
 
 
 }

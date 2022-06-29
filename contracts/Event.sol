@@ -10,7 +10,7 @@ import "./Interfaces.sol";
 import "./Roles.sol";
 
 abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
-    enum State { Active, PaidFor, Minted, Completed }
+    enum State { Active, PaidFor, Minted, Completed, Cancelled }
 
     bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
     uint256 public constant baseUnit = 1 ether;
@@ -29,6 +29,9 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
     // The cost of resources for this event
     address public hero;
 
+    uint256 public override multiplier; // Multiply the effect of the event. More Farms create more yield etc.
+    uint256 public override penalty; // The penalty factor for cancelling the event, if any.
+    uint256 public override rounds; // Repeat the event a number of rounds. 
     uint256 public override manPower;
     uint256 public override foodAmount;
     uint256 public override woodAmount;
@@ -99,10 +102,20 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
     }
 
 
-    /// The cost of the time to complete the transfer.
+    /// The cost of the time to complete the event with rounds and multipliers.
     function priceForTime() external view override virtual returns(uint256)
     {
-        return goldForTime;
+        // Check if the time needed to complete the event is over, then just return zero cost.
+		if((block.timestamp - creationTime) >= (timeRequired * rounds * multiplier)) return 0;
+
+        uint256 baseCost = province.world().baseGoldCost();
+		uint256 totalCost = multiplier * goldForTime * baseCost * rounds;
+        uint256 reducedCost = reducedAmountOnTimePassed(totalCost);
+
+        // uint256 factor = ((block.timestamp - creationTime) * 1e18) / (timeRequired * rounds * multiplier);
+		// uint256 reducedCost = totalCost - ((totalCost * factor) / 1e18);
+
+        return reducedCost;
     }
 
     /// When a user has paid for time, this method gets called.
@@ -117,17 +130,47 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
         timeRequired = 0;
     }
 
-    function completeEvent() public override virtual timeExpired onlyProvince notState(State.Completed)
+    function complete() public override virtual timeExpired onlyProvince notState(State.Completed) notState(State.Cancelled)
     {
         updatePopulation();
         state = State.Completed;
+    }
+
+    function cancel() public override virtual onlyProvince notState(State.Minted) notState(State.Completed) notState(State.Cancelled)
+    {
+        // E.g;
+        // Calculate penalty
+        updatePopulation();
+        state = State.Cancelled;
+    }
+
+
+    function penalizeAmount(uint256 _amount) internal view virtual returns(uint256) {
+        uint256 reducedAmount = reducedAmountOnTimePassed(_amount);
+        uint256 amountLeft = (_amount - reducedAmount);
+        amountLeft = ((amountLeft * penalty) / 1e18);
+         
+        return amountLeft;
+    }
+
+    function reducedAmountOnTimePassed(uint256 _amount) internal view returns(uint256)
+    {
+		if((block.timestamp - creationTime) >= (timeRequired * rounds)) return 0;
+
+        uint256 factor = ((block.timestamp - creationTime) * 1e18) / (timeRequired * rounds);
+		uint256 reducedCost = (_amount - ((_amount * factor) / 1e18));
+
+        return reducedCost;
     }
 
     function updatePopulation() internal virtual
     {
         assert(attrition <= 1e18); // Cannot be more than 100%
         // Calc mamPower Attrition
+
         uint256 attritionCost = ((manPower * attrition) / baseUnit); // Calculate the percentage of the attrition.
+        uint256 reducedAmount = reducedAmountOnTimePassed(attritionCost);
+        attritionCost = attritionCost - reducedAmount; // Attrition increases over time.
         uint256 manPowerLeft = manPower - attritionCost;
 
         province.setPopulationAvailable(province.populationAvailable() + manPowerLeft);

@@ -14,6 +14,9 @@ interface IEvent {
     function typeId() external pure returns(uint256);
     function province() external view returns(IProvince);
     function world() external view returns(IWorld);
+    function multiplier() external returns(uint256);
+    function penalty() external returns(uint256);
+    function rounds() external returns(uint256);
     function manPower() external returns(uint256);
     function foodAmount() external returns(uint256);
     function woodAmount() external returns(uint256);
@@ -24,7 +27,8 @@ interface IEvent {
     function payForTime() external;
     function paidForTime() external;
 
-    function completeEvent() external;
+    function complete() external;
+    function cancel() external;
 }
 
 interface IContractType {
@@ -42,13 +46,14 @@ interface IProvince is IAccessControlUpgradeable {
     function setPopulationTotal(uint256 _count) external;
     function setPopulationAvailable(uint256 _count) external;
 
-    function createStructure(uint256 _structureId, uint256 _count, uint256 _hero) external;
-    function createYieldEvent(uint256 _structureId, uint256 _count, uint256 _hero) external;
+    function createStructureEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external;
+    function createYieldEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external;
+    function createGrowPopulationEvent(uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) external returns(IPopulationEvent);
     function getStructure(uint256 _id) external returns(bool, address);
     function setStructure(uint256 _id, IStructure _structureContract) external;
     function payForTime(IEvent _event) external;
     function completeEvent(IEvent _event) external;
-    //function completeMint() external;
+    function cancelEvent(IEvent _event) external;
     function world() external view returns(IWorld);
     function containsEvent(IEvent _event) external view returns(bool);
 }
@@ -123,13 +128,17 @@ interface IBuildEvent is IEvent {
 interface IYieldEvent is IEvent {
     function structure() external view returns(IYieldStructure);
     function completeMint() external;
+    function penalizeCommodities() external;
 }
 
+interface IPopulationEvent is IEvent {
+}
 
 interface IEventFactory {
     function ensureStructure(IProvince _province, uint256 _structureId) external returns(IStructure);
-    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _count, uint256 _hero) external returns(IBuildEvent);
-    function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _count, uint256 _hero) external returns(IYieldEvent);
+    function CreateBuildEvent(IProvince _province, uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external returns(IBuildEvent);
+    function CreateYieldEvent(IProvince _province, IYieldStructure _structure, address _receiver, uint256 _multiplier, uint256 _rounds, uint256 _hero) external returns(IYieldEvent);
+    function createGrowPopulationEvent(IProvince _province, uint256 _multiplier, uint256 _rounds, uint256 _manPower, uint256 _hero) external returns(IPopulationEvent);
     function setStructureBeacon(uint256 _id, address _beaconAddress) external;
     function getStructureBeacon(uint256 _id) external view returns(bool, address);
     function setEventBeacon(uint256 _id, address _beaconAddress) external;

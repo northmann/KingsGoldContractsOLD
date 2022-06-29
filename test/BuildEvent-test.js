@@ -44,7 +44,7 @@ describe("BuildEvent", function () {
     it('Init', async () => {
  
 
-      let tx = await province.createStructure(farmTypeId, 1, 0);
+      let tx = await province.createStructureEvent(farmTypeId, 1, 1, 0);
       await tx.wait();
       
 
