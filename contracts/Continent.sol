@@ -166,7 +166,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     // }
 
     /// The user pays to reduce the time on a contract.
-    function payForTime(IEvent _event) public override onlyProvince {
+    function payForTime(IEvent _event, address user) public override onlyProvince {
 
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         IProvince province = _event.province();
@@ -178,9 +178,12 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
         ITreasury treasury = world.treasury();
 
         IKingsGold gold = treasury.gold();
-        require(timeCost <= gold.balanceOf(msg.sender), "Not enough gold");
 
-        if(!gold.transferFrom(msg.sender, address(treasury), timeCost))
+        console.log("continent.payForTime: User=", user, " the value of ", timeCost);
+
+        require(timeCost <= gold.balanceOf(user), "Not enough gold");
+
+        if(!gold.transferFrom(user, address(treasury), timeCost))
             revert InsuffcientGold({
                 minRequired: timeCost
             });

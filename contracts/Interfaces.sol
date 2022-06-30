@@ -36,6 +36,7 @@ interface IContractType {
 }
 
 interface IProvince is IAccessControlUpgradeable { 
+    function latestEvent() external view returns(IEvent);
     function getEvents() external view returns(EventListExtensions.ActionEvent[] memory);
     function continent() external view returns(IContinent);
     function setVassal(address _user) external;
@@ -79,7 +80,7 @@ interface IContinent  {
     function createProvince(string memory _name, address owner) external returns(uint256);
     function setProvinceManager(IProvinceManager _instance) external;
     function spendEvent(IEvent _event, address _user) external;
-    function payForTime(IEvent _event) external;
+    function payForTime(IEvent _event, address user) external;
     function completeMint(IYieldEvent _event) external;
     // function completeMint(IYieldEvent _yieldEvent) external;
 }

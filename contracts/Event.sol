@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable-next-line
 pragma solidity >0.8.2;
+import "hardhat/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
@@ -95,7 +96,8 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
 
     function setupEvent(IProvince _province) internal onlyInitializing {
         province = _province;
-        world = _province.world();
+        if(address(_province) != address(0))
+            world = _province.world();
         creationTime = block.timestamp;
 		_registerInterface(type(IEvent).interfaceId);
         state = State.Active;
@@ -109,8 +111,17 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
 		if((block.timestamp - creationTime) >= (timeRequired * rounds * multiplier)) return 0;
 
         uint256 baseCost = province.world().baseGoldCost();
-		uint256 totalCost = multiplier * goldForTime * baseCost * rounds;
+        console.log("BaseCost: ", baseCost);
+        console.log("multiplier: ", multiplier);
+        console.log("goldForTime: ", goldForTime);
+        console.log("rounds: ", rounds);
+        uint256 basePrice = ((goldForTime * baseCost) / 1e18);
+        console.log("basePrice: ", basePrice);
+		uint256 totalCost = multiplier * rounds * basePrice;
+        console.log("totalCost: ", totalCost);
+        
         uint256 reducedCost = reducedAmountOnTimePassed(totalCost);
+        console.log("reducedCost: ", totalCost);
 
         // uint256 factor = ((block.timestamp - creationTime) * 1e18) / (timeRequired * rounds * multiplier);
 		// uint256 reducedCost = totalCost - ((totalCost * factor) / 1e18);

@@ -54,6 +54,8 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     address public armyContract;
 
     EnumerableMap.AddressToUintMap internal events;
+    IEvent public override latestEvent; // Mostly for testing purposes
+
     EventListExtensions.History internal eventHistory;
 
     EnumerableMap.UintToAddressMap private structures;
@@ -112,6 +114,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         console.log("createStructure add event");
         // Add the event to the list of activities on the province.
         events.set(address(buildEvent), buildEvent.typeId()); 
+        latestEvent = buildEvent;
 
         console.log("createStructure grant role");
         _grantRole(EVENT_ROLE, address(buildEvent)); // Enable the event to perform actions on this provice.
@@ -141,6 +144,9 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
         // Create a new Build event        
         IYieldEvent yieldEvent =  world.eventFactory().CreateYieldEvent(this, structure, msg.sender, _multiplier, _rounds, _hero);
+        // Add the event to the list of activities on the province.
+        events.set(address(yieldEvent), yieldEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
+        latestEvent = yieldEvent;
 
         // Check that there is mamPower enough to build the requested structures.
         require(yieldEvent.manPower() <= populationAvailable, "not enough population");
@@ -148,8 +154,6 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
         structure.setAvailableAmount(structure.availableAmount() - _multiplier);
 
-        // Add the event to the list of activities on the province.
-        events.set(address(yieldEvent), yieldEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
         
         _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
     }
@@ -163,6 +167,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
         // Add the event to the list of activities on the province.
         events.set(address(populationEvent), populationEvent.typeId()); // Needs some refactoring, as we do not know the type of event !
+        latestEvent = populationEvent;
         
         _grantRole(EVENT_ROLE, address(populationEvent)); // Enable the event to perform actions on this provice.
 
@@ -199,7 +204,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _event.payForTime(); // More check locally
 
         // Execute the payment
-        continent.payForTime(_event);
+        continent.payForTime(_event, msg.sender);
 
         _event.paidForTime();
     }

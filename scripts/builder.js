@@ -20,6 +20,7 @@ let roles;
 let farmBeacon;
 let buildEventBeacon;
 let yieldEventBeacon;
+let populationEventBeacon;
 
 const eth1 = ethers.utils.parseUnits("1.0", "ether");
 let goldAmount = ethers.utils.parseUnits("1000.0", "ether"); // 10 eth
@@ -77,10 +78,12 @@ async function addEventFactory() {
     farmBeacon = await createBeacon("Farm");
     buildEventBeacon = await createBeacon("BuildEvent");
     yieldEventBeacon = await createBeacon("YieldEvent");
+    populationEventBeacon = await createBeacon("PopulationEvent");
 
     if(farmBeacon) await eventFactory.setStructureBeacon(getId("FARM_STRUCTURE"), farmBeacon.address);
     if(buildEventBeacon) await eventFactory.setEventBeacon(getId("BUILD_EVENT"), buildEventBeacon.address);
     if(yieldEventBeacon) await eventFactory.setEventBeacon(getId("YIELD_EVENT"), yieldEventBeacon.address);
+    if(populationEventBeacon) await eventFactory.setEventBeacon(getId("POPULATION_EVENT"), populationEventBeacon.address);
 
     return {eventFactory, farmBeacon, buildEventBeacon, yieldEventBeacon };
 }

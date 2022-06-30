@@ -27,7 +27,7 @@ contract PopulationEvent is Initializable, IPopulationEvent, Event {
         hero = _hero;
 
         // Base values before multiplier and rounds
-        multiplier = 2e18; // 100% population growth
+        multiplier = 1; // 
         penalty = 50e16; // 50%
         attrition = 0;
         timeRequired = 6 hours;
@@ -35,6 +35,9 @@ contract PopulationEvent is Initializable, IPopulationEvent, Event {
         foodAmount = 1 ether; // 1 unit of food for each citizen
 
         _calculateCost();
+
+        console.log("updatePopulation.creationTime: ", creationTime);
+
     }
 
     function typeId() public pure override returns(uint256)
@@ -62,15 +65,29 @@ contract PopulationEvent is Initializable, IPopulationEvent, Event {
 
     function updatePopulation() internal override
     {
-        assert(multiplier >= 1 ether); // multiplier cannot be below 1 ether otherwise there would be negative population growth.
+        console.log("updatePopulation.block.timestamp: ", block.timestamp);
 
-        uint256 populationCreated = (manPower * multiplier) - manPower;
+        //assert(multiplier >= 1 ether); // multiplier cannot be below 1 ether otherwise there would be negative population growth.
+        console.log("updatePopulation.manPower: ", manPower);
+        uint256 populationCreated = (manPower * 2e18) - (manPower * 1e18); // 2e18 can be another value!
+        console.log("updatePopulation.populationCreated: ", populationCreated);
+
         uint256 reducedAmount = reducedAmountOnTimePassed(populationCreated);
+
+
         populationCreated = populationCreated - reducedAmount;
+        console.log("updatePopulation.populationCreated: ", populationCreated);
+
         if(reducedAmount > 0) {
             // Penalty kicks in as time has not yet expire.
             populationCreated = penalizeAmount(populationCreated); // Reduce the created population by the penalty
+            console.log("updatePopulation.penalizeAmount populationCreated: ", populationCreated);
         }
+
+        // Reduce down to "int" format again
+        populationCreated = populationCreated / 1e18;
+
+        console.log("updatePopulation.populationCreated: ", populationCreated);
 
         province.setPopulationAvailable(province.populationAvailable() + manPower + populationCreated); // return manPower and add new population
         province.setPopulationTotal(province.populationTotal() + populationCreated);
