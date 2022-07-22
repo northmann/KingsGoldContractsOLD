@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "./GenericAccessControl.sol";
 import "./World.sol";
 import "./ProvinceManager.sol";
-import "./ArmyManager.sol";
+//import "./ArmyNFT.sol";
 import "./Treasury.sol";
 import "./KingsGold.sol";
 import "./Interfaces.sol";

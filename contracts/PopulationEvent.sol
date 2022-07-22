@@ -53,15 +53,28 @@ contract PopulationEvent is Initializable, IPopulationEvent, Event {
     }
 
 
-    // function cancel() public override(IEvent, Event) onlyProvince notState(State.Minted) notState(State.Completed) notState(State.Cancelled)
-    // {
-    //     updatePopulation();
+    function cancel() public override(IEvent, Event) onlyProvince notState(State.Minted) notState(State.Completed) notState(State.Cancelled)
+    {
 
-    //     //amountLeft = ((amountLeft * penalty) / 1e18);
+        uint256 populationCreated = createPopulation();
+        console.log("populationCreated base ", populationCreated);
 
-    //     //updatePopulation();
-    //     state = State.Cancelled;
-    // }
+        // uint256 reducedAmount = reducedAmountOnTimePassed(populationCreated);
+        // populationCreated = populationCreated - reducedAmount;
+        // console.log("populationCreated reduced ", populationCreated);
+
+        uint256 populationPenalized = penalizeAmount(populationCreated); // Reduce the created population by the penalty
+        console.log("populationPenalized: ", populationPenalized);
+
+        // Reduce down to "int" format again
+        uint256 populationUInt = populationPenalized / 1e18;
+        console.log("Reduce down to uint format again: ", populationUInt);
+
+        province.setPopulationAvailable(province.populationAvailable() + manPower + populationUInt); // return manPower and add new population
+        province.setPopulationTotal(province.populationTotal() + populationUInt);
+
+        state = State.Cancelled;
+    }
 
     function updatePopulation() internal override
     {
@@ -78,12 +91,6 @@ contract PopulationEvent is Initializable, IPopulationEvent, Event {
         populationCreated = populationCreated - reducedAmount;
         console.log("updatePopulation.populationCreated: ", populationCreated);
 
-        if(reducedAmount > 0) {
-            // Penalty kicks in as time has not yet expire.
-            populationCreated = penalizeAmount(populationCreated); // Reduce the created population by the penalty
-            console.log("updatePopulation.penalizeAmount populationCreated: ", populationCreated);
-        }
-
         // Reduce down to "int" format again
         populationCreated = populationCreated / 1e18;
 
@@ -91,6 +98,13 @@ contract PopulationEvent is Initializable, IPopulationEvent, Event {
 
         province.setPopulationAvailable(province.populationAvailable() + manPower + populationCreated); // return manPower and add new population
         province.setPopulationTotal(province.populationTotal() + populationCreated);
+    }
+
+    function createPopulation() internal view returns(uint256) {
+        console.log("manPower: ", manPower);
+        uint256 populationCreated = (manPower * 2e18) - (manPower * 1e18); // 2e18 can be another value!
+        console.log("populationCreated: ", populationCreated);
+        return populationCreated;
     }
 
 

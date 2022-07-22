@@ -153,6 +153,7 @@ interface IWorld is IGenericAccessControl {
     function wood() external view returns(IWood);
     function rock() external view returns(IRock);
     function iron() external view returns(IIron);
+    function armyUnits() external view returns(IArmyUnits);
  
     function setFood(IFood _food) external;
     function setWood(IWood _wood) external;
@@ -187,5 +188,27 @@ interface ITreasury {
 }
 
 interface IKingsGold is IERC20 {
+
+}
+
+interface IArmyNFT {
+    function setArmyBeacon(address _template) external;
+    function mintArmy(address _owner) external returns(uint256);
+}
+
+
+interface IArmyUnits {
+
+}
+
+interface IArmy {
+
+}
+
+interface IArmyEvent {
+    
+}
+
+interface IArmyStateMachine {
 
 }

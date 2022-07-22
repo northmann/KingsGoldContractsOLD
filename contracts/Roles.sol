@@ -16,4 +16,5 @@ contract Roles {
     bytes32 public constant PROVINCE_ROLE = keccak256("PROVINCE_ROLE");
     bytes32 public constant EVENT_ROLE = keccak256("EVENT_ROLE");
     bytes32 public constant TEMPORARY_MINTER_ROLE = keccak256("TEMPORARY_MINTER_ROLE");
+    bytes32 public constant ARMY_ROLE = keccak256("ARMY_ROLE");
 }

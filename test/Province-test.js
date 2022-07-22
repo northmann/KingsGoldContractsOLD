@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { getId, getContractInstance } = require("../scripts/Auxiliary.js");
+const { getId, getContractInstance, advanceTime, waitBlock } = require("../scripts/Auxiliary.js");
 const builder = require("../scripts/builder.js");
 
 
@@ -158,8 +158,7 @@ describe("Province", function () {
         let populationTotalBefore = await province.populationTotal();
         console.log("Total population before: ",populationTotalBefore);
 
-        let tx = await province.createGrowPopulationEvent(1, committedManPower, 0);
-        await tx.wait();
+        waitBlock( province.createGrowPopulationEvent(1, committedManPower, 0) );
 
         let populationAvailableAfter = await province.populationAvailable();
         expect(populationAvailableAfter.toNumber()).to.equal(populationTotalBefore.toNumber()-committedManPower);
@@ -167,12 +166,11 @@ describe("Province", function () {
         let latestEvent = await province.latestEvent();
 
         // suppose the current block has a timestamp of 01:00 PM
-        let hours2 = (60 * 60 * 2);
-        await network.provider.send("evm_increaseTime", [hours2])
-        await network.provider.send("evm_mine") // this one will have 03:00 PM as its timestamp
+        let hours3 = (60 * 60 * 3);
 
-        //await (await province.payForTime(latestEvent)).wait(); Do not pay
-        await (await province.cancelEvent(latestEvent)).wait();
+        advanceTime(hours2);
+
+        waitBlock( province.cancelEvent(latestEvent) );
 
         let populationAvailable = await province.populationAvailable();
         let populationTotalAfter = await province.populationTotal();
@@ -180,7 +178,7 @@ describe("Province", function () {
         console.log("Total population after: ",populationTotalAfter);
 
         //expect(populationAvailable.toNumber()).to.equal(populationTotalBefore.toNumber());
-        expect(populationTotalAfter.toNumber()).to.equal(populationTotalBefore.toNumber() + (committedManPower / 4));
+        expect(populationTotalAfter.toNumber()).to.equal(populationTotalBefore.toNumber() + Math.floor(committedManPower / 4));
       });
     });
 

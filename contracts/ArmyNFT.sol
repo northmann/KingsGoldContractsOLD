@@ -1,79 +1,44 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+// solhint-disable-next-line
+pragma solidity >0.8.2;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721BurnableUpgradeable.sol";
+import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
+import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableMap.sol";
 
-contract ArmyNFT is Initializable, ERC721Upgradeable, ERC721EnumerableUpgradeable, PausableUpgradeable, AccessControlUpgradeable, ERC721BurnableUpgradeable, UUPSUpgradeable {
-    using CountersUpgradeable for CountersUpgradeable.Counter;
 
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    CountersUpgradeable.Counter private _tokenIdCounter;
-    bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
+import "./GenericNFT.sol";
+import "./Army.sol";
+import "./Roles.sol";
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() {
-        _disableInitializers();
+contract ArmyManager is Initializable, GenericNFT, IArmyNFT {
+    using EnumerableMap for EnumerableMap.AddressToUintMap;
+
+    address public beaconAddress;
+    mapping(uint256 => address) public army;
+        EnumerableMap.AddressToUintMap internal lookup;
+
+
+
+    function initialize(IUserAccountManager _userUserManager) initializer override public {
+        super.initialize(_userUserManager); // Call parent GenericNFT
+        __ERC721_init("KingsGold Army BFT", "KSGA");
     }
 
-    function initialize() initializer public virtual {
-        __ERC721_init("KingsGold Army", "KSGA");
-        __ERC721Enumerable_init();
-        __Pausable_init();
-        __AccessControl_init();
-        __ERC721Burnable_init();
-        __UUPSUpgradeable_init();
-
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(PAUSER_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        _grantRole(UPGRADER_ROLE, msg.sender);
+    function setArmyBeacon(address _template) external override onlyRole(UPGRADER_ROLE) {
+        beaconAddress = _template;
     }
 
-    function pause() public onlyRole(PAUSER_ROLE) {
-        _pause();
-    }
 
-    function unpause() public onlyRole(PAUSER_ROLE) {
-        _unpause();
-    }
+    function mintArmy(address _owner) external override onlyRole(MINTER_ROLE) returns(uint256) {
+        uint256 tokenId = safeMint(_owner);
+        
+        BeaconProxy proxy = new BeaconProxy(beaconAddress   ,abi.encodeWithSelector(Army(address(0)).initialize.selector ));
+        army[tokenId] = address(proxy);
+        lookup.set(address(proxy), tokenId);
 
-    function safeMint(address to) public onlyRole(MINTER_ROLE) returns(uint256) {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
+        
         return tokenId;
-    }
-
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        whenNotPaused
-        override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
-    {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
-
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        onlyRole(UPGRADER_ROLE)
-        override
-    {}
-
-    // The following functions are overrides required by Solidity.
-
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721Upgradeable, ERC721EnumerableUpgradeable, AccessControlUpgradeable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
     }
 }

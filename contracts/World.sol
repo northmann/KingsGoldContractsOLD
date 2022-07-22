@@ -33,6 +33,8 @@ contract World is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, I
     IRock public override rock;
     IIron public override iron;
 
+    IArmyUnits public override armyUnits;
+
     
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {

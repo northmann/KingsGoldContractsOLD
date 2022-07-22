@@ -30,6 +30,11 @@ abstract contract Event is ERC165Storage, Initializable, Roles, IEvent {
     // The cost of resources for this event
     address public hero;
 
+    uint256 private timeBaseCost;
+    uint256 private goldForTimeBaseCost;
+    uint256 private foodBaseCost;
+    
+
     uint256 public override multiplier; // Multiply the effect of the event. More Farms create more yield etc.
     uint256 public override penalty; // The penalty factor for cancelling the event, if any.
     uint256 public override rounds; // Repeat the event a number of rounds. 

@@ -44,11 +44,33 @@ async function getRoles() {
     return roles;
 }
 
+async function advanceTime(time) {
+    await network.provider.send("evm_increaseTime", [time]);
+}
+
+async function advanceBlock() {
+    await network.provider.send("evm_mine", []);
+}
+
+async function advanceTimeAndBlock(time) {
+    await advanceTime(time);
+    await advanceBlock();
+    return Promise.resolve(ethers.provider.getBlock("latest"));
+}
+
+async function waitBlock(promise) {
+    await (await promise).wait();
+}
+
 module.exports = {
     createBeacon,
     createUpgradeable,
     deployContract,
     getContractInstance,
     getId,
-    getRoles
+    getRoles,
+    advanceTime,
+    advanceBlock,
+    advanceTimeAndBlock,
+    waitBlock
   };
