@@ -1,7 +1,11 @@
+require("dotenv").config();
+
 require("@nomiclabs/hardhat-waffle");
-require('hardhat-contract-sizer');
 require("@nomiclabs/hardhat-ethers");
 require('@openzeppelin/hardhat-upgrades');
+require("solidity-coverage");
+require('hardhat-contract-sizer');
+require('hardhat-abi-exporter');
 
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -36,5 +40,29 @@ module.exports = {
     runOnCompile: false,
     strict: true,
     only: [], //':ERC20$'
+  },
+  networks: {
+    hardhat: {
+      chainId: 1337
+    },
+    ropsten: {
+      url: process.env.ROPSTEN_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+  },
+  gasReporter: {
+    enabled: process.env.REPORT_GAS !== undefined,
+    currency: "USD",
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY,
+  },
+  abiExporter: {
+    path: './frontend/src/abi',
+    runOnCompile: true,
+    clear: true,
+    flat: true,
+    spacing: 2
   }
 };
