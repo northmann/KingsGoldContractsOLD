@@ -39,7 +39,7 @@ describe("Continent", function () {
 
     provinceManager = await createUpgradeable("ProvinceManager", [userAccountManager.address]);
     provinceBeacon = await createBeacon("Province");
-    provinceManager.setBeacon(provinceBeacon.address);
+    provinceManager.setProvinceBeacon(provinceBeacon.address);
     provinceManager.setContinent(continentAddress);
 
     continent.setProvinceManager(provinceManager.address);

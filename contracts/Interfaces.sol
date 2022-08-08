@@ -185,10 +185,12 @@ interface IIron is ICommondity {
 
 interface ITreasury {
     function gold() external view returns(IKingsGold);
+    function buy() payable external;
+    function sell(uint256 amount) external;
 }
 
 interface IKingsGold is IERC20 {
-
+    function mint(address to, uint256 amount) external;
 }
 
 interface IArmyNFT {

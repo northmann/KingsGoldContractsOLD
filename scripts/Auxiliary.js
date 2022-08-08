@@ -1,8 +1,20 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+var fs = require('fs');
 
+var content = [];
 var roles = undefined;
 
+
+function writeSetting(name, value) {
+    content.push(" \"" + name + "\": \"" + value + "\"");
+}
+
+async function createConfigFile(path) {
+
+    let data = "{\n\r" + content.join(",\n\r") + "\n\r}\n\r";
+    await fs.writeFileSync(path,data,{encoding:'utf8',flag:'w'});
+}
 
 async function createBeacon(contractName) {
     const Contract = await ethers.getContractFactory(contractName);
@@ -17,6 +29,8 @@ async function createUpgradeable(contractName, params) {
     const instance = await upgrades.deployProxy(Contract, params);
     await instance.deployed();
     console.log(`${contractName} contract deployed to ${instance.address}`);
+    writeSetting(contractName, instance.address);
+
     return instance;
 }
 
@@ -24,6 +38,7 @@ async function deployContract(contractName, ...args) {
     const Contract = await ethers.getContractFactory(contractName);
     const instance = await Contract.deploy(args);
     console.log(`${contractName} contract deployed to ${instance.address}`);
+    writeSetting(contractName, instance.address);
 
     return instance;
 }
@@ -62,6 +77,7 @@ async function waitBlock(promise) {
     await (await promise).wait();
 }
 
+
 module.exports = {
     createBeacon,
     createUpgradeable,
@@ -72,5 +88,7 @@ module.exports = {
     advanceTime,
     advanceBlock,
     advanceTimeAndBlock,
-    waitBlock
+    waitBlock,
+    createConfigFile,
+    writeSetting
   };

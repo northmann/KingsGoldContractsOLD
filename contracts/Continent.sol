@@ -81,7 +81,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
 
         console.log("createProvince - transfer gold");
         if(!gold.transferFrom(msg.sender, address(treasury), provinceCost))
-            revert();
+            revert("KingsGold transfer failed from sender to treasury.");
 
         console.log("createProvince - mintProvince with ProvinceManager: ", address(provinceManager));
 

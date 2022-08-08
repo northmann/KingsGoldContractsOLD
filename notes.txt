@@ -1,0 +1,5 @@
+Medieval Font
+https://www.mansgreback.com/font?name=middle-ages
+
+Names Generator
+https://github.com/Snake4life/fantasy-names/blob/master/generators/towns_and_cities/fantasy_towns.js

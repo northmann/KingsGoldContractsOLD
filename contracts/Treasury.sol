@@ -37,16 +37,17 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
         gold = IKingsGold(_gold);
     }
 
-    function buy() payable public {
+    function buy() payable public override {
         uint256 amountTobuy = msg.value;
-        uint256 dexBalance = gold.balanceOf(address(this));
         require(amountTobuy > 0, "You need to send some ether");
+        uint256 dexBalance = gold.balanceOf(address(this));
         require(amountTobuy <= dexBalance, "Not enough tokens in the reserve");
+        
         gold.transfer(msg.sender, amountTobuy);
         emit Bought(amountTobuy);
     }
 
-    function sell(uint256 amount) public {
+    function sell(uint256 amount) public override {
         require(amount > 0, "You need to sell at least some tokens");
         uint256 allowance = gold.allowance(msg.sender, address(this));
         require(allowance >= amount, "Not enough token allowance");

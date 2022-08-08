@@ -1,6 +1,6 @@
 const { ethers, upgrades } = require("hardhat");
 
-async function main() {
+async function world_deploy() {
   const World = await ethers.getContractFactory("World");
   const _world = await upgrades.deployProxy(World);
   await _world.deployed();
@@ -28,9 +28,14 @@ async function createContinentBeacon() {
 }
 
 
-main()
+world_deploy()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
     process.exit(1);
   });
+
+  
+module.exports = {
+  world_deploy
+};

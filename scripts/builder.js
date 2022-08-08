@@ -1,5 +1,5 @@
 const { ethers } = require("hardhat");
-const { createBeacon, createUpgradeable, deployContract, getContractInstance, getId } = require("./Auxiliary.js");
+const { createBeacon, createUpgradeable, deployContract, getContractInstance, getId, writeSetting } = require("./Auxiliary.js");
 
 let owner, addr1, addr2;
 let userAccountBeacon;
@@ -23,7 +23,7 @@ let yieldEventBeacon;
 let populationEventBeacon;
 
 const eth1 = ethers.utils.parseUnits("1.0", "ether");
-let goldAmount = ethers.utils.parseUnits("1000.0", "ether"); // 10 eth
+let goldAmount = ethers.utils.parseUnits("100.0", "ether"); // 100 mill eth
 
 async function addRoles() {
     roles = await deployContract("Roles");
@@ -44,9 +44,10 @@ async function addTreasury(user) {
     if(!userAccountManager) throw "Missing userAccountManager instance";
 
     gold = await deployContract("KingsGold");
-    await gold.mint(user.address, goldAmount);        // Give me a lot of new coins
 
     treasury = await createUpgradeable("Treasury", [userAccountManager.address, gold.address]);
+    let treasuryGold = ethers.utils.parseUnits("100000000.0", "ether"); // 100 mill eth
+    await gold.mint(treasury.address, goldAmount);        // Give the treasury a lot of new coins
 
     return treasury;
 }
@@ -113,6 +114,8 @@ async function addContinent() {
 
     continentAddress = await world.continents(0);
     console.log("Continent address: ", continentAddress);
+    writeSetting("Continent", continentAddress);
+
 
     await userAccountManager.grantRole(await roles.MINTER_ROLE(), continentAddress);
 
@@ -157,6 +160,38 @@ async function addProvince(user) {
 }
 
 
+async function deployMultiCall(owner, config, ...args) {
+    const transactionCount = await owner.getTransactionCount()
+
+    const futureAddress = ethers.utils.getContractAddress({
+      from: owner.address,
+      nonce: transactionCount
+    });
+  
+    console.log("Next contract Multicall will be deployed to: ", futureAddress);
+  
+    multicall = await deployContract("Multicall");
+    console.log("Multicall address: ", multicall.address);
+  
+    console.log("Next contract Multicall2 will be deployed to: ", futureAddress);
+    multicall2 = await deployContract("Multicall2");
+    console.log("Multicall2 address: ", multicall2.address);
+}
+
+
+async function deployGame(owner) {
+    await deployMultiCall(owner);
+    roles = await addRoles();
+    userAccountManager = await addUserAccountManager();
+    await addTreasury(owner);
+    await addCommodities(owner);
+    eventFactoryObject = await addEventFactory();
+    world = await addWorld();
+    await addContinent();
+    await addProvinceManager();
+}
+
+
 
 module.exports = {
     addRoles,
@@ -168,5 +203,7 @@ module.exports = {
     addContinent,
     addProvinceManager,
     addProvince,
-    goldAmount
+    deployMultiCall,
+    deployGame,
+    goldAmount,
   };
