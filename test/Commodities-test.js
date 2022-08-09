@@ -19,6 +19,7 @@ describe("Commodities", function () {
     //treasury = await builder.addTreasury(owner);
     commodities = await builder.addCommodities(owner);
 
+    await builder.mintCommodities(owner);
   });
 
   it('CheckAmount on food', async () => {

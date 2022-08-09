@@ -8,13 +8,14 @@ import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import "./GenericAccessControl.sol";
 import "./Interfaces.sol";
 import "./Roles.sol";
 
 
-contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, ITreasury {
+contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable, ReentrancyGuardUpgradeable, ITreasury {
 
 
     IKingsGold public override gold;
@@ -30,6 +31,7 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
     function initialize(IUserAccountManager _userAccountManager, address _gold) initializer public {
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __UUPSUpgradeable_init();
+        __ReentrancyGuard_init();
         gold = IKingsGold(_gold);
     }
 
@@ -37,7 +39,7 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
         gold = IKingsGold(_gold);
     }
 
-    function buy() payable public override {
+    function buy() payable public override nonReentrant {
         uint256 amountTobuy = msg.value;
         require(amountTobuy > 0, "You need to send some ether");
         uint256 dexBalance = gold.balanceOf(address(this));
@@ -47,7 +49,7 @@ contract Treasury is Initializable, Roles, GenericAccessControl, UUPSUpgradeable
         emit Bought(amountTobuy);
     }
 
-    function sell(uint256 amount) public override {
+    function sell(uint256 amount) public override nonReentrant {
         require(amount > 0, "You need to sell at least some tokens");
         uint256 allowance = gold.allowance(msg.sender, address(this));
         require(allowance >= amount, "Not enough token allowance");

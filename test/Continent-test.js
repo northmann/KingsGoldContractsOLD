@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const { createBeacon, createUpgradeable, deployContract, getContractInstance } = require("./Auxiliary.js");
+const builder = require("../scripts/builder.js");
 
 
 describe("Continent", function () {
@@ -9,54 +10,41 @@ describe("Continent", function () {
 
   let userAccountBeacon;
   let userAccountManager;
-  let token;
+  let gold;
   let treasury;
   let userManager;
   let continentBeacon;
-  let continentAddress;
   let world;
   let continent;
+  let commodities;
+  let provinceManager;
+
+  before(async function () {
+    [owner, addr1, addr2] = await ethers.getSigners();
+    roles = await builder.addRoles();
+    userAccountManager = await builder.addUserAccountManager();
+    gold = await builder.addKingsGold(owner);
+    treasury = await builder.addTreasury(owner);
+    commodities = await builder.addCommodities(owner);
+    eventFactoryObject = await  builder.addEventFactory();
+    world = await builder.addWorld();
+    continent = await builder.addContinent();
+    provinceManager = await builder.addProvinceManager();
+
+  });
 
   beforeEach(async function () {
     [owner, addr1, addr2] = await ethers.getSigners();
 
-    userAccountBeacon = await createBeacon("UserAccount");
-    userAccountManager = await createUpgradeable("UserAccountManager", [userAccountBeacon.address]);
-    token = await deployContract("KingsGold");
-    treasury = await createUpgradeable("Treasury", [userAccountManager.address, token.address]);
-    continentBeacon = await createBeacon("Continent");
-    world = await createUpgradeable("World", [userAccountManager.address, continentBeacon.address]);
-    world.setTreasury(treasury.address);
-
-    let tx = await world.createContinent(); // Make a continent
-    await tx.wait(); // wait until the transaction is mined
-
-    continentAddress = await world.continents(0);
-    console.log("Continent address: ", continentAddress);
-
-    const Continent = await ethers.getContractFactory("Continent");
-    continent = Continent.attach(continentAddress);
-
-    provinceManager = await createUpgradeable("ProvinceManager", [userAccountManager.address]);
-    provinceBeacon = await createBeacon("Province");
-    provinceManager.setProvinceBeacon(provinceBeacon.address);
-    provinceManager.setContinent(continentAddress);
-
-    continent.setProvinceManager(provinceManager.address);
-
   });
 
   it('CreateProvince', async () => {
-    // GrantRole minter to the Continent contract so it can create new UserAccount as new Provinces are created.
+    const eth1 = ethers.utils.parseUnits("10.0", "ether");
+    let amount = ethers.utils.parseUnits("100.0", "ether"); // 10 eth
+    await gold.mint(owner.address, amount);        // Give me a lot of new coins
+    await gold.approve(continent.address, amount);  // Approve Continent to spend my coins
 
-    const roles = await deployContract("Roles");
-    const minterRole = await roles.MINTER_ROLE();
-    await userAccountManager.grantRole(minterRole, continentAddress);
-
-    const eth1 = ethers.utils.parseUnits("1.0", "ether");
-    let amount = ethers.utils.parseUnits("10.0", "ether"); // 10 eth
-    await token.mint(owner.address, amount);        // Give me a lot of new coins
-    await token.approve(continentAddress, amount);  // Approve Continent to spend my coins
+    const ownerBalanceBefore = await gold.balanceOf(owner.address);
 
     const tx = await continent.createProvince("Test", owner.address);
     await tx.wait();
@@ -72,14 +60,21 @@ describe("Continent", function () {
     console.log(`UserAccount ${userAccountAddress} has a province ${provinceAddress}`);
 
     // Check gold account
-    const ownerBalance = await token.balanceOf(owner.address);
-    amount = amount.sub(eth1);
-    expect(ownerBalance).to.equal(amount);
-    console.log(`User Gold balance ${ethers.utils.formatEther(amount)}`);
+    const ownerBalanceAfter = await gold.balanceOf(owner.address);
+    expect(ownerBalanceBefore.gt(ownerBalanceAfter)).to.equal(true);
+
+    console.log(`User Gold balance ${ethers.utils.formatEther(ownerBalanceAfter)}`);
 
     // Check treasury
-    const treasuryBalance = await token.balanceOf(treasury.address);
-    expect(treasuryBalance).to.equal(eth1);
+    // const treasuryBalance = await gold.balanceOf(treasury.address);
+    // expect(treasuryBalance).to.equal(eth1);
+
+    // Check commodities
+    expect((await commodities.food.balanceOf(owner.address)).eq(amount)).to.equal(true);
+    expect((await commodities.wood.balanceOf(owner.address)).eq(amount)).to.equal(true);
+    expect((await commodities.rock.balanceOf(owner.address)).eq(amount)).to.equal(true);
+    expect((await commodities.iron.balanceOf(owner.address)).eq(amount)).to.equal(true);
+
   });
 
 });

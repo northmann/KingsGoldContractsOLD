@@ -43,13 +43,19 @@ module.exports = {
   },
   networks: {
     hardhat: {
-      chainId: 1337
+      chainId: 1337,
+      // mining: {
+      //   auto: false,
+      //   interval: [1000, 2000] // mine between 1000 and 2000 ms
+      // }
     },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+
+    
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

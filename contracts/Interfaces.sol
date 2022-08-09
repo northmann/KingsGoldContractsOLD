@@ -9,6 +9,12 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./ResourceFactor.sol";
 import "./EventSetExtensions.sol";
 
+struct Config {
+    uint256 baseProvinceCost;
+    uint256 baseCommodityReward;
+    uint256 provinceLimit;
+}
+
 
 interface IEvent { 
     function typeId() external pure returns(uint256);
@@ -76,6 +82,7 @@ interface IGenericAccessControl {
 
 interface IContinent  { 
 
+    function setConfig(Config memory _config) external;
     function world() external view returns(IWorld);
     function createProvince(string memory _name, address owner) external returns(uint256);
     function setProvinceManager(IProvinceManager _instance) external;
@@ -170,6 +177,7 @@ interface IWorld is IGenericAccessControl {
 
 interface ICommondity is IERC20Upgradeable {
     function mint_with_temp_account(address to, uint256 amount) external;
+    function mint(address to, uint256 amount) external; 
 }
 
 interface IFood is ICommondity {

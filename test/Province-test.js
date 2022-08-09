@@ -19,6 +19,7 @@ describe("Province", function () {
     [owner, addr1, addr2] = await ethers.getSigners();
     roles = await builder.addRoles();
     userAccountManager = await builder.addUserAccountManager();
+    await builder.addKingsGold(owner);
     await builder.addTreasury(owner);
     await builder.addCommodities(owner);
     eventFactoryObject = await  builder.addEventFactory();

@@ -20,6 +20,7 @@ describe("BuildEvent", function () {
 
     roles = await builder.addRoles();
     userAccountManager = await builder.addUserAccountManager();
+    await builder.addKingsGold(owner);
     await builder.addTreasury(owner);
     await builder.addCommodities(owner);
     efContainer = await  builder.addEventFactory();

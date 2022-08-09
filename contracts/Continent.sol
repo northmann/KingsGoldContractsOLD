@@ -6,17 +6,16 @@ import "hardhat/console.sol";
 // import "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-//import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
-//import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+
 
 
 import "./GenericAccessControl.sol";
 import "./World.sol";
 import "./ProvinceManager.sol";
-//import "./ArmyNFT.sol";
 import "./Treasury.sol";
 import "./KingsGold.sol";
 import "./Interfaces.sol";
@@ -30,12 +29,14 @@ import "./Errors.sol";
 
 
 
-contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
-    uint256 constant provinceCost = 1 ether;
-
+contract Continent is Initializable, Roles, GenericAccessControl, ReentrancyGuardUpgradeable, IContinent {
     string public name;
     IProvinceManager internal provinceManager;
     IWorld public override world;
+
+    Config public config;
+    //uint256 public baseProvinceCost = 1 ether; // The base cost, this value will change depending the on the blockchain. E.g. Ethereum would 0.001 ether and FTM would be 1 ether.
+    //uint256 public baseCommodityReward = 100 ether; // The base reward for the commodities after buying a Province.
    
     modifier onlyProvince() {
         require(provinceManager.contains(msg.sender),"No Province in Continent"); //Event must be listed on the province's events.
@@ -51,49 +52,56 @@ contract Continent is Initializable, Roles, GenericAccessControl, IContinent {
     function initialize(string memory _name, IWorld _world, IUserAccountManager _userAccountManager) public initializer {
         //transferOwnership(tx.origin); // Now set ownership to the caller and not the world contract.
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
+        __ReentrancyGuard_init();
         name = _name;
         world = _world;
+        config = Config({
+            baseProvinceCost: 1 ether, // The base cost, this value will change depending the on the blockchain. E.g. Ethereum would 0.001 ether and FTM would be 1 ether.
+            baseCommodityReward: 100 ether, // The base reward for the commodities after buying a Province.
+            provinceLimit: 10
+        });
     }
 
-    // function world() public view override returns(IWorld)
-    // {
-    //     return world;
-    // }
+    function setConfig(Config memory _config) public override onlyRole(DEFAULT_ADMIN_ROLE) {
+        config = _config;
+    }
 
     // Everyone should be able to mint new Provinces from a payment in KingsGold
-    function createProvince(string memory _name, address owner) external override returns(uint256) {
-        console.log("createProvince - Start");
-        // Check name, no illegal chars
+    function createProvince(string memory _name, address owner) external override nonReentrant returns(uint256) {
+        // TODO: Check name, no illegal chars
+
+
+        // Make sure that the user account exist and if not then created it automatically.
         IUserAccount user = userAccountManager.ensureUserAccount(); // Just make sure that the user account exist!
 
-        console.log("createProvince - check user");
+        require(user.provinceCount() <= config.provinceLimit, "Cannot exeed the limit of provinces"); 
 
-        require(user.provinceCount() <= 10, "Cannot exeed 10 provinces"); // Temp setup for now 4 june 2022
-
-        console.log("createProvince - get treasury address");
         ITreasury treasury = world.treasury();
-        console.log("createProvince - get treasury");
-        //Treasury tt = Treasury(treasuryAddress);
-        console.log("createProvince - get Gold instance");
         IKingsGold gold = treasury.gold();
-        console.log("createProvince - check balanceOf user");
-        require(provinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
+        
+        // Check if the user has enough money to pay for the province
+        require(config.baseProvinceCost <= gold.balanceOf(msg.sender), "Not enough tokens in reserve");
 
-        console.log("createProvince - transfer gold");
-        if(!gold.transferFrom(msg.sender, address(treasury), provinceCost))
+        // Transfer gold from user to the treasury
+        if(!gold.transferFrom(msg.sender, address(treasury), config.baseProvinceCost))
             revert("KingsGold transfer failed from sender to treasury.");
 
-        console.log("createProvince - mintProvince with ProvinceManager: ", address(provinceManager));
 
+        // Create the province 
         (uint256 tokenId, IProvince province) = provinceManager.mintProvince(_name, owner);
 
-        console.log("createProvince - setProvinceRole: PROVINCE_ROLE");
-        userAccountManager.grantProvinceRole(province); // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
-
-        console.log("createProvince - add province to user address: ", address(user));
+        // Give the Provice the role of PROVINCE_ROLE, this will allow it to perform actions on other contrats.
+        userAccountManager.grantProvinceRole(province); 
+        
+        // Add the province to the user account
         user.addProvince(province);
 
-        console.log("createProvince - Done - returning tokenId: ", tokenId);
+        // Mint resources to the user as a reward for creating a province.
+        world.food().mint(msg.sender, config.baseCommodityReward);
+        world.wood().mint(msg.sender, config.baseCommodityReward);
+        world.rock().mint(msg.sender, config.baseCommodityReward);
+        world.iron().mint(msg.sender, config.baseCommodityReward);
+
         return tokenId;
     }
 

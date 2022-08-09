@@ -15,6 +15,7 @@ describe("Treasury", function () {
     [owner, addr1, addr2] = await ethers.getSigners();
     roles = await builder.addRoles();
     userAccountManager = await builder.addUserAccountManager();
+    await builder.addKingsGold(owner);
     treasury = await builder.addTreasury(owner);
   });
 

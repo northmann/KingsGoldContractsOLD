@@ -23,7 +23,8 @@ let yieldEventBeacon;
 let populationEventBeacon;
 
 const eth1 = ethers.utils.parseUnits("1.0", "ether");
-let goldAmount = ethers.utils.parseUnits("100.0", "ether"); // 100 mill eth
+let bigNumber100eth = ethers.utils.parseUnits("100.0", "ether"); // 100 mill eth
+let bigNumber100Mill = ethers.utils.parseUnits("100000000.0", "ether"); // 100 mill eth
 
 async function addRoles() {
     roles = await deployContract("Roles");
@@ -38,16 +39,24 @@ async function addUserAccountManager() {
     return userAccountManager;
 }
 
+async function addKingsGold(user) {
+    if(!user) throw "Missing user instance";
+
+    gold = await deployContract("KingsGold");
+
+    return gold;
+}
+
+
 // Dependen on userAccountManager
 async function addTreasury(user) {
     if(!user) throw "Missing user instance";
     if(!userAccountManager) throw "Missing userAccountManager instance";
 
-    gold = await deployContract("KingsGold");
-
     treasury = await createUpgradeable("Treasury", [userAccountManager.address, gold.address]);
     let treasuryGold = ethers.utils.parseUnits("100000000.0", "ether"); // 100 mill eth
-    await gold.mint(treasury.address, goldAmount);        // Give the treasury a lot of new coins
+    await gold.mint(treasury.address, bigNumber100eth);        // Give the treasury a lot of new coins
+    await gold.mint(user.address, bigNumber100eth);        // Give the user a lot of new coins
 
     return treasury;
 }
@@ -57,18 +66,21 @@ async function addCommodities(user) {
     if(!userAccountManager) throw "Missing userAccountManager instance";
 
     food = await createUpgradeable("Food",[userAccountManager.address]);
-    await food.mint(user.address, goldAmount);        // Give me a lot of new coins
 
     wood = await createUpgradeable("Wood",[userAccountManager.address]);
-    await wood.mint(user.address, goldAmount);        // Give me a lot of new coins
 
     rock = await createUpgradeable("Rock",[userAccountManager.address]);
-    await rock.mint(user.address, goldAmount);        // Give me a lot of new coins
 
     iron = await createUpgradeable("Iron",[userAccountManager.address]);
-    await iron.mint(user.address, goldAmount);        // Give me a lot of new coins
 
     return { food, wood, rock, iron };
+}
+
+async function mintCommodities(user) {
+    await food.mint(user.address, bigNumber100eth);        // Give me a lot of new coins
+    await wood.mint(user.address, bigNumber100eth);        // Give me a lot of new coins
+    await rock.mint(user.address, bigNumber100eth);        // Give me a lot of new coins
+    await iron.mint(user.address, bigNumber100eth);        // Give me a lot of new coins
 }
 
 async function addEventFactory() {
@@ -116,17 +128,17 @@ async function addContinent() {
     console.log("Continent address: ", continentAddress);
     writeSetting("Continent", continentAddress);
 
-
     await userAccountManager.grantRole(await roles.MINTER_ROLE(), continentAddress);
 
     const Continent = await ethers.getContractFactory("Continent");
     continent = Continent.attach(continentAddress);
-    
-    if(gold) await gold.approve(continentAddress, goldAmount);  // Approve Continent to spend my coins
-    if(food) await food.approve(continentAddress, goldAmount);  // Approve Continent to spend my coins
-    if(wood) await wood.approve(continentAddress, goldAmount);  // Approve Continent to spend my coins
-    if(rock) await rock.approve(continentAddress, goldAmount);  // Approve Continent to spend my coins
-    if(iron) await iron.approve(continentAddress, goldAmount);  // Approve Continent to spend my coins
+
+    // Approve the continent to spend the owners coins
+    if(gold) await gold.approve(continentAddress, bigNumber100Mill);  // Approve Continent to spend my coins
+    if(food) await food.approve(continentAddress, bigNumber100Mill);  // Approve Continent to spend my coins
+    if(wood) await wood.approve(continentAddress, bigNumber100Mill);  // Approve Continent to spend my coins
+    if(rock) await rock.approve(continentAddress, bigNumber100Mill);  // Approve Continent to spend my coins
+    if(iron) await iron.approve(continentAddress, bigNumber100Mill);  // Approve Continent to spend my coins
 
     return continent;
 }
@@ -183,6 +195,7 @@ async function deployGame(owner) {
     await deployMultiCall(owner);
     roles = await addRoles();
     userAccountManager = await addUserAccountManager();
+    await addKingsGold(owner);
     await addTreasury(owner);
     await addCommodities(owner);
     eventFactoryObject = await addEventFactory();
@@ -196,8 +209,10 @@ async function deployGame(owner) {
 module.exports = {
     addRoles,
     addUserAccountManager,
+    addKingsGold,
     addTreasury,
     addCommodities,
+    mintCommodities,
     addEventFactory,
     addWorld,
     addContinent,
@@ -205,5 +220,5 @@ module.exports = {
     addProvince,
     deployMultiCall,
     deployGame,
-    goldAmount,
+    goldAmount: bigNumber100eth,
   };

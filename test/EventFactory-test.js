@@ -9,7 +9,6 @@ describe("EventFactory", function () {
   let owner, addr1, addr2;
   let userAccountBeacon;
   let userAccountManager;
-  let token;
   let treasury;
   let userManager;
   let continentBeacon;
@@ -30,6 +29,7 @@ describe("EventFactory", function () {
 
     roles = await builder.addRoles();
     userAccountManager = await builder.addUserAccountManager();
+    await builder.addKingsGold(owner);
     await builder.addTreasury(owner);
     await builder.addCommodities(owner);
     container = await  builder.addEventFactory();
