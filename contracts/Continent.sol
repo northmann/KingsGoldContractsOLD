@@ -118,8 +118,14 @@ contract Continent is Initializable, Roles, GenericAccessControl, ReentrancyGuar
     //     events.add(_event);
     // }
 
-    function spendEvent(IEvent _event, address _user) public override onlyProvince {
+    // Spends the resouces of the event from the user account.
+    // Only a province contract can call this function.
+    function spendEvent(IEvent _event, address _user) public override onlyProvince nonReentrant {
         require(_user != address(0),"User cannot be empty");
+        
+        // Only the original caller can spend the event.
+        require(_user == tx.origin,"Spending user must be the original caller"); 
+
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not a event contract");
         IProvince province = _event.province();
 
@@ -174,7 +180,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, ReentrancyGuar
     // }
 
     /// The user pays to reduce the time on a contract.
-    function payForTime(IEvent _event, address user) public override onlyProvince {
+    function payForTime(IEvent _event, address user) public override onlyProvince nonReentrant {
 
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         IProvince province = _event.province();
@@ -197,7 +203,7 @@ contract Continent is Initializable, Roles, GenericAccessControl, ReentrancyGuar
             });
     }
 
-    function completeMint(IYieldEvent _event) public override onlyProvince
+    function completeMint(IYieldEvent _event) public override onlyProvince nonReentrant
     {
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         IProvince province = _event.province();

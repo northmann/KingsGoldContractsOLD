@@ -17,17 +17,38 @@ import "./Interfaces.sol";
 // Roles added
 // GenericAccessControl added
 contract Commodity is Initializable, ERC20Upgradeable, ERC20BurnableUpgradeable, PausableUpgradeable, Roles, GenericAccessControl, UUPSUpgradeable, ICommondity {
+
+    ITreasury internal treasury;
+
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-    function initialize(IUserAccountManager _userAccountManager) initializer virtual public {
+    function initialize(IUserAccountManager _userAccountManager, ITreasury _treasury) initializer virtual public {
         __setUserAccountManager(_userAccountManager);// Has to be set here, before anything else!
         __ERC20_init("KingsGold Commodity", "KSGC");
         __ERC20Burnable_init();
         __Pausable_init();
         __UUPSUpgradeable_init();
+        setTreasury(ITreasury(_treasury));
+    }
+
+    // The SPENDER_ROLE are typically only given to Province contracts.
+    modifier onlySpender() {
+        require(userAccountManager.hasRole(SPENDER_ROLE, msg.sender), "Caller do not have the SPENDER_ROLE");
+        _;
+    }
+
+    // Allow a contract to call this function and transfer on behalf of the original caller.
+    // This function ignores allowances.
+    function spendToTreasury(uint256 amount) public override onlySpender {
+        // Spend from the original caller by a contract with the SPENDER_ROLE.
+        _transfer(tx.origin, address(treasury), amount);
+    }
+
+    function setTreasury(ITreasury _treasury) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        treasury = _treasury;
     }
 
     function mint_with_temp_account(address to, uint256 amount) public override onlyRole(TEMPORARY_MINTER_ROLE) {

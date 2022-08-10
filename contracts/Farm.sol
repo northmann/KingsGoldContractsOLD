@@ -20,8 +20,8 @@ contract Farm is YieldStructure  {
                     manPower:10,
                     attrition: 2e16, // 2 % base = 1 ether
                     penalty: 50e16, // 50 % base = 1 ether
-                    time:4 hours,
-                    goldForTime: 0.1 ether,
+                    time:1 hours,
+                    goldForTime: 1 ether,
                     food:0,
                     wood:100,
                     rock:0,

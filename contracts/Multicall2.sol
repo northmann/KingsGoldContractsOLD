@@ -3,17 +3,12 @@
 pragma solidity ^0.8.4;
 //pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-
-
 /// @title Multicall2 - Aggregate results from multiple read-only function calls
 /// @author Michael Elliot <mike@makerdao.com>
 /// @author Joshua Levine <joshua@makerdao.com>
 /// @author Nick Johnson <arachnid@notdot.net>
 
-contract Multicall2 is ReentrancyGuard {
-
-    event Callresult(address target, bool success, bytes result);
+contract Multicall2  {
 
     struct Call {
         address target;
@@ -22,16 +17,6 @@ contract Multicall2 is ReentrancyGuard {
     struct Result {
         bool success;
         bytes returnData;
-    }
-
-    // @author Northmann
-    // @dev Executes a series of function calls that can change state.
-    function callFunctions(Call[] calldata calls) external payable nonReentrant {
-        for(uint256 i = 0; i < calls.length; i++) {
-            (bool success, bytes memory ret) = calls[i].target.call{ value: msg.value }(calls[i].callData);
-            require(success, "Multicall aggregate: call failed");
-            emit Callresult(calls[i].target, success, ret);
-        }
     }
 
     function aggregate(Call[] memory calls) public returns (uint256 blockNumber, bytes[] memory returnData) {

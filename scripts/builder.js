@@ -204,6 +204,18 @@ async function deployGame(owner) {
     await addProvinceManager();
 }
 
+// async function createProvince(user, ownerAddress) {
+//     const eth1 = ethers.utils.parseUnits("10.0", "ether");
+//     let amount = ethers.utils.parseUnits("100.0", "ether"); // 10 eth
+//     await gold.mint(ownerAddress, amount);        // Give me a lot of new coins
+//     await gold.approve(continent.address, amount);  // Approve Continent to spend my coins
+
+//     //const ownerBalanceBefore = await gold.balanceOf(owner.address);
+
+//     const tx = await continent.createProvince("Test", owneraddress);
+//     await tx.wait();
+
+// }
 
 
 module.exports = {

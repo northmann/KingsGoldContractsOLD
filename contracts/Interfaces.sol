@@ -63,6 +63,23 @@ interface IProvince is IAccessControlUpgradeable {
     function cancelEvent(IEvent _event) external;
     function world() external view returns(IWorld);
     function containsEvent(IEvent _event) external view returns(bool);
+    function getAttributes() external returns (
+        string memory Name,
+        address Owner,
+        address Vassal,
+
+        uint32 PositionX,
+        uint32 PositionY,
+
+        uint32  Plains,   // Food
+        uint32  Forest,   // Wood
+        uint32  Mountain, // Stone
+        uint32  Hills,   // Gold and iron ore
+
+        uint256 PopulationTotal,
+        uint256 PopulationAvailable,
+        address ArmyContract
+        );
 }
 
 interface IProvinceManager {
@@ -80,7 +97,7 @@ interface IGenericAccessControl {
     function userAccountManager() external view returns(IUserAccountManager);
 }
 
-interface IContinent  { 
+interface IContinent is IGenericAccessControl { 
 
     function setConfig(Config memory _config) external;
     function world() external view returns(IWorld);
@@ -176,6 +193,7 @@ interface IWorld is IGenericAccessControl {
 }
 
 interface ICommondity is IERC20Upgradeable {
+    function spendToTreasury(uint256 amount) external;
     function mint_with_temp_account(address to, uint256 amount) external;
     function mint(address to, uint256 amount) external; 
 }

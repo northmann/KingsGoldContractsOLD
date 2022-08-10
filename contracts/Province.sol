@@ -27,6 +27,26 @@ import "./EventSetExtensions.sol";
 
 //, Roles, 
 contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
+    // struct Attributes {
+    //     string name;
+
+    //     address owner;
+    //     address vassal;
+
+    //     uint32 positionX;
+    //     uint32 positionY;
+
+    //     uint32  plains;   // Food
+    //     uint32  forest;   // Wood
+    //     uint32  mountain; // Stone
+    //     uint32  hills;    // Gold and iron ore
+
+    //     uint256 populationTotal;
+    //     uint256 populationAvailable;
+    //     address armyContract;
+    // }
+
+
     using EnumerableMap for EnumerableMap.UintToAddressMap;
     using EnumerableMap for EnumerableMap.AddressToUintMap;
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -64,9 +84,15 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     EnumerableSet.AddressSet private insideTransfers;
     EnumerableSet.AddressSet private outgoingTransfers;
 
-
-    modifier onlyRoles(bytes32 role1, bytes32 role2) {
-        require(hasRole(role1, msg.sender) || hasRole(role2, msg.sender),"onlyRoles: Access denied");
+    // Only Owner or Vassal or MultiCall can call this.
+    // If MultiCall, then the tx.origin has to be the owner or vassal.
+    modifier onlyRoles() {
+        require(hasRole(OWNER_ROLE, msg.sender) 
+        || hasRole(VASSAL_ROLE, msg.sender)
+        || (IUserAccountManager(IContinent(continent).userAccountManager()).hasRole(MULTICALL_ROLE, msg.sender) 
+            && (hasRole(OWNER_ROLE, tx.origin) || hasRole(VASSAL_ROLE, tx.origin))
+            ),
+        "onlyRoles: Access denied");
         _;
     }
 
@@ -76,7 +102,6 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _;
     }
 
-    
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -93,6 +118,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         populationTotal = populationAvailable;
     }
 
+
     function setVassal(address _user) external override onlyRole(OWNER_ROLE)
     {
         _grantRole(VASSAL_ROLE, _user);
@@ -103,7 +129,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _revokeRole(VASSAL_ROLE, _user);
     }
 
-    function createStructureEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createStructureEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external override onlyRoles  {
         // check that the hero exist and is controlled by user.
         console.log("createStructure start");
 
@@ -114,6 +140,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         console.log("createStructure add event");
         // Add the event to the list of activities on the province.
         events.set(address(buildEvent), buildEvent.typeId()); 
+
         latestEvent = buildEvent;
 
         console.log("createStructure grant role");
@@ -132,7 +159,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
        
     }
 
-    function createYieldEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)  {
+    function createYieldEvent(uint256 _structureId, uint256 _multiplier, uint256 _rounds, uint256 _hero) external override onlyRoles  {
         // check that the hero exist and is controlled by user.
         //IProvince provinceInstance = IProvince(msg.sender)
 
@@ -158,7 +185,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _grantRole(EVENT_ROLE, address(yieldEvent)); // Enable the event to perform actions on this provice.
     }
 
-    function createGrowPopulationEvent(uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRoles(OWNER_ROLE, VASSAL_ROLE) returns(IPopulationEvent) {
+    function createGrowPopulationEvent(uint256 _rounds, uint256 _manPower, uint256 _hero) public override onlyRoles returns(IPopulationEvent) {
         IPopulationEvent populationEvent =  world.eventFactory().createGrowPopulationEvent(this,  _rounds, _manPower, _hero);
 
         // Check that there is mamPower enough to build the requested structures.
@@ -195,7 +222,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     }
 
 
-    function payForTime(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function payForTime(IEvent _event) external override onlyRoles
     {
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         require(events.contains(address(_event)),"Event unknown by province");
@@ -209,7 +236,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
         _event.paidForTime();
     }
 
-    function completeEvent(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function completeEvent(IEvent _event) external override onlyRoles
     {
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         require(events.contains(address(_event)),"Event unknown by province");
@@ -227,7 +254,7 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
 
     }
 
-    function cancelEvent(IEvent _event) external override onlyRoles(OWNER_ROLE, VASSAL_ROLE)
+    function cancelEvent(IEvent _event) external override onlyRoles
     {
         require(ERC165Checker.supportsInterface(address(_event), type(IEvent).interfaceId), "Not an event contract");
         require(events.contains(address(_event)),"Event unknown by province");
@@ -252,5 +279,25 @@ contract Province is Initializable, Roles, AccessControlUpgradeable, IProvince {
     function containsEvent(IEvent _event) public view override returns(bool)
     {
         return events.contains(address(_event));
+    }
+
+    function getAttributes() public view override returns(
+        string memory Name,
+        address Owner,
+        address Vassal,
+
+        uint32 PositionX,
+        uint32 PositionY,
+
+        uint32  Plains,   // Food
+        uint32  Forest,   // Wood
+        uint32  Mountain, // Stone
+        uint32  Hills,   // Gold and iron ore
+
+        uint256 PopulationTotal,
+        uint256 PopulationAvailable,
+        address ArmyContract
+        ) {
+            return (name, owner, vassal, positionX, positionY, plains, forest, mountain, hills, populationTotal, populationAvailable, armyContract);
     }
 }

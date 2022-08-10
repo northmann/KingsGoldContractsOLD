@@ -10,8 +10,8 @@ import "./Commodity.sol";
 
 contract Iron is Initializable, Commodity, IFood {
 
-    function initialize(IUserAccountManager _userAccountManager) initializer override public {
-        super.initialize(_userAccountManager);
+    function initialize(IUserAccountManager _userAccountManager, ITreasury _treasury) initializer override public {
+        super.initialize(_userAccountManager, _treasury);
         __ERC20_init("KingsGold Iron", "KSGI");
     }
 }
